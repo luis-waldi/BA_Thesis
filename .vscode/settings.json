@@ -1,4 +1,5 @@
 {
+    "ltex.language": "de-DE",
     "latex-workshop.latex.recipes": [
         {
             "name": "build",

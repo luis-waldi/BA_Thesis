@@ -1,0 +1,73 @@
+\newpage
+\section{Theoretischer Hintergrund}\label{theoretischer_hintergrund}
+% Einleitender Absatz in das Kapitel.
+
+
+\subsection{Ökologischer Hintergrund}\label{okologischer_hintergrund}
+
+ konkret nehmen die Gräser oder Büsche der Heide Platz zum wachsen weg, indem sie sie einfach zuwachsen (eigentlich wachsen Heiden in Standorten mit folgenden abiotische Standorteigenschaften: wie Niederschlagsar-mut, große Versickerungsfähigkeit der Böden, starkes Relief oder Südexposition.), jedoch sind ihre heutigen Standorte ausreichend mit Wasser versorgt und vor allem von der Eutrophierung (Nährstoffanreicherung) betroffen (bspw. wenn die Dünger von benachbarten Landwirtschafltihc genutzten Flächen über die Luft verstreut werden), dass das nach und nach, bei ausbleibender Pflege die Pioniergehölze wachsen lässt (Schlehen, Rosen- und Weißdornarten sowie Bäume wie Birken, Zitterpappeln und Kiefern) (https://www.dvl.org/fileadmin/user_upload/Publikationen/Praxishefte_Biotoppflege/DVL-Publikation-Praxisheft_Hinweise_zur_Biotop-_und_Landschaftspflege-Trockenrasen_und_Heiden.pdf)
+- durch diese natürliche Sukzession breiten sich Dominanzbestände aus, welche so aggresiv wachsen, dass sie die Heide einfach überwuchern (durch entzug von Nährstoffen und beschatten -> kein Sonnenlicht)
+- aber wie kann man das verhindern, bzw. wie wurde es ursprünglich verhindert?
+-Heiden und Trockenrasen gebiete sind eigntlich von Menschen geschaffene Halbkulturbiotope mit Nährstoffarmen Böden, die inidrekt durch die frühere Bewirtschaftung entstnaden sind
+- beispielsweise wurde durch das "abplaggen" die nährstoffreiche Humusschicht mitsant der Heidevegeation vom Oberboden entfernt -> Plaggen wurden als Einstreu in Ställen genutzt und später als Dünger auf dem Feld eingesetzt
+- Methode wurde mit der Einfühurung von Dünger und dem genug zur verfügung stehendem Stroh, überflüssig
+-auch verhinderte die stark verbreitete Schafzucht das wachsen von Bäumen und Sträuchern in diesen Gebieten -> Schafe fressen die jungen Triebe 
+-Schafahltung ging zurück als Baumwolle und billige Wollimporte aus Übersee populär wurden
+-neben dem abplaggen wurde auch die "Mahd" eingesetzt -> oberen Schichten wurden mit einer Sense oder Sichel abgemäht und so der Bestand verjüngt (ähnlich wie zurückschneiden von Bäumen, nur dass dadruch auch die jungen, störenden Baumtriebe und Sträucher entfernt wurden)
+-da diese Mehtoden jedoch weggefallen sind musste sich der Naturschutz andere Mehtoden überlegen
+-maschineller Plaggenhieb mit Planierraupen - da das aggressive Sandrohr sich sonst wieder ausbreiten würde, müssen die abgetrgenen Bodenschichten komplett aus dem Gebiet entfernt werden
+- gezielter Einsatz von Schafen oder Heidschnucken - wichtig hierbei: das nächtliche Aufstallen, also das in den Stall bringen oder auf Äckern zusammenpferchen, damit der Dung nicht wieder ins Heidegebiet kommt und gleichzeitig direkt auf dem Acker landet (heidefläche braucht Nährstoffarmen Boden)
+-auch die Mahd wird noch gemacht - das abschneiden der Gräser und Büsche ist einer der gängisten Mehtoden - wichtig ist der unbedingte Abtransport des Mähguts (sonst Aubsreitung von aggressiven Pflanzenarten wie bei der abplaggung)
+-das entkusseln ist quasi wie die Mahd eine Ebene drüber - das rein mechanische Absägen und Zurückschneiden, mithilfe von Kettensägen,  von Gehölzen wie Kiefer oder Birke 
+-auch kontrolliertes abbrennen von kleinen Flächen wird angewendet - Nährstoffe werden dem Rohhummus entzogen, wodurch sich kein Buschland entwickeln kann und somit offene, konkurrenzarme Standorte für das Heidekraut entstehen 
+Quellen: (https://www.bund-koeln.de/service/meldungen/detail/news/wiesenpflege-fuer-mehr-artenvielfalt-wieso-das-land-reitgras-in-der-dellbruecker-heide-probleme-macht/), (https://www.nul-online.de/themen/landschaftspflege/article-8259515-201985/landschaftspflege-in-der-heide-.html)
+
+\subsection{Structure from Motion}\label{structure_from_motion}
+
+\subsubsection{Allgemeines}\label{sfm_allgemeines}
+% Grundlagen zur Struktur für Bewegung. Beispielzitat: \footcite[\vglf][\pagef 1]{Balzert.2008}
+
+
+% --- Muster für eine Abbildung (auskommentiert) ---
+% \begin{figure}[H]
+% \caption{Funktionsweise von Tesseract OCR}\label{fig:tesseract}
+% \includegraphics[width=0.9\textwidth]{tesseract}
+% \\
+% Quelle: Eigene Darstellung
+% \end{figure}
+
+\subsection{Convolutional Neural Networks (CNNs)}\label{cnns}
+
+dabei unterteilt er diese Mehtoden in vier Hauptkategorien, wobei die erste und zweite Kategorie eher großflächige, ökologische Zusammenhänge aus Satelliten- und Luftbildern analysieren, dringen die dritte und vierte in die Detaillebene, nutzen mehr auch LIDAR Daten und stellen die anatomischen Details einzelner Bäume dar 
+- in der 1. KAT. wird eine "forest ressource assessment" (FRA) durchgeführt, wobei das CNN U-Net mittels semantischer Segmentierung zur Kartierung von Waldtypen am Beispiel des atlantischen Regenwaldes, eingesetzt wurde
+- als 2. KAT wurde die "forest ecological disturbance" (FED) überwacht um mithilfe von YOLO-Modellen Waldbrandrauch frühzeitig zu erknnen und mithilfe von Mask R-CNN, kranke von einem Pilz befallene Bäume zu identifizieren
+- die "forest parameter retrieval at the individual scale" (FPI) wurde angewendet und mittels Deeplab aus Drohnenbildern einzelne Buamkronen zu identifizieren
+- außerdem kann man mit dieser Methode, über das CNN ResNet auch einzelne Baumarten genau identifizieren
+- die vierte Hauptkategorie in der man Deep-Learning Anwendungen in Bezug auf Waldmonitoring unterteilt, ist die "tree organ-level measurement"(TOM)
+- diese wird meist als Vorverarbeitungsschritt eingesetzt um dann noch detaillierter zu Untersuchen, da diese Methode besipielsweise mithilfe von LIDAR Daten die Holzstrukur und die Blätter eines Baumes trennen kann, was dann wiederum die Grundlage für die Bestimmung von Baumarten ist
+- auch wird TOM vor allem im landwirtschaftlichen Bereich genutzt um Früchte zu lokalisieren und somit den Ernteertrag abzuschätzen
+
+-man sieht klar wie viel mehr flexibel deep learning algorithmen im verlgeich zu klassichen machine learning algorithmen sind
+- wohingegen diese noch stark auf die manuelle Merkmalsextraktion angewiesen sind und bei unregelmäßigen oder komplexen Datenmengen (insebsondere bei Baumstrukturen) schnell an ihre Grenzen stoßen
+- im Vergleich dazu kann deep learning automatisch aus hochdimensionalen, nichtlinearen Rohdaten wichtige und entscheidene Merkmale extrahieren, lernen damit umzugehen und dann auch zu modellieren
+- diese Flexibilität von deep learning zeigt sich insbesondere dadruch, dass die 4 verschiedenen Methoden die CNNs ganz flexibel nutzen und exakt an das Problem anpassen können
+- die Pixel- und patch basierten CNNs wie U-Net oder ResNet kartieren fließende Übergänge von Waldtypen, wohingegen Objektbasierte CNNs wie YOLO oder Faster R-CNN, gezielt einzelne Organe wie Früchte, kranke Blätter oder Äste in komplexen Umgebungen lokalisieren
+
+
+\subsubsection{Allgemeines}\label{cnns_Allgemeines}
+% Grundlagen künstlicher neuronaler Netze.
+
+\subsection{Geometric Deep Learning}\label{geometric_deep_learning}
+
+\subsubsection{Semantische Segmentierung von 3D-Punktwolken}
+
+\subsubsection{Beispiel: Pointnet}\label{pointnet}
+% konkretes Beispiel für Geometrische Deep Learning (Vorgänger).
+
+\subsubsection{Beispiel: Pointnet++}\label{pointnet++}
+% konkretes Beispiel für Geometrische Deep Learning (aktueller Stand).
+
+% \subsubsection{MLPs (Multilayer Perceptrons)}\label{mlps}
+
+
+

@@ -1,0 +1,1 @@
+{"rule":"DE_CASE","sentence":"^\\QDie zugrunde liegende Flora-Fauna-Habitat-Richtlinie bildet innerhalb des Natura-2000-Netzwerks das Rückgrat des europäischen Naturschutzes (Rat der Europäischen Gemeinschaften, 1992) und definiert damit die Schutzgebiete, deren Erhaltungszustand im Projekt erfasst werden soll.\\E$"}

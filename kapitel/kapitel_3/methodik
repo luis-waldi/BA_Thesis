@@ -1,0 +1,61 @@
+\newpage
+\section{Methodik}\label{methodik}
+% Überblick über den gesamten Workflow, idealerweise mit einer
+% Abbildung die alle Schritte auf einen Blick zeigt.
+
+% \begin{figure}[H]
+% \caption{Methodischer Workflow der Arbeit}\label{fig:workflow}
+% \includegraphics[width=0.9\textwidth]{workflow}
+% \\
+% Quelle: Eigene Darstellung
+% \end{figure}
+
+\subsection{Untersuchungsgebiet}\label{untersuchungsgebiet}
+% Authausener Wald / Schneisen, Lage, Größe, Vegetationstypen,
+% naturschutzfachliche Relevanz der Heideflächen.
+
+\subsection{Datengrundlage}\label{datengrundlage}
+% Bereitgestellte Daten (RGB, Multispektral, SfM-Punktwolke).
+% Kurze Beschreibung wie die Daten entstanden sind (Befliegung, SfM)
+% ohne dass du das selbst gemacht hast – klar als gegeben markieren.
+
+\subsection{Annotation und Klassenschema}\label{annotation}
+% Manuelles Labeling der RGB-Bilder mit Polygonen.
+% Die 8 Klassen (bush, deadwood, graminoid, heath, other,
+% sand, soil, tree) und ihre naturschutzfachliche Bedeutung.
+% Zusatzattribute: shadow, overexposed, confidence.
+
+\subsection{Datenvorverarbeitung}\label{datenvorverarbeitung}
+
+\subsubsection{Label-Transfer und Qualitätssicherung}\label{label_transfer}
+% Übertragung der 2D-Polygon-Labels auf die 3D-Punktwolke (merge_spatial).
+% Höhennormalisierung (CSF-Bodenklassifikation + knnidw).
+% Regelbasierte Plausibilisierung über Höhen-Schwellenwerte
+% (z.B. Heide-Punkte über 1.5m → Klasse Busch).
+
+\subsubsection{Tiling und Sampling}\label{tiling}
+% Sliding-Window-Tiling (10m Tiles, 5m Stride).
+% Festes Sampling auf 4096 Punkte pro Tile.
+% Feature-Aufbereitung: zentrierte Koordinaten, normalisierte RGB-Werte.
+% Aufteilung in Trainings- und Validierungsdaten.
+
+\subsection{Modell und Training}\label{modell_training}
+
+\subsubsection{PointNet++}\label{modell_pointnetpp}
+% Begründete Wahl (vgl. Kapitel \ref{pointnet++}).
+% Kurze Beschreibung der Architektur: Set Abstraction, 
+% Feature Propagation, MLPs für die Segmentierungsaufgabe.
+
+\subsubsection{Training}\label{training}
+% Hyperparameter, Loss-Funktion (Klassenungleichgewicht begründen!),
+% Hardware (MPS/Mac), Anzahl Epochen, Modellauswahl (beste Epoche).
+
+\subsection{Quantifizierung des Verbuschungsgrades}\label{quantifizierung}
+% Nach der Segmentierung: Welche der 8 Klassen gelten als "Verbuschung"?
+% (bush, tree, ggf. deadwood → begründen)
+% Rasterisierung: 2D-Projektion von oben auf ein Raster,
+% Berechnung des Flächenanteils der Verbuschungsklassen.
+% Vergleichbarkeit mit dem 2D-Ansatz der Kollegen begründen.
+
+\subsubsection{Rasterisierung}\label{rasterisierung}
+% Rasterisierung der 3D-Punktwolke in ein 2D-Raster (z.B. 1m x 1m Zellen).
