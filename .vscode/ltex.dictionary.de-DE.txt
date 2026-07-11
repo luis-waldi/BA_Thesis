@@ -21,3 +21,11 @@ D-SfM-Punktwolken
 D-Deep-Learning-Ansatz
 SfM-Punktwolke
 Rasterisierungsmethode
+Calluna-Lebenszyklusphasen
+Heidestandorten
+Vergrasung
+Plaggen
+Schoppern
+Plaggenhieb
+Heidevegation
+Heidevegetation
