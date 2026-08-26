@@ -1,0 +1,54 @@
+\section{Einleitung und Motivation}\label{einleitung}
+
+Der Schutz und Erhalt naturnaher Lebensräume ist eine zentrale Aufgabe des europäischen Naturschutzes. Allein das Natura-2000-Netzwerk umfasst rund 25.000 Schutzgebiete in den EU-Mitgliedsstaaten, deren Zustand regelmäßig erfasst und überwacht werden muss \cite{Kissling.2024}. Indikatoren des Habitatzustands sind dabei unverzichtbar, um Fortschritte im Naturschutz nachzuvollziehen. Ihre Erhebung über große Flächen und in feiner Auflösung bleibt jedoch eine Herausforderung \cite{Kissling.2024}.
+
+Klassischerweise erfolgt diese Vegetationskartierung durch Geländearbeit: Fachleute begehen die Flächen und erheben Daten manuell vor Ort. Da dieses Vorgehen sehr zeit- und kostenintensiv ist, können auf diese Weise meist nur kleine Flächen kartiert werden. An dieser Stelle setzen Methoden der Fernerkundung an. Insbesondere das Drohnen bzw. UAS-gestützte Monitoring liefert hochauflösende Daten und kann den Aufwand intensiver Geländekartierungen deutlich reduzieren, wobei Genauigkeiten erreicht werden, die klassische Verfahren der Luftbildinterpretation erreichen oder übertreffen \cite{Goncalves.2016}.
+
+Gerade für die Heideflächen wurde gezeigt, dass sich der Erhaltungszustand fernerkundlich bewerten lässt, sofern die Auswertung eng an die etablierten feldbasierten Kartierschemata angelehnt sind \cite{Schmidt.2017}. Allerdings besteht weiterhin eine deutliche Lücke zwischen den feldbasierten Monitoring-Richtlinien und den bestehenden fernerkundlichen Ansätzen, was deren praktische Anwendung erschwert \cite{Schmidt.2017}. Der entscheidende Haken klassischer Fernerkundung liegt zudem darin, dass die erhobenen Daten wiederum manuell von Fachleuten ausgewertet werden müssen, was erneut sehr zeitaufwendig ist. Genau hier wird der Einsatz künstlicher Intelligenz interessant, da sie die Auswertung der Fernerkundungsdaten automatisieren kann.
+
+Die Anwendung von Machine-Learning-Verfahren in der Fernerkundung ist seit Jahren etabliert. Klassische Algorithmen wie Random Forest (RF) werden vor allem zur Klassifizierung der Bodenbedeckung eingesetzt. Eischeid et al. (2021) \cite{Eischeid.2021} nutzten beispielsweise einen überwachten RF-Klassifikator, um aus Drohnenbildern die Vegetation arktischer Tundra zu kartieren. Auch Support Vector Machines (SVMs) finden Anwendung, etwa bei Cao et al. (2018) \cite{Cao.2018} zur objektbasierten Klassifizierung von Mangrovenarten aus hochauflösenden UAV-Hyperspektraldaten.
+
+Einen entscheidenden Fortschritt brachte die Einführung von Deep Learning und insbesondere von Convolutional Neural Networks (CNNs), die die Objekterkennung und damit das Habitatmonitoring deutlich verbessert haben \cite{Yun.2024}.
+
+Der wesentliche Vorteil gegenüber klassischen Verfahren liegt darin, dass CNNs die entscheidenden Merkmale automatisch aus komplexen, hochdimensionalen Rohdaten lernen, während klassische Algorithmen auf eine manuelle Merkmalsextraktion angewiesen sind und bei unregelmäßigen oder komplexen Datenmengen schnell an ihre Grenzen stoßen. Eine ausführliche Gegenüberstellung der Ansätze sowie verschiedene CNN-Architekturen erfolgt in Kapitel \ref{theoretischer_hintergrund} (\nameref{theoretischer_hintergrund}).
+
+Aus den genannten Gründen ist es nicht verwunderlich, dass aktuelle Projekte im Bereich des Habitat-Qualitätsmonitorings auf Deep Learning zurückgreifen. So auch das Projekt des Instituts für Landschaftsökologie der Universität Münster: “Ready for Take-Off?! How to integrate UAS remote sensing into the monitoring of EU habitats directive sites?“. Dort wird untersucht, wie sich UAS-basierte Fernerkundung in das Monitoring von FFH-Gebieten integrieren lässt, gerade weil UAS deutlich hochauflösendere Daten liefern als Satellitenbilder und flexibler einsetzbar sind. Die zugrunde liegende Flora-Fauna-Habitat-Richtlinie bildet innerhalb des Natura-2000-Netzwerks das Rückgrat des europäischen Naturschutzes \cite{RatEG.1992} und definiert damit die Schutzgebiete, deren Erhaltungszustand im Projekt erfasst werden soll.
+
+Neben der Habitatstruktur (etwa \textit{Calluna}-Lebenszyklusphasen oder Sandanteil) und dem Arteninventar sollen dabei vor allem Degradationsindikatoren erfasst werden. Zu nennen sind insbesondere der Deckungsgrad invasiver Neophyten, der Deckungsgrad von Gras sowie der Deckungsgrad von Sträuchern und Bäumen, also die Verbuschung, die sich kritisch auf den Zustand von Heideflächen auswirkt. Heideflächen sind nährstoffarme Halbkulturbiotope, die erst durch menschliche Nutzung entstanden sind. Bleibt diese Nutzung aus oder werden die Standorte durch Eutrophierung mit Nährstoffen angereichert, setzt natürliche Sukzession ein, bei der Gräser und Gehölze aufkommen und die Zwergstrauchheide zunehmend überwuchern \cite{Schoknecht.1998}. Die Verbuschung ist daher ein zentraler Degradationsindikator. Da die früheren Nutzungsformen weggefallen sind, lassen sich diese Flächen heute nur durch aufwändige Pflegemaßnahmen offenhalten. Um solche Maßnahmen gezielt planen und ihren Erfolg überprüfen zu können, muss der Verbuschungsgrad objektiv, flächendeckend und reproduzierbar erfasst werden.
+
+Dazu wurden mehrere Flächen mehrfach mit einer Drohne beflogen, um hochauflösende RGB-Bilder zu erhalten und aus den überlappenden 2D-Aufnahmen mittels Structure from Motion einen 3D-Datensatz abzuleiten - ein Verfahren, das aus mehreren überlappenden 2D-Bildern eine dreidimensionale Punktwolke der aufgenommenen Fläche rekonstruiert. Diese Daten dienen als Ausgangspunkt für ein Deep-Learning-Modell, das die einzelnen Vegetationsarten segmentiert und jeweils einer Klasse zuordnet, woraus sich anschließend ein Verbuschungsgrad berechnen lässt.
+
+Da nun zwei Arten von Datensätzen vorliegen, ergibt sich daraus eine zentrale Frage. Welcher Datensatz eignet sich besser zur Segmentierung der Vegetationsarten und damit zur Berechnung des Verbuschungsgrades - die RGB-Bilder oder die SfM-Punktwolken? Beide Ansätze nutzen Deep Learning, für die 2D-Daten das CNN U-Net und für den 3D-Ansatz PointNet++, das eigens auf unstrukturierten 3D-Punktmengen spezialisiert ist. Aufgabe dieser Arbeit ist es, den 3D-Ansatz zu entwickeln, zu testen und zu evaluieren und sein Ergebnis mit dem 2D-Ansatz zu vergleichen, um herauszufinden, welcher Datensatz sich besser für die Segmentierung der Vegetationsarten und damit für die Erfassung des Verbuschungsgrades eignet.
+
+Daraus ergeben sich zwei Forschungsfragen (FF) mit jeweils einer untergeordneten Teilfrage (TF), die den Weg von der Datenaufbereitung über die Segmentierung bis zur praktischen Nutzung abbilden:
+
+\begin{enumerate}[label=\textbf{FF\arabic*:}, leftmargin=*, align=left, itemsep=6pt]
+    \item Inwiefern unterscheidet sich die semantische Segmentierung von 3D-SfM-Punktwolken mittels Deep Learning von einem vergleichbaren 2D-Deep-Learning-Ansatz, sowohl quantitativ als auch qualitativ, bei der Erfassung der Verbuschung von Heideflächen?
+    \begin{enumerate}[label=\textbf{TF\arabic{enumi}:}, leftmargin=*, align=left, topsep=4pt]
+        \item Inwiefern lässt sich ein automatisierter Label-Transfer von 2D-Referenzdaten auf 3D-Punktwolken realisieren, um den Trainingsaufwand für tiefe neuronale Netze effizient zu gestalten?
+    \end{enumerate}
+    \item Inwiefern unterscheidet sich die aus der 3D-Punktwolken-Segmentierung abgeleitete Rasterisierung des Verbuschungsgrades in ihrer Genauigkeit von der aus dem 2D-RGB-Ansatz abgeleiteten Rasterisierung?
+    \begin{enumerate}[label=\textbf{TF\arabic{enumi}:}, leftmargin=*, align=left, topsep=4pt]
+        \item Wie stabil und anwenderfreundlich lässt sich das entwickelte Modell in eine bestehende GIS-Umgebung integrieren, um für Naturschutzpraktiker nutzbar zu sein?
+    \end{enumerate}
+\end{enumerate}
+
+Das übergeordnete Ziel ist schließlich ein vollständiger Workflow, der es Naturschutzpraktikern ermöglicht, den Verbuschungsgrad von Heideflächen effizient und zuverlässig zu erfassen.
+
+\subsection{Aufbau der Arbeit}\label{aufbau}
+Kapitel~\ref{theoretischer_hintergrund} (\nameref{theoretischer_hintergrund})
+legt die theoretischen Grundlagen. In Kapitel~\ref{verwandte_arbeiten}
+(\nameref{verwandte_arbeiten}) werden verwandte Arbeiten vorgestellt.
+Kapitel~\ref{methodik} (\nameref{methodik}) beschreibt das methodische
+Vorgehen, bevor in Kapitel~\ref{diskussion}
+(\nameref{diskussion}) die Ergebnisse evaluiert werden.
+Kapitel~\ref{ausblick} (\nameref{ausblick}) schließt die Arbeit mit
+einem Ausblick ab.
+
+% --- Muster für eine Abbildung (auskommentiert) ---
+% \begin{figure}[H]
+% \caption{Beispielhafte Abbildung}\label{fig:beispielEinleitung}
+% \includegraphics[width=0.9\textwidth]{dateiname}
+% \\
+% Quelle: Eigene Darstellung
+% \end{figure}

@@ -1,0 +1,65 @@
+\newpage
+\section{Fazit und Diskussion}\label{diskussion}
+% Einleitender Absatz: Was wird in diesem Kapitel gezeigt und in welcher
+% Reihenfolge (erst Segmentierungsgüte, dann Quantifizierung, dann Vergleich).
+
+\subsection{Evaluation der semantischen Segmentierung}\label{evaluation_segmentierung}
+% Bewertung des trainierten PointNet++-Modells auf den Validierungsdaten.
+
+\subsubsection{Gesamtmetriken}\label{gesamtmetriken}
+% Overall Accuracy (OA), mean Accuracy (mAcc) und mIoU als
+% zusammenfassende Kennzahlen über alle Klassen.
+
+\subsubsection{Klassenweise Auswertung}\label{klassenweise}
+% IoU, Precision, Recall und F1-Score pro Klasse.
+% Tabelle mit allen 8 Klassen. Auffälligkeiten benennen
+% (heath und tree gut, mehrere Klassen mit IoU = 0).
+
+% \begin{table}[H]
+% \caption{Klassenweise Evaluationsmetriken}\label{tab:metriken}
+% \begin{tabular}{lcccc}
+% Klasse & IoU & Precision & Recall & F1 \\
+% ...
+% \end{tabular}
+% \\
+% Quelle: Eigene Darstellung
+% \end{table}
+
+\subsubsection{Konfusionsmatrix}\label{konfusionsmatrix}
+% Absolute und normalisierte Konfusionsmatrix.
+% Visualisierung der Verwechslungen zwischen den Klassen.
+
+\subsection{Fehleranalyse}\label{fehleranalyse}
+% Qualitative und quantitative Analyse der häufigsten Fehler.
+
+\subsubsection{Einfluss des Klassenungleichgewichts}\label{klassenungleichgewicht}
+% Warum erreichen Klassen wie sand, soil, other, deadwood IoU = 0?
+% Zusammenhang zwischen Punktanzahl pro Klasse und Erkennungsleistung.
+% Diskussion: mIoU wird durch leere/seltene Klassen nach unten gezogen.
+
+\subsubsection{Kritische Verwechslungen}\label{verwechslungen}
+% Die für die Verbuschung relevanten Fehler:
+% bush -> heath, tree -> bush, heath -> graminoid.
+% Mögliche Ursachen (Höhenüberschneidung, ähnliche RGB-Werte,
+% Schatten/Überbelichtung).
+
+\subsection{Quantifizierung des Verbuschungsgrades}\label{ergebnis_quantifizierung}
+% Anwendung der Rasterisierung auf die segmentierte Punktwolke.
+% Resultierender Flächenanteil der Verbuschung für die Testfläche.
+
+% \begin{figure}[H]
+% \caption{Rasterisierte Verbuschungskarte}\label{fig:verbuschungskarte}
+% \includegraphics[width=0.9\textwidth]{verbuschungskarte}
+% \\
+% Quelle: Eigene Darstellung
+% \end{figure}
+
+\subsection{Vergleich mit dem 2D-Ansatz}\label{vergleich_2d}
+% Gegenüberstellung der 3D-abgeleiteten Ergebnisse mit dem 2D-Workflow
+% gegen die Referenz (Ground Truth). Welcher Ansatz ist näher dran?
+
+\subsection{Diskussion}\label{diskussion}
+% Einordnung der Ergebnisse, Limitationen (Datengrundlage, Labelqualität,
+% Punktdichte), Stärken des 3D-Ansatzes, Verbesserungspotenzial.
+
+\subsection{Fazit}\label{fazit}

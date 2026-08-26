@@ -1,0 +1,548 @@
+\newpage
+\section{Methodik}\label{methodik}
+% Überblick über den gesamten Workflow, idealerweise mit einer
+% Abbildung die alle Schritte auf einen Blick zeigt.
+
+% \begin{figure}[H]
+% \caption{Methodischer Workflow der Arbeit}\label{fig:workflow}
+% \includegraphics[width=0.9\textwidth]{workflow}
+% \\
+% Quelle: Eigene Darstellung
+% \end{figure}
+
+% ============================================================
+% Die Gliederung folgt dem Datenfluss von der Befliegung bis zur
+% Kennzahl, nicht der zeitlichen Abfolge der Bearbeitung.
+% ============================================================
+
+\subsection{Untersuchungsgebiete und Datengrundlage}\label{gebiete_daten}
+
+\subsubsection{Untersuchungsgebiete}\label{untersuchungsgebiet}
+% Authausen, Schneise I und 110-kV-Trasse (Heidefläche innerhalb einer Waldschneise).
+% Cuxhavener Küstenheide (offene Heide).
+% Begründung der Auswahl, unterschiedliche Bestandsstruktur und Verbuschungssituation.
+% Verworfen: Weißhaus, da die Daten in geografischen Koordinaten (Grad) statt in
+% metrischem UTM vorlagen und damit inkompatibel zur metrischen Weiterverarbeitung waren.
+
+\subsubsection{Befliegung und photogrammetrische Auswertung}\label{datengrundlage}
+% Drohnenbefliegung, RGB, Überlappung. Als gegeben markieren, nicht selbst durchgeführt.
+% Structure from Motion zur Punktwolkenrekonstruktion (vgl. Abschnitt \ref{structure_from_motion}).
+% Punktdichte: 113 Punkte je Quadratmeter in Authausen, 165 bis 184 in Cuxhaven,
+% medianer Nachbarabstand 7,1 beziehungsweise 2,2 Zentimeter.
+% Drei getrennte Punktwolken, Gesamtumfang 11,7 Millionen klassifizierte Punkte.
+% OFFEN: Drohnen- und Sensormodell, Flughöhe, Bodenauflösung (GSD),
+% Befliegungsdatum, verwendete SfM-Software.
+
+\subsubsection{Manuelle Annotation und Klassenschema}\label{annotation}
+% Annotation als 2D-Polygone im Luftbild.
+% Klassenschema mit acht Klassen (bush, deadwood, graminoid, heath, other, sand,
+% soil, tree), water als ID 9 reserviert, aber nicht belegt.
+% 16 gelabelte Tiles aus drei Gebieten.
+% Naturschutzfachliche Bedeutung der Klassen.
+% OFFEN: Annotationssoftware, Bearbeiterin oder Bearbeiter,
+% Definitionskriterien je Klasse, Anzahl der Polygone.
+
+\subsection{Datenvorverarbeitung}\label{datenvorverarbeitung}
+% Zentrales Skript preprocessing_R/LabelMapping.R, ergänzt um hoehen_analyse.R.
+
+Die Vorverarbeitung überführt drei Ausgangsgrößen in einen Trainingsdatensatz für PointNet++, nämlich die SfM-Punktwolken der drei Gebiete, die manuell annotierten Polygone und die daran hängenden Qualitätsattribute. Sie ist vollständig in R umgesetzt und stützt sich auf das Paket \texttt{lidR} für die Verarbeitung der Punktwolken \cite{Roussel.2020} sowie auf \texttt{sf} für die Vektoroperationen \cite{Pebesma.2018} und \texttt{terra} für die Rasteroperationen \cite{Hijmans.2025}. Am Ende steht ein Verzeichnis aus Textdateien, in dem jede Datei eine Kachel der Fläche beschreibt und jede Zeile einen Punkt mit seinen Merkmalen und seinem Label enthält.
+
+\subsubsection{Aufbereitung und Prüfung der Ausgangsdaten}\label{georeferenz}
+% Entfernen dreier zusätzlicher Punktattribute (Richtungsvektoren), da die eingesetzte
+% QGIS-Version die LAZ-Datei sonst nicht öffnen konnte.
+% Prüfung der räumlichen Deckungsgleichheit von Orthophoto (.tif) und Punktwolke (.laz),
+% rechnerisch in R und visuell in QGIS.
+% Speicherschonendes Einlesen über das filter-Argument von readLAS(), wodurch Punkte
+% bereits beim Einlesen auf die Bounding-Box des jeweiligen Tiles beschränkt werden.
+
+Für die Arbeit standen drei photogrammetrisch erzeugte Punktwolken zur Verfügung. Die Wolke der Schneise I im Authauser Wald umfasst 8,3 Millionen Punkte auf einer Ausdehnung von rund 540 mal 260 Metern, die der 110-kV-Trasse enthält 67,4 Millionen Punkte auf rund 3.900 mal 1.000 Metern und die Wolke der Cuxhavener Küstenheide beinhaltet 415,5 Millionen Punkte auf einer Fläche von rund 2.800 mal 2.150 Metern. Zusammen enthalten die drei Datensätze also etwa 491 Millionen Punkte.
+
+Voraussetzung für den Label-Transfer ist, dass die annotierten Polygone und die Punktwolke im selben Koordinatensystem liegen und räumlich deckungsgleich sind. Beides wurde vorab geprüft, und zwar zuerst rechnerisch über einen Vergleich der EPSG-Codes und der Ausdehnungen und anschließend visuell durch eine gemeinsame Darstellung von Punkten und Polygonrändern. Alle verwendeten Daten liegen in der UTM-Zone 32N (EPSG 25832) vor. Ein weiteres zunächst vorgesehenes Gebiet musste verworfen werden, da seine Daten in geografischen Koordinaten in Grad vorlagen und die metrischen Schwellenwerte der späteren Verarbeitungsschritte dort keine sinnvolle Bedeutung gehabt hätten.
+
+Punktwolken dieser Größe lassen sich nicht vollständig im Arbeitsspeicher halten. Daher wird beim Einlesen das Filterargument von \texttt{readLAS()} genutzt, um Punkte bereits während des Lesevorgangs anhand ihrer Koordinaten zu verwerfen. Für jedes annotierte Tile wird nur der Ausschnitt geladen, der innerhalb des umschließenden Rechtecks (bounding box) der zugehörigen Polygone liegt. Da diese Rechtecke die tatsächlichen Annotationsflächen nur grob umschreiben, enthalten die geladenen Ausschnitte auch Punkte außerhalb der Polygone, die im weiteren Verlauf als ungelabelt aussortiert werden. Von den mitgeführten Punktattributen werden ausschließlich die Koordinaten, die vier Farbkanäle sowie die Klassen- und Qualitätsangaben übernommen, da die Punktwolken der drei Gebiete unterschiedliche Zusatzattribute enthalten und sich sonst nicht zu einem gemeinsamen Datensatz zusammenführen ließen.
+
+\subsubsection{Bodenerkennung und Höhennormalisierung}\label{hoehennormalisierung}
+% Cloth Simulation Filter (CSF) zur automatischen Bodenpunkterkennung.
+% Digitales Geländemodell, Interpolation über knnidw.
+% Normalisierung je Tile statt global, da die Höhe über Boden eine lokale Größe ist
+% und ein gemeinsames Bodenmodell über mehrere hundert Kilometer getrennte Gebiete
+% fachlich nicht tragfähig wäre.
+
+Die Z-Koordinate der Rohpunkte gibt die absolute Höhe an und ist für eine vegetationskundliche Auswertung wenig aussagekräftig, weil sie das Relief des Geländes enthält. Für die Unterscheidung von Heide, Gras und Gehölzen ist dagegen die Höhe über dem Boden entscheidend, also die Wuchshöhe der Pflanze an ihrem Standort. Die Punktwolke wird deshalb höhennormalisiert, wodurch jeder Punkt statt seiner absoluten Höhe seinen vertikalen Abstand zur Geländeoberfläche erhält.
+
+Der erste Schritt ist die automatische Erkennung der Bodenpunkte mit einem Cloth Simulation Filter (CSF) \cite{Zhang.2016}. Das Verfahren invertiert die Punktwolke und lässt anschließend ein virtuelles Tuch auf die so entstandene Oberfläche fallen. Die Knoten des Tuchs sinken ab, bis sie auf einen Punkt treffen, während Verbindungen zwischen benachbarten Knoten das Tuch zusammenhalten und es über Vertiefungen hinweg gespannt bleiben lassen. Die Form des abgesunkenen Tuchs nähert die Geländeoberfläche an, wobei alle Punkte, deren Abstand zu dieser Fläche unter einem Schwellenwert liegt, werden als Boden klassifiziert \cite{Zhang.2016}.
+
+Der Vorteil gegenüber älteren Filterverfahren liegt darin, dass CSF mit wenigen, einfach zu setzenden Parametern auskommt, während andere Verfahren eine Reihe komplizierter Parameter sorgfältig aufeinander abstimmen müssen \cite{Zhang.2016}. Gesetzt wurden hier neben dem horizontalen Abstand zweier benachbarter Tuchknoten (grid resolution) auf 0,5 Meter, der Abstandsschwellenwert für die Trennung von Boden- und Objektpunkten auf 0,3 Meter, auch die Steifigkeit des Tuchs (rigidness) auf 2. Letztere ist auf die Werte 1 bis 3 beschränkt, wobei ein höherer Wert ein steifere Tuch erzeugt \cite{Zhang.2016}. 
+
+Aus den so bestimmten Bodenpunkten wird anschließend für jeden Punkt der Wolke die lokale Geländehöhe geschätzt und von seiner Z-Koordinate abgezogen. Die Schätzung erfolgt über eine inverse Distanzgewichtung (inverse distance weighting) der zehn nächstgelegenen Bodenpunkte, deren Beitrag zur Schätzung, mit dem Quadrat ihres Abstands abnimmt. Bodenpunkte liegen danach nahe null, während die Höhe eines Vegetationspunktes seiner Wuchshöhe entspricht.
+
+Diese Normalisierung erfolgt getrennt für jede der 16 annotierten Teilflächen und nicht gemeinsam über alle Gebiete. Die Höhe über Boden ist eine lokale Größe, wodurch ein einziges Geländemodell über mehrere hundert Kilometer hinweg, weder fachlich sinnvoll wäre, noch mit vertretbarem Rechenaufwand zu erzeugen wäre. An den Rändern der Gebiete entstehen Werte, wo die photogrammetrische Rekonstruktion ungenau wird und das Geländemodell aus weiter entfernt liegenden Bodenpunkten extrapoliert werden muss. Aus diesem Grund werden mach der Normalisierung Punkte unterhalb von minus einem Meter verworfen.
+\subsubsection{Übertragung der Labels auf die Punktwolke}\label{label_transfer}
+% Räumlicher Verschnitt der Polygone mit den Punkten (merge\_spatial).
+% Grundproblem: das Polygon wird über alle darunterliegenden Punkte gestempelt,
+% unabhängig von deren Höhe.
+% Empirischer Beleg der Kontamination: als heath gelabelte Punkte bis 22 Meter,
+% graminoid bis 23 Meter, sand bis 14 Meter Höhe. Umgekehrt liegt viel
+% tree-Punktmasse nahe null Meter.
+% Punkte außerhalb der Polygone (rechteckige Bounding-Box gegen unregelmäßige
+% Polygone) fallen als NA an und werden verworfen.
+
+Die Annotation liegt als zweidimensionale Polygone im Luftbild vor, das Modell benötigt jedoch ein Label je Punkt der dreidimensionalen Wolke. Diese Übertragung erfolgt über einen räumlichen Versschnitt, bei dem für jeden Punkt geprüft wird, in welchem Polygon seine X- und Y-Koordinate liegt, woraufhin er dessen Klasse übernimmt. Neben der Vegetationsklasse werden auf demselben Weg die drei Qualitätsattribute \texttt{shadow}, \texttt{overexposed} und \texttt{confidence} übertragen, die festhalten, ob ein Segment verschattet oder überbelichtet war und wie sicher die Zuordnung bei der Annotation war. Punkte ohne zugeordnetes Polygon werden anschließend entfernt, wobei neben fehlenden Werten auch leere Zeichenketten abgefangen werden, da diese in R nicht als fehlender Wert gelten und sonst als eigene Scheinklasse in die weitere Verarbeitung gelangt wären. 
+
+Die erste Teilfrage nach einem automatisierten Label-Transfer wird durch dieses Vorgehen beantwortet, bringt jedoch eine systematische Schwäche mit sich. Die
+Polygone wurden auf der von oben sichtbaren Oberfläche gezeichnet, ihre Klasse
+wird beim Verschnitt aber auf die gesamte darunterliegende Punktsäule
+übertragen. Jedes Polygon wirkt damit wie ein Ausstecher, der seine Klasse
+durch die volle Höhe der Punktwolke stempelt. 
+
+Daraus folgen zwei gegenläufige Fehlerarten. Ragt eine Baumkrone über eine Heidefläche, ist im Luftbild nur die Krone zu sehen, sodass dort ein Baumpolygon entsteht und die darunter wachsende Heide das Label \texttt{tree} erhält. Umgekehrt reichen an den Rändern der Kronen einzelne Zweige über benachbarte Flächen, ohne im Bild eigens abgegrenzt zu werden, weil die Polygongrenze vereinfacht entlang der sichtbaren Kronenkante verläuft. Punkte auf diesen Zweigen fallen dann in ein Heide- oder Graspolygon und tragen dessen Label.
+
+Die Höhenverteilung je Klasse belegt beide Fehlerarten. Ein erheblicher Teil der als \texttt{tree} gelabelten Punktmasse liegt nahe der Bodenoberfläche und bildet damot Unterwuchs statt Baum ab. In der Gegenrichtung reichen einzelne, als \texttt{heath} gelabelte Punkte bis 22 Meter, als \texttt{graminoid} gelabelte Punkte bis 23 Meter und als \texttt{sand} gelabelte Punkte bis 14 Meter über dem Boden, was für diese Klassen ausgeschlossen ist. Solche Extremwerte betreffen nur wenige Punkte, da das 95. Perzentil der Heidepunkte bei 1,26 Metern liegt. Sie zeigen jedoch, dass die Kontamination durch Überhang tatsächlich auftritt und nicht auf einzelne Flächen beschränkt bleibt. 
+
+\subsubsection{Höhenbasierte Labelkorrektur}\label{labelkorrektur}
+% Aufwärtsregel: Punkte oberhalb der klassenüblichen Höhe werden zu tree hochgestuft.
+% Abwärtsregel: tiefe tree-Punkte werden als Unterwuchs zurückgestuft, unter
+% 0,5 Meter zu heath, zwischen 0,5 und 2,0 Metern zu bush.
+% Schwellen datengetrieben als 95. Perzentil der normierten Höhe je Klasse über alle
+% 16 Tiles (soil 1,15 m, sand 1,4 m, graminoid 1,2 m, heath 1,3 m).
+% Ausnahme bush: ökologisch auf 3,5 Meter gesetzt, da das obere Perzentil durch
+% Baumüberhang verfälscht ist.
+% deadwood bewusst ohne Höhenregel wegen bimodaler Höhenverteilung
+% (liegendes gegen stehendes Totholz).
+% Limitation offenlegen: die Abwärtszuweisung ist eine Heuristik, tiefer Unterwuchs
+% kann auch Sand oder Boden sein. Mögliche Überschätzung von heath.
+
+Um diese Fehllabel zu bereinigen, wird auf der normalisierten Höhe ein Regelwerk angewendet, das Punkte in zwei Richtungen umklassifiziert. Die Aufwärtsregeln stufen Punkte, die für ihre Klasse zu hoch liegen, zur Klasse \texttt{tree} hoch. Die Abwärtsregeln behandeln den umgekehrten Fall und weisen tiefliegende Punkte unter Baumpolygonen dem Unterwuchs zu, wobei Punkte unterhalb von 0,5 Metern die Klasse \texttt{heath} und Punkte zwischen 0,5 und 2,0 Metern die Klasse \texttt{bush} erhalten. Die Rückstufung ist dadurch gerechtfertigt, dass die Punktwolke unter geschlossenen Kronen kaum rekonstruiert wird, sodass tiefliegende Punkte unter einem Baumpolygon mit hoher Wahrscheinlichkeit Vegetation am Boden abbilden.
+
+Die Schwellenwerte der Aufwärtsregeln wurden nicht geschätzt, sondern aus den Daten selbst abgeleitet. Für jede klasse wurde über alle 16 annotierten Tiles das 95. Perzentil der normierten Höhe berechnet und auf einen gerundeten Wert festgelegt, woraus sich ein Höhenschwellenwert von 1,15 Meter für \texttt{soil}, 1,4 Meter für \texttt{sand}, 1,2 Meter für \texttt{graminoid} und 1,3 Meter für \texttt{heath} ergibt. Auf die Klasse \texttt{bush} ist dieses Vorgehen nicht anwendbar, da ihr oberes Perzentil durch überstehende Bäume so stark verfälscht wird, dass es mit 13,5 Metern weit oberhalb jeder realistischen Strauchhöhe liegt. Ihre Schwelle wurde deshalb als eigene Setzung auf 3,5 Meter festgelegt. Dieser Wert orientiert sich an der Wuchshöhe der auf Heideflächen typischen Pioniergehölze wie Schlehe, Weißdorn und Rosenarten \cite{Schoknecht.1998} und liegt bewusst unterhalb der in der Vegetationskunde üblichen Obergrenze der Strauchschicht von etwa fünf Metern, da Gehölze dieser Höhe im Untersuchungsgebiet bereits durchweg als Birke oder Kiefer und damit als Baum auftreten. Die Klasse \texttt{deadwood} bleibt bewusst ohne Höhenregel, weil Totholz sowohl liegend als auch stehend vorkommt und ihre Höhenverteilung deshalb zweigipflig ist, sodass eine einzelne Schwelle eine der beiden Erscheinungsformen systematisch falsch behandeln würde. 
+
+Die Zuweisung des Unterwuchses über feste Höhenbänder ist eine Näherung. Tiefliegende Punkte unter Baumkronen können auch offener Boden oder Sand sein, werden durch die Abwärtsregeln aber je nach Höhe, der Heide oder den Büschen zugeordnet. Beide Klassen können dadurch überschätzt werden, im Fall von \texttt{bush} sogar unmittelbar die Zielgröße dieser Arbeit. Die Schwellenwerte selbst beruhen auf den 16 annotierten Teilflächen und wären bei einer erneuten Erweiterung des Datensatzes neu zu bestimmen.
+
+\subsubsection{Klassenkodierung und Reproduzierbarkeit}\label{klassenkodierung}
+% Vergabe der Klassen-IDs über eine feste Namensliste statt über as.factor, da
+% letzteres alphabetisch aus den gerade vorhandenen Klassen kodiert und die IDs bei
+% neuen oder fehlenden Klassen unbemerkt verrutschen würden.
+% Unbekannte Klassennamen brechen das Skript ab, statt still falsch zu mappen.
+% Gehärteter Filter ungelabelter Segmente, da ein leerer String in R nicht als NA gilt.
+
+Für die Verarbeitung im neuronalen Netz müssen die Klassennamen in ganzzahlige Bezeichner überführt werden. Die Zuordnung erfolgt über eine fest im Skript hinterlegte Namensliste und nicht über die in R naheliegende Umwandlung in einen Faktor. Eine solche Umwandlung würde die Bezeichner  alphabetisch aus den jeweils vorhanden Klassen vergeben, sodass sich die Nummerierung bei jeder neuen Datencharge verschieben könnte, sobald eine Klasse hinzukommt oder in einem Datensatz nicht vorkommt. Die feste Liste hält die Bezeichner über alle Chargen stabil und lässt neue Klassen nur am Ende zu. Ein Klassenname, der nicht in der Liste steht, führt zum Abbruch des Skripts, statt unbemerkt einen fehlenden Wert zu erzeugen. Die Klasse \texttt{water} ist als Bezeichner reserviert, wird aber erst zur Modellklasse, sobald tatsächlich entsprechende Punkte annotiert sind, da ein Training auf einer leeren Klasse nicht möglich ist.
+
+\subsubsection{Lokale Höhenmerkmale}\label{hoehenmerkmale}
+% Ableitung von shadow, overexposed und confidence je Punkt.
+% Diese Attribute sind kein Netzwerk-Input, sondern gehen ausschließlich als
+% Punktgewichte in den Verlust ein (vgl. Abschnitt \ref{verlustfunktion}).
+
+Die normalisierte Höhe allein trennt einen 40 Zentimeter hohen Busch nicht von einem gleich hohen Heidebestand. Was eine annotierte Person in diesem Fall nutzt, ist nicht die absolute Höhe, sondern die Struktur des Bestandes, also die Frage, ob die Oberfläche geschlossen und flächig ist oder ob einzelne Zweige aus ihrer Umgebung herausragen. Um diese Information für das Netz verfügbar zu machen, werden je Punkt zwei zusätzliche Merkmale berechnet. Das Merkmal \texttt{z\_range} gibt die Höhenspanne innerhalb einer Rasterzelle von 0,5 Metern an und erreicht große Werte bei Sträuchern mit Ästen und Lücken, kleine Werte im geschlossenen Heideteppich und nahezu den Wert null auf offenem Boden. Das Merkmal \texttt{z\_rel} beschreibt die Höhe eines Punktes über der medianen Höhe seiner Umgebung von 2,5 Metern und wird positiv, wenn eine Struktur aus dem umgebenen Bestand herausragt. 
+
+Die Berechnung erfolgt getrennt je Gebiet. Ein durchgehendes Raster mit 0,5
+Metern Zellweite über alle drei Gebiete hinweg bestünde aus so vielen Zellen,
+dass die verwendete Rasterbibliothek sie nicht mehr adressieren kann, denn
+zwischen Authausen und Cuxhaven liegen mehrere hundert Kilometer.
+
+Beide Merkmale werden bei fünf Metern begrenzt, \texttt{z\_rel} zusätzlich
+nach unten bei minus fünf Metern, da ihr Wertebereich sonst zu groß würde.
+Schneidet eine Rasterzelle eine Baumkrone, fallen Kronendach und Bodenpunkte
+in dieselbe Zelle, und \texttt{z\_range} erreicht dort über 20 Meter. Für die
+Fragestellung entscheidend ist dagegen der Abstand zwischen einem
+geschlossenen Heidebestand mit rund 0,1 Metern und einem Busch mit rund einem
+Meter. Dieser Abstand macht bei einem Wertebereich von 20 Metern nur etwa ein
+Zwanzigstel der gesamten Spanne aus, sodass das Netz die für die Verbuschung
+wichtige Unterscheidung aus einem sehr schmalen Ausschnitt des Merkmals
+herauslesen müsste. Nach der Begrenzung auf fünf Meter entspricht derselbe
+Abstand rund einem Fünftel der Spanne und tritt für das Netz deutlicher
+hervor. Verloren geht dabei wenig, da Spannen über fünf Metern nur in Zellen
+mit Baumkronen vorkommen und Bäume sich bereits über die normalisierte Höhe
+zuverlässig von der niedrigen Vegetation abheben.
+
+\subsubsection{Kachelung}\label{tiling}
+% Sliding Window mit 10 Meter Fensterbreite und 5 Meter Versatz, wodurch eine
+% bewusste 50-prozentige Überlappung als Datenerweiterung entsteht.
+% Fensterung je zusammenhängendem Bereich statt global, damit die Leerflächen
+% zwischen den Gebieten ausgelassen werden.
+% Normierung auf eine feste Punktzahl je Kachel (4096, ab run08 8192).
+% Export als Textdateien mit einer Zeile je Punkt, Label von 1 bis 8 auf 0 bis 7
+% umgeschrieben.
+% Begleittabelle tile\_offsets.csv mit Kachelname, Bereich, Block, Ursprung,
+% Kantenlänge und Punktzahl zur Rückrechnung in absolute Koordinaten.
+% Ergebnis: 3429 Kacheln bei 4096 Punkten, 3017 bei 8192 Punkten.
+
+Da PointNet++ keine beliebig großen Szenen verarbeitet, sondern Punktmengen
+fester Größe, muss die korrigierte Punktwolke zerlegt werden. Ein gleitendes
+Fenster (sliding window) von zehn Metern Kantenlänge wandert dafür über die
+Fläche und schneidet daraus quadratische Kacheln. Zwischen zwei Fenstern
+liegen jeweils fünf Meter Versatz, sodass benachbarte Kacheln sich zur Hälfte
+überlappen. Damit verdoppelt sich nicht nur die Zahl der Trainingsbeispiele, das Netz sieht dieselbe Struktur auch an wechselnder Stelle innerhalb der Kachel, was einer Datenerweiterung (data augmentation) entspricht. 
+
+Das gleitende Fenster wird je zusammenhängendem Bereich verschoben und nicht über alle Gebiete hinweg, damit die großen unannotierten Zwischenräume ausgelassen werden. Die acht aneinandergrenzenden Teilflächen der Schneise I bilden ein durchgehendes Raster, während alle übrigen Teilflächen isoliert liegen und einzeln verarbeitet werden. 
+
+Jede Kachel muss dieselbe Anzahl an Punkten enthalten, weil das Netz eine feste Eingabegröße erwartet. Aus jedem Fenster werden deshalb 8.192 Punkte, ohne zurücklegen, gezogen, damit kein Punkt doppelt in eine Kachel gelangt und dort eine Dichte vortäuscht, die in den Daten nicht vorhanden ist. Enthält ein Fenster weniger Punkte, wird es verworfen. Betroffen sind davon vor allem Randfenster, die nur zum Teil innerhalb einer annotierten Fläche liegen. Von 4.170 Fenstern bleiben auf diesem Weg 3.017 Kacheln übrig. Gezogen wird mit einem festen Startwert des Zufallsgenerators, sodass ein erneuter Export dieselben Kacheln erzeugt. Ohne ihn würde sich der Datensatz bei jedem Durchlauf leicht verändern und die Läufe der Ablationsstudie wären nicht mehr sauber miteinander vergleichbar. Wie viele Punkte eine Kachel enthält, gehört selbst zu den Faktoren, die dort variiert werden (Abschnitt~\ref{ablation}).
+
+Die Punkte jeder Kachel werden auf die Fenstermitte zentriert, damit das Netz keine absoluten Koordinaten lernt, sondern nur die Anordnung der Punkte zueinander. Die Farbkanäle einschließlich des Nahinfrarotkanals erhalten Werte zwischen null und eins, die Klassenbezeichner werden von eins bis acht auf null bis sieben umgeschrieben, so wie es die Implementierung erwartet. Abgelegt wird jede Kachel als Textdatei, in der eine Zelle einem Punkt entspricht. Dort stehen in fester Reihenfolge die zentriertem X- und Y-Koordinaten, die normalisierte Höhe, die vier Farbkanäle, die beiden lokalen Höhenmerkmale, das Label sowie die drei Qualitätsattribute. 
+
+Da mit der Zentrierung die Lage einer Kachel verloren geht, hält eine Begleittabelle zu jeder Kachel den Bereich, den Block, den Ursprung in X und Y sowie Kantenlänge und Punktzahl fest. Über sie lässt sich jeder vorhergesagte Punkt in absolute Koordinaten zurückrechnen, was sowohl für das Auflösen der Überlappung, als auch für die spätere Rasterisierung des Verbuschungsgrades gebraucht wird.
+
+
+\subsubsection{Räumlich getrennte Datenaufteilung}\label{split}
+% Aufteilung auf Ebene räumlich getrennter Bereiche statt einzelner Kacheln, sodass
+% überlappende Kacheln nicht über die Split-Grenze lecken (make\_splits.py).
+% Teilung der zusammenhängenden Schneise I in drei Blöcke mit Pufferstreifen.
+% Verhältnis rund 70/15/15, jedes Gebiet in allen drei Splits vertreten.
+
+Bevor trainiert werden kann, muss der Kacheldatensatz in drei Teile zerlegt werden. Der Trainingsteil enthält die meisten Kacheln und dient der Optimierung der Netzgewichte. Während des Trainings wird mit dem Validierungsteil beurteilt, welcher Zwischenstand des trainierten Models der beste ist, ohne dass das Netz aus diesen Kacheln lernt. Der Testteitl bleibt bis zum Schluss unberührt und liefert am Ende die Kennzahlen für die endgültige Bewertung. Sinn dieser Trennung ist, dass die Bewertung auf Daaten beruht, die das Netz nie gesehen hat. Ohe sie ließe sich nicht unterscheiden, ob es die Vegetationsklassen tatsächlich erkennt oder die Trainingskacheln nur auswendig gelernt hat.
+
+Die Kacheln zufällig auf die drei Teile zu verteilen wäre in diesem Fall die falsche Hernagehensweise. Wegen der 50-prozhentigen Überlappung, enthalten zwei benachbarte Kacheln zur Hälfte diesleben Punkte. Landet nun die eine im Training und die andere in der Validierung, wird das Netz an Punkten geprüft, mit denen es traininert wurde und die gemessene Güte fiele zu optimistisch aus. 
+
+Auf Grund dessen werden nicht einzelne Kacheln, sondern räumlich voneiander getrennte Blöcke auf die drei Teile veerteilt. Alle Kacheln eines Blocks gehen geschlossen in denselben Teil, sodass keine Überlappunmg eine Grenze überschreiten kann. Die kleineren isoliert liegenden Teilflächen bilden jeweils einen eigenen Block, wohingegen die Schneise I als großes, zusammenhängendes Gebiet in drei Blöcke aufgetielt wird. Andernfalls würde der gesamte Landschaftstyp aus den Schneise I Daten in einen Teil fallen und darauf entweder nicht trainiert oder nicht geprüft werden. 
+
+Die Dateinamen der Kacheln enthalten den Block, dem sie angehören. Ein eingenes Skript liest diese Angabe, beginnend beim größten und legt die Kachel in den Teil, in dem im Verhältnis zur angestebten Größe noch die meisten von ihr fehlen. Ziel ist eine Aufteilung von 70 zu 15 zu 15 Prozent, die sich nur annähern lässt, weil immer gnaze Blöcke vergeben werden. Von den 3.017 Kacheln entfallen am Ende 2.094 auf das Training
+, 455 auf die Validierung und 468 auf den Test, was 69, 15 und
+16 Prozent entspricht. Beide Untersuchungsgebiete, der Authausener Wald und
+die Cuxhavener Küstenheide, sind in allen drei Teilen vertreten.
+\subsection{Datenorganisation und Versionsverwaltung}\label{datenorganisation}
+% Ordnerstruktur raw, labeling, labeled, processed sowie Archiv für ältere Versionen.
+% Preprocessing (R) und Modelltraining (Python) im selben Repository, Rohdaten
+% außerhalb der Versionsverwaltung.
+% Basis des Modellcodes: yanx27-Referenzimplementierung von PointNet++, als
+% unveränderter Erst-Commit eingefroren, eigene Änderungen über Feature-Branches.
+% Laufzeitumgebung: Miniconda, Python 3.9, PyTorch. Training auf einer CUDA-GPU
+% des Uni-JupyterHub.
+
+\subsection{Modell und Trainingssetup}\label{modell_training}
+
+\subsubsection{Architektur}\label{modell_pointnetpp}
+% PointNet++ zur semantischen Segmentierung (vgl. Kapitel \ref{pointnet++}).
+% Begründung der Architekturwahl: direkte Verarbeitung der 3D-Höhenstruktur ohne
+% Voxelisierung oder Projektion auf Rasterbilder, hierarchische Gruppierung in
+% lokalen Nachbarschaften über mehrere Abstraktionsebenen.
+% Set Abstraction, Feature Propagation, Kugelabfrage (ball query).
+
+\subsubsection{Verlustfunktion}\label{verlustfunktion}
+% Klassengewichte umgekehrt proportional zur Klassenhäufigkeit (1/sqrt).
+% Zusätzliche Punktgewichte aus den Qualitätsattributen, mit den Parametern
+% CONFIDENCE\_MAX = 10, SHADOW\_WEIGHT = 0,3, OVEREXPOSED\_WEIGHT = 0,3,
+% MIN\_WEIGHT = 0,05.
+
+\subsubsection{Hyperparameter und Augmentierung}\label{training}
+% Batchgröße 32 (ab run08 16), 64 Epochen, Adam, Lernrate 1e-3 mit Step-Decay.
+% Rotation um die Hochachse, Jitter.
+% Modellauswahl über die beste Epoche auf dem Validierungs-Split.
+
+\subsubsection{Reproduzierbarkeit}\label{reproduzierbarkeit}
+% Klassenschema und Nachbarschaftsradien über Umgebungsvariablen umschaltbar.
+% Ableitung der Merkmalszahl aus der Spaltenzahl der Kacheldateien.
+% Protokollierung von Schema, Merkmalszahl und Radien je Lauf.
+% Fester Zufalls-Seed im Export.
+
+\subsection{Explorative Vorarbeiten}\label{vorarbeiten}
+% Kurzer Abschnitt, vier bis fünf Sätze.
+% Vor der Umstrukturierung des Repositorys wurden drei Läufe auf einer kleineren
+% Datenbasis gerechnet (sechs gelabelte Tiles, 759 Kacheln, Warmstart-Kette).
+% Aus dieser Phase stammen drei Festlegungen, die in die finale Methode eingegangen
+% sind: die Kachelparameter, die Wahl der Architektur und die Punktgewichtung über
+% die Qualitätsattribute.
+% Nach der Erweiterung auf 16 Tiles und der Vereinheitlichung der Skripte wurden alle
+% Läufe neu und von Scratch gerechnet. Die Ergebnisse der Vorläufe sind daher nicht
+% mit denen der Ablationsstudie vergleichbar und werden nicht berichtet.
+
+\subsection{Ablationsstudie}\label{ablation}
+% Einleitender Absatz zum Vorgehen: jeweils ein geänderter Faktor gegenüber dem
+% Vergleichslauf, Training von Scratch, Bewertung auf dem ungesehenen Test-Split.
+%
+% run01  Baseline, 8 Klassen, 6 Kanäle
+% run02  NIR als 7. Kanal
+% run03  Focal Loss
+% run04  Reduziertes 6-Klassen-Schema
+% run05  Lokale Höhenmerkmale z_rel und z_range
+% run06  Binäres Klassenschema Gehölz gegen Rest
+% run07  Vergrößerte Nachbarschaftsradien
+% run08  8192 statt 4096 Punkte je Kachel
+% run09  Multi-Scale Grouping
+%
+% Zwischenabschnitt zur Punktdichteanalyse zwischen run06 und run07, die den Anlass
+% für die Radienanpassung lieferte.
+% Hinweis zur Vergleichbarkeit: run01 bis run04 arbeiten mit sechs oder sieben
+% Kanälen und werden auf der ursprünglichen Testmenge berichtet, run05 bis run09 mit
+% neun Kanälen auf der vereinheitlichten Testmenge.
+
+\subsection{Evaluation}\label{evaluation}
+% Skript eval\_confusion.py, Akkumulation der Konfusionsmatrix über alle
+% Test-Kacheln.
+% Kennzahlen: IoU je Klasse, mittlere IoU, Overall Accuracy, mittlere Accuracy
+% (Definitionen vgl. Abschnitt \ref{evaluationsmetriken}).
+% Für die Fragestellung zusätzlich Precision, Recall und F1 der zusammengefassten
+% Klasse Gehölz, da die mIoU über unterschiedlich viele Klassen nicht vergleichbar ist.
+
+\subsection{Quantifizierung des Verbuschungsgrades}\label{quantifizierung}
+% Anwendung des besten Modells auf die vollständige Punktwolke.
+% Auflösen der 50-prozentigen Kachelüberlappung über tile\_offsets.csv.
+% Rückrechnung in absolute Koordinaten.
+% Bezugsflächenbildung und Berechnung des Anteils der Gehölzklasse.
+% Vergleichbarkeit mit dem 2D-Ansatz der Kollegen begründen.
+% OFFEN: konkretes Verfahren noch nicht festgelegt. Zu klären sind die Bezugsfläche
+% (Rasterzelle oder abgegrenzte Heidefläche), das Aggregationsmaß (Punktanteil,
+% projizierte Flächendeckung oder Volumenanteil), der Umgang mit Mehrfachvorhersagen
+% in überlappenden Kacheln sowie eine mögliche Validierung gegen Referenzdaten.
+
+% ============================================================
+% OFFENE PUNKTE INSGESAMT
+% 1. Befliegungs- und Sensorparameter, SfM-Software
+% 2. Annotationssoftware und Klassendefinitionen
+% 3. Verfahren zur Berechnung des Verbuschungsgrades
+% ============================================================
+
+% ============================================================
+% ROHNOTIZEN AB HIER, NICHT TEIL DES FLIESSTEXTS
+% Quelle für die Ausformulierung der obigen Abschnitte.
+% Vor der Abgabe entfernen.
+% ============================================================
+
+BA Notizen was gemacht wurde
+
+.laz Datei in QGIS Version öffnen nicht funktioniert -> zu viele Attribute bzw. 3 spezielle Attribute normal x, y ,z (Richtungsvektoren der Punkte) 
+Scheinbar liegt an QGIS Version (in älterer wäre es möglich gewesen)
+Dann einfach diese 3 Attribute in R Studio entfernt und ohne diese geöffnet -> funktioniert
+
+Vorher checken ob .tif Datei und .laz Datei räumlich genau übereinander liegen, damit mapping funktioniert. In R mit verschiedenen Operationen und visueller Check in QGiS erledigt.
+
+Jetzt Mappen: vorher .laz Datei auf bb des tile 1 Ausschnitts zuschneiden (readLAS() kann mit filter schon beim Einlesen Punkte verwerfen, was deutlich speicherschonender ist als erst die komplette LAZ-Datei zu laden. Die lidR-Doku beschreibt genau diesen Zweck des filter-Arguments.)
+Mappen erledigt. tree 117183   <NA> 18080 (linke Ecke). Dann NAs aussortiert und rds file abgespeichert.
+   
+Anmerkung - bb von tile 1 ist Rechteck - wirkliche Polygone jedoch nicht rechteckig -> linke ecke hat keine Labels
+￼
+
+Nach mapping .rds Datei enthält Punkte wo jeder Punkt die zugehörige Klasse aus den gelabelten Daten enthält. Diese 8 Klassen mit class-ID beschriftet -> Algorithmus später kann damit besser arbeiten.
+1       2       3       4       5       6       7       8
+  bush        91358       0       0       0       0       0       0       0
+  deadwood        0   27120       0       0       0       0       0       0
+  graminoid       0       0  404802       0       0       0       0       0
+  heath           0       0       0  556455       0       0       0       0
+  other           0       0       0       0     329       0       0       0
+  sand            0       0       0       0       0   45694       0       0
+  soil            0       0       0       0       0       0    3380       0
+  tree            0       0       0       0       0       0       0 1628464
+Dann .rds Datei in .las Datei umgewandelt um Ergebniss in QGIS zu visualisieren. Da viele Punkte fehlen und weiße stellen dabei sind sieht es teilweise so aus als gäbe es 2 Schichten über dem Boden wo die Heide und die Büsche wachsen. Das ist jedoch einmal der Stiel und die Spitze der Pflanze, da dortzwischen keine Punkte existieren (Berechnung nicht möglich, da nur 2D Daten als Ausgangsmaterial). Dann ist mir aufgefallen, dass es auch bei als soil klassifizierte Punkte, Punkte in 2 Schichten übereinander gibt. Es sieht zusätzlich so aus wie wirklich 2 Schichten dann würde man von Double Surface/Strip Misalignment Problem sprechen, wo durch die Berechnung einfach die Höhe der Drohne als Z Wert genommen hat und da diese ja wegen der Überlappung 2 mal das Gebiet abgeflogen ist es zu unterschiedlichen Höhen kommen kann. Jetzt ist die Frage was es wirklich ist. Problem außerdem. Dort wo im 2D Bild klare Trennlinien waren zwischen Heide und Baum, kommt es in der Punktwolke zu Problemen, wenn eine Baumkrone in 3D (Realität) über eine Heidefläche ragt, werden die Blätter bzw. Äste des Baums als Heide klassifiziert. Mapping sticht einmal durch die Punktwolke und klassifiziert alle Punkte so wie die, die im 2D Bild an der Oberfläche liegen. Zusätzlich in R ein DGM aus Punktwolke erstellt: 
+# 2. Deine KLASSIFIZIERTE Punktwolke von vorhin einlesen
+las <- readLAS("/Users/luis/Documents/BA/Punktwolke_klassifiziert.laz")
+
+# 3. Das perfekte DGM erstellen (Auflösung 0.5 Meter, TIN-Algorithmus schließt alle Löcher)
+# WICHTIG: Das dauert je nach Rechner kurz, weil er ein komplexes Netz berechnet!
+dgm <- rasterize_terrain(las, res = 0.5, algorithm = tin())
+
+# 4. Das lückenlose DGM als .tif für QGIS speichern
+writeRaster(dgm, "/Users/luis/Documents/BA/DGM_Lueckenlos.tif", overwrite = TRUE)
+
+Um das Problem mit den überragenden Bäumen bzw. die Vegetation unterhalb der Bäume sichtbar zu machen, zu lösen wurde zuerst die Höhe der Punktwolke normalisiert. Dazu erstmal mithilfe eines CSF die Bodenpunkte automatisch erkannt und in Klasse 2 geschrieben. Diese Klasse nutzt dann knnidw um das vorher erstellte DGM von der Punktwolke abzuziehen um alle Punkte die wirklich auf dem Boden liegen bei der Z Koordinate 0 liegen. Dann wurden Schwellenwerte bestimmt um die Punkte danach zu klassifizieren wie sie in der Natur vorkommen. Bei den Zonen wo das Strip Misalignment greift und in Randgebieten wo das SfM ungenau ist kommt es manchmal dazu dass Punkte nach oben verschoben werden und hochschweben. Da die normalisierte Punktwolke auf dem DGM basiert und dieses an den Randstellen wo SfM keine Bodenpunkte hat, extra/interpoliert, werden die Punkte aus weiter entfernt liegenden Punkten berechnet und ungenau geschätzt. 
+Ich habe mich dann als Architektur für PointNet++ entschieden, da es im Gegensatz zu 2D-Ansätzen die wichtige 3D-Höhenstruktur der Heide (Verbuschung) verarbeiten kann. Aufgrund dessen wurde dann die saubere Punktwolke  in 10x10 Meter große Kacheln zerschnitten. Um genug Trainingsdaten zu erhalten, wurde ein 50%iger Überlapp (Sliding Window, Stride=5) genutzt. Jede Kachel wurde auf exakt 4096 Punkte (Unter-/Überabtastung) normiert. Somit entstehen statt anfangs nur ca. 200 Kacheln nun ca. 800, wodurch man dann mehr Kacheln für Training Test und Evaluation hat. Diese 759 .txt-Dateien  repräsentieren jeden Punkt in einer Zeile mit 7 Spalten: zentrierte X/Y-Koordinaten, Z-Höhe, normalisierte R/G/B-Farbwerte (0-1) und das jeweilige Label (von 1-8 auf 0-7 für Python umgeschrieben).
+Dann wurde ein privates GitHub-Repo (BA_2026)  mit einer Python-.gitignore und MIT-Lizenz erstellt und in VS Code lokal geklont. Der PointNet++ Basis-Code vom yanx27-Repository wurde als ZIP heruntergeladen, in den eigenen Projektordner entpackt und als "unberührter" Erst-Commit im main-Branch eingefroren. Es wurde ein schlanker Feature-Branch-Workflow vereinbart. Alle neuen Baustellen (wie das anstehende Data-Splitting) werden auf temporären Branches (z. B. feature/data-splitting) entwickelt und erst bei fehlerfreier Funktion in den main-Branch integriert.
+Miniconda wurde installiert und das Mac-Terminal (zsh) in VS Code entsprechend konfiguriert. Es wurde eine eigene Umgebung namens pointnet2 mit Python 3.9 erstellt, um Konflikte mit QGIS oder R zu vermeiden. Die für PointNet++ nötigen Bibliotheken (torch, torchvision, numpy, scikit-learn, tqdm, tensorboard) wurden erfolgreich installiert.
+
+Training und Evaluation
+
+Als Modellarchitektur wird PointNet++ (MSG, Multi-Scale Grouping) für semantische Segmentierung verwendet, implementiert auf Basis des yanx27-Repositories, da es im Gegensatz zu 2D-Ansätzen die wichtige 3D-Höhenstruktur der Heide (Verbuschung) direkt verarbeiten kann, ohne Voxelisierung oder Projektion auf Rasterbilder zu benötigen, indem es Punkte hierarchisch in lokalen Nachbarschaften gruppiert und geometrische wie spektrale Merkmale über mehrere Abstraktionsebenen extrahiert. Jeder Punkt wird dabei durch sechs Merkmale beschrieben, zentrierte X/Y-Koordinaten, die Z-Höhe sowie normalisierte R/G/B-Farbwerte, wodurch sich die Modellkonfiguration in_channel = 6 ergibt, während die Qualitätsattribute (shadow, overexposed, confidence) kein Netzwerk-Input sind, sondern ausschließlich als Loss-Gewichte einfließen. Der Gesamtverlust kombiniert entsprechend zwei Gewichtungsebenen, Klassengewichte, die umgekehrt proportional zur über alle Trainingspunkte berechneten Klassenhäufigkeit sind und seltenere Klassen wie soil und deadwood stärker gewichten, sowie Punktgewichte, die aus den Qualitätsattributen abgeleitet werden, sodass schattige oder überbelichtete Punkte sowie Punkte mit niedriger Rekonstruktionssicherheit ein geringeres Gewicht erhalten, konkret mit den Schwellenwerten CONFIDENCE_MAX=10, SHADOW_WEIGHT=0.3, OVEREXPOSED_WEIGHT=0.3 und MIN_WEIGHT=0.05.
+
+Das Training erfolgte in mehreren aufeinander aufbauenden Durchläufen. In Run 1 wurde der Datensatz v1 (7 Spalten, ohne Qualitätsattribute) über 32 Epochen mit einer Lernrate von 1e-3 ohne Warmstart trainiert, wobei ein bestes Validierungs-mIoU von 0.1815 erreicht wurde, dieser Lauf jedoch durch thermisches Drosseln des Prozessors starke Instabilität zeigte, aber dennoch konvergent genug war, um als Warmstart-Basis für Run 2 zu dienen. In Run 2 wurde derselbe Datensatz v1 über 64 Epochen mit einer auf 1e-4 reduzierten Lernrate und Warmstart aus Run 1 weitertrainiert, was ein bestes Validierungs-mIoU von 0.2071 in Epoche 57 ergab, mit Klassen-IoU-Werten von tree=0.75, heath=0.50 und bush=0.39 beim besten Checkpoint, wodurch bestätigt wurde, dass das Modell grundsätzlich die relevanten Strukturen erkennt. In Run 3 wurde schließlich der erweiterte Datensatz v2 (10 Spalten, inklusive Qualitätsgewichte) über 64 Epochen mit einer von 1e-4 auf 1e-6 abfallenden Lernrate (CosineAnnealing) und Warmstart aus Run 2 trainiert, was das bislang beste Validierungs-mIoU von 0.2306 in Epoche 29 lieferte und unter ./logs/heath_run3/best_model.pth gespeichert wurde, wobei die Einführung der punktweisen Qualitätsgewichte eine Verbesserung von +0.023 mIoU absolut beziehungsweise rund +11 % relativ gegenüber Run 2 brachte, dieser Effekt durch den parallel verbesserten Warmstart jedoch nicht vollständig isoliert von anderen Einflussfaktoren betrachtet werden kann.
+
+Die Evaluation erfolgte über das eigens erstellte Skript eval_confusion.py, das für alle Tiles des Test-Sets die Konfusionsmatrix akkumuliert und daraus klassen- sowie gesamtweise IoU-Werte berechnet. Auf den 115 Test-Tiles von Run 3 ergaben sich dabei folgende Test-IoU-Werte, tree=0.967 (sehr gut), heath=0.505 (gut), bush=0.352 (moderat), sand=0.200 (moderat), graminoid=0.148 (schwach) sowie deadwood=0.000 (nicht gelernt), während für die Klassen other und soil keine auswertbaren Testpunkte vorlagen, woraus sich ein Gesamt-mIoU von 0.310 sowie ein auf die Kernklassen bush, tree, heath und graminoid bezogenes mIoU von 0.492 ergibt. Die Analyse der Hauptverwechslungen zeigt, dass Baumpunkte zu 10,5 % als bush fehlklassifiziert werden, da Baumränder geometrisch ähnlich zu Büschen sind, dass niedrige Büsche zu 34,3 % mit heath verwechselt werden, weil sie spektral schwer von Heide zu trennen sind, dass kahle Heidestellen zu 17,1 % als sand erkannt werden aufgrund spektraler Ähnlichkeit, dass graminoid und heath sich gegenseitig zu etwa 40 % verwechseln, da sie mit RGB-only-Merkmalen strukturell schwer trennbar sind, sowie dass deadwood zu 96,6 % als tree klassifiziert wird, da Totholz geometrisch und spektral kaum von Baum zu unterscheiden ist.
+Als zentrale Limitation zeigt sich ein deutliches Overfitting, erkennbar an einem Train-Loss von 0.057 gegenüber einem Val-Loss von 0.370, also einem Faktor von etwa 6, was darauf hindeutet, dass das Modell die 531 Trainings-Tiles weitgehend auswendig gelernt hat. Zudem landeten durch den rein räumlichen Split sämtliche Sand-Tiles zufällig im Trainings- und Testbereich, sodass der Validierungs-Split keine Sand-Punkte enthielt und der entsprechende Sand-IoU auf den Validierungsdaten nicht auswertbar ist. Die Klassen soil mit 357 Punkten und other mit 526 Punkten erwiesen sich zudem als zu selten für ein stabiles Lernen, und da ausschließlich RGB-Merkmale ohne Infrarot- oder Texturinformationen genutzt wurden, sind strukturell ähnliche Klassen wie Gräser und Heide kaum trennbar.
+
+Für die weitere Modellverbesserung wurde als kurzfristige Maßnahme mit höchster Priorität die Einbindung neuer, von Projektmitarbeitenden erwarteter Annotationen vorgesehen, welche über dieselbe R-Pipeline (CSF-Normalisierung, Qualitätsattribute, Tile-Export v2) verarbeitet und dem bestehenden Datensatz hinzugefügt werden sollen, wonach make_splits.py erneut auszuführen ist, diesmal mit einem stratifizierten Split, der sicherstellt, dass seltene Klassen wie Sand in allen drei Splits vertreten sind. Um dem beobachteten starken Overfitting entgegenzuwirken, sollen außerdem stärkere Datenerweiterungen in heath_dataset_v2.py ergänzt werden, namentlich eine zufällige Rotation um die Z-Achse, eine zufällige Skalierung der XYZ-Koordinaten, ein zufälliger Punkt-Dropout zur Unterabtastung der Kachel sowie ein RGB-Jitter in Form leichter zufälliger Farbverschiebungen. Sobald neue Daten und Augmentierungen vorliegen, soll ein Run 4 mit Warmstart von heath_run3/best_model.pth gestartet werden, wobei die Hyperparameter zunächst unverändert bleiben sollen, um den Mehrwert der neuen Daten isoliert beurteilen zu können. Sollten die Klassen deadwood, soil und other auch nach der Datenerweiterung zu selten bleiben, wird optional eine Zusammenführung zu einer gemeinsamen Klasse sonstiges erwogen, um das Klassifikationsproblem zu vereinfachen und die Modellkapazität stärker auf die relevanten Kernklassen bush, heath, tree und graminoid zu konzentrieren. Als finales Ziel der Bachelorarbeit wird das beste Modell auf die vollständige Punktwolke der Untersuchungsfläche angewendet, wobei aus der klassenweisen Punktanzahl die Flächenanteile der Verbuschung, also der Klasse bush, berechnet werden, da diese Kennzahl das zentrale quantitative Ergebnis der Arbeit darstellt. Perspektivisch wird zudem erwogen, sollten RGB-Merkmale allein nicht ausreichen, um Gräser von Heide zu trennen, zusätzliche Spektralmerkmale wie Near-Infrared oder berechnete Vegetationsindices wie NDVI aus Multispektraldaten einzubinden, was jedoch eine Überarbeitung der Befliegungsdaten sowie eine Anpassung der Eingabekanäle erfordern würde.
+
+Label-Ableitung 2D auf 3D (Grundproblem)
+* Labels stammen aus 2D-Polygonen (manuell im Luftbild annotiert), per merge_spatial auf die 3D-Punkte projiziert.
+* Wirkt wie ein Plätzchenausstecher: das Polygon einer von oben sichtbaren Klasse wird über alle darunterliegenden Punkte gestempelt, unabhängig von der Höhe.
+* Folge: systematische Fehllabel. Unterwuchs (Heide, Busch, Boden) unter Baumkronen wird als tree gelabelt, überstehende Äste über niedrigen Polygonen umgekehrt.
+* Empirischer Beleg aus 6 Tiles: als heath gelabelte Punkte bis 22 m, graminoid bis 23 m, sand bis 14 m Höhe. Physikalisch unmöglich, also Kontamination durch Überhang. tree hat viel Punktmasse nahe 0 m (Unterwuchs).
+Höhenbasierte Labelkorrektur
+* Punktwolke SfM-basiert aus Drohnen-RGB, Baumstämme unter Kronen kaum rekonstruiert, daher sind tiefe Punkte unter tree-Polygonen eher Unterwuchs als Stamm.
+* Bodenerkennung mit Cloth Simulation Filter (CSF), Höhennormalisierung per knnidw, dann Schwellenwertregeln auf der normierten Höhe.
+* Aufwärtsregeln: Punkte über der klassenüblichen Höhe werden zu tree hochgestuft. Abwärtsregeln: tiefe tree-Punkte werden als Unterwuchs zurückgestuft (unter 0,5 m zu heath, 0,5 bis 2,0 m zu bush).
+* Schwellen nicht mehr geraten, sondern datengetrieben als 95. Perzentil der normierten Höhe je Klasse (soil 0,85 m, sand 1,5 m, graminoid 1,5 m, heath 1,9 m).
+* Ausnahme bush: dessen 95. Perzentil (13,5 m) ist durch Baumüberhang verfälscht, daher ökologisch auf 3,5 m gesetzt.
+* deadwood bewusst ohne Höhenregel, da die Höhenverteilung bimodal ist (liegendes gegen stehendes Totholz).
+Limitationen (fürs Methodenkapitel offenlegen)
+* Die Abwärtszuweisung des Unterwuchses auf feste Klassen per Höhenband ist eine Heuristik. Tiefer Unterwuchs kann auch Sand oder Boden sein, wird aber pauschal heath oder bush zugewiesen. Mögliche Überschätzung von heath, der Zielgröße für die Verbuschung.
+* Schwellen aus aktuell nur 6 Tiles abgeleitet, bei mehr Trainingsdaten erneut zu prüfen.
+Reproduzierbarkeit und Klassenkodierung
+* Klassen-IDs über ein festes Wörterbuch vergeben (match auf feste Namensliste) statt über as.factor. Grund: as.factor kodiert alphabetisch aus den gerade vorhandenen Klassen, sodass IDs bei neuen oder fehlenden Klassen unbemerkt verrutschen.
+* Feste Reihenfolge garantiert stabile IDs über alle Datenchargen (bush 1 bis tree 8), neue Klassen werden nur hinten angehängt.
+* water ist als ID 9 reserviert, wird aber erst Modellklasse, wenn tatsächlich water-Punkte gelabelt sind (kein Training auf leerer Klasse).
+* Sicherheitsnetz: unbekannte Klassennamen brechen das Skript ab, statt still falsch zu mappen.
+* Filter der ungelabelten Segmente gehärtet, da ein leerer String in R nicht als NA gilt und sonst als Scheinklasse alle IDs verschoben hätte.
+Datenorganisation
+* Datenbestand strukturiert in raw (Rohdaten), labeling (in Bearbeitung), labeled (fertige Annotation), processed (abgeleitete Daten), plus Archiv für alte Versionen. Verbessert Nachvollziehbarkeit der Pipeline.
+* Preprocessing (R) und Modelltraining (PointNet++) liegen jetzt im selben Repository, Rohdaten bleiben außerhalb der Versionsverwaltung.
+
+Erweiterung des Trainingsdatensatzes
+* Von anfangs 6 auf 16 gelabelte Tiles erweitert, aus drei Gebieten: Authausen (Schneise I und 110kV-Trasse) sowie Cuxhavener Küstenheide.
+* Drei getrennte Punktwolken. Jedes Tile wurde per Bounding-Box eindeutig seiner Punktwolke zugeordnet.
+* Ein weiteres Gebiet (Weißhaus) verworfen, da es in geografischen Koordinaten (Grad) statt in metrischem UTM vorlag und damit inkompatibel zur metrischen Verarbeitung war.
+* Dadurch deutlich ausgewogenere Klassenverteilung, insbesondere die seltenen Klassen (etwa other, soil, deadwood) wurden aufgefüllt.
+Höhennormalisierung pro Tile
+* Bodenerkennung (Cloth Simulation Filter) und Höhennormalisierung (knnidw) je Tile statt global über alle Gebiete.
+* Begründung: Höhe über Boden ist eine lokale Größe. Ein globales Bodenmodell über kilometerweit getrennte Gebiete ist fachlich nicht sinnvoll.
+Datengetriebene Höhenschwellen
+* Die Schwellen der Höhenkorrektur je Klasse als 95. Perzentil der normierten Höhe über alle 16 Tiles bestimmt (soil 1,15 m, sand 1,4 m, graminoid 1,2 m, heath 1,3 m).
+* Ausnahme bush (3,5 m, ökologisch begründet), da dessen oberes Perzentil durch überstehende Bäume verfälscht ist.
+Kachelung (Sliding Window)
+* 10 m Fenster, 5 m Versatz, 4096 Punkte je Kachel. Der 5m-Versatz erzeugt eine bewusste 50%-Überlappung als Data-Augmentation.
+* Fensterung je zusammenhängendem Bereich statt global, um die Leerflächen zwischen den Gebieten auszulassen. Zusammenhängende Tiles (Schneise I) laufen als ein durchgehendes Raster, isolierte Tiles jeweils einzeln.
+* Ergebnis: 3429 Trainingskacheln.
+Räumlicher, leckagefreier Split
+* Aufteilung auf Ebene räumlich getrennter Bereiche, nicht einzelner Kacheln: alle Kacheln eines Bereichs gehen vollständig in genau einen Split. Damit können überlappende Kacheln nicht über die Split-Grenze lecken.
+* Die zusammenhängende Schneise I wurde in drei räumliche Blöcke mit Pufferstreifen geteilt, damit sie in allen Splits vertreten ist, ohne Leckage.
+* Verhältnis rund 70/15/15, jedes Gebiet in train, val und test vertreten.
+
+Setup Baseline-Lauf (run01)
+* Modell PointNet++ (semantische Segmentierung, nach yanx27), 8 Klassen, 6 Eingabekanäle (x, y, z, R, G, B), 4096 Punkte je Kachel.
+* Hyperparameter: Batch 32, 64 Epochen, Adam mit Lernrate 1e-3 und Step-Decay (×0,7 alle 10 Epochen), Klassengewichte 1/sqrt(Häufigkeit), zusätzliches Per-Punkt-Qualitätsgewicht, Augmentierung Rotation um Z plus Jitter. Training auf NVIDIA-GPU.
+* Bestes Modell in Epoche 53, Validierungs-mIoU 0,3555.
+Ergebnis auf dem Test-Split (487 Kacheln, ungesehen)
+* Overall Accuracy 0,67, mittlere Accuracy 0,36, mIoU 0,248.
+* IoU je Klasse: tree 0,96, bush 0,39, graminoid 0,29, heath 0,26, soil 0,03, sand 0,02, deadwood 0,01, other 0,003.
+Kernbefunde
+* Bäume sind klar trennbar (strukturell eindeutig, IoU 0,96).
+* Die niedrigen Vegetationsklassen heath, graminoid und bush werden stark untereinander verwechselt. Häufigste Fehler: graminoid als heath (50%), bush als graminoid (41%), heath als graminoid (28%). Diese Trennung ist der Kern der Verbuschungsfrage und gleichzeitig die größte Schwäche.
+* Die seltenen Bodenklassen sand, soil, other und deadwood werden praktisch nicht gelernt. Unsichere Bodenpunkte werden überwiegend als heath vorhergesagt.
+* Überanpassung ab etwa Epoche 20 (Validierungs-Loss steigt bei weiter fallendem Trainings-Loss), mIoU stagniert danach.
+Interpretation und geplante Verbesserungen
+* Grenze ist die spektrale und strukturelle Ähnlichkeit der niedrigen Vegetationsklassen im reinen RGB, dazu Seltenheit und schlechte Trennbarkeit der Bodenklassen.
+* Nächste Schritte: NIR-Band als zusätzliches Feature (trennt Vegetationstypen besser), sand und soil zu einer Bodenklasse zusammenlegen, other ausschließen, optional Focal Loss.
+
+Methodik (was gemacht wurde)
+* NIR (Nahinfrarot) als 7. Eingabekanal zusätzlich zu x, y, z, R, G, B getestet, mit dem Ziel, die Trennung der Vegetationsklassen zu verbessern.
+* NIR stammt aus denselben Punktwolken (Punktdatenformat 8), wurde im R-Export als zusätzliches Feature mitgeführt und wie RGB auf 0 bis 1 normiert.
+* Ansonsten identische Pipeline und Konfiguration wie die Baseline: gleiche Kacheln und Regionen, gleicher Split, 8 Klassen, PointNet++, Batch 32, 64 Epochen, Step-Lernrate, Klassen- und Per-Punkt-Gewichte, Augmentierung. Einziger Unterschied ist das Modell mit 7 statt 6 Eingangskanälen.
+* Beide Modelle von Scratch trainiert, kein Warmstart, damit der Effekt allein dem NIR zuzuschreiben ist.
+* Reproduzierbares Punkt-Sampling im NIR-Export über einen festen Zufalls-Seed. Die Baseline-Kacheln wurden ohne Seed erzeugt, daher minimale Sampling-Unterschiede.
+Ergebnisse (Zahlen)
+* Test-mIoU mit NIR 0,242 gegenüber Baseline 0,248, praktisch unverändert.
+* Klassenweise: graminoid steigt von 0,29 auf 0,37, heath fällt von 0,26 auf 0,18, bush von 0,39 auf 0,34. tree und die seltenen Klassen bleiben gleich.
+* mittlere Accuracy steigt von 0,36 auf 0,47, Overall Accuracy bleibt bei 0,67.
+* Das beste NIR-Modell lag bereits in Epoche 7, die Baseline erst in Epoche 53.
+
+Für die Diskussion (Deutung, kommt später)
+* NIR trennt Vegetation stark vom Boden, aber die grünen Vegetationsklassen heath, graminoid und bush haben zu ähnliche NIR-Reflexion, genau diese Trennung bleibt also aus.
+* NIR verschiebt nur die Vorhersagebalance zugunsten von graminoid, statt die Verwechslung zu lösen.
+* Die frühe Sättigung (bestes Modell Epoche 7) deutet darauf hin, dass NIR kein zusätzliches trennendes Signal liefert.
+
+
+Methodik
+* Focal Loss (Lin et al. 2017) als Loss-Variante getestet, mit Faktor (1 - p_t)^gamma, gamma = 2, zusätzlich zu den Klassen- und Per-Punkt-Gewichten. Ziel: stärkerer Fokus auf schwer trennbare und seltene Punkte.
+* Umschaltbar per Argument, sonst identische Konfiguration wie der NIR-Lauf (7 Kanäle, NIR-Kacheln, Batch 32, 64 Epochen). Nur der Loss unterscheidet sich, also saubere Ablations-Zeile. Von Scratch trainiert.
+Ergebnisse
+* Test-mIoU 0,229, gegenüber 0,242 (NIR, gewichtet) und 0,248 (RGB-Baseline). Also schlechter.
+* Klassenweise fast durchweg leicht niedriger: graminoid 0,32, bush 0,33, heath 0,17, tree 0,95. soil kollabiert auf 0,001, other und deadwood bei 0.
+* Overall Accuracy 0,65, mittlere Accuracy 0,38, bestes Modell in Epoche 6.
+Diskussion (Für Später)
+* Focal Loss hat die Imbalance nicht gelöst und die funktionierenden Klassen leicht verschlechtert. Zusammen mit den ohnehin starken Klassengewichten überbetont es die grundsätzlich nicht trennbaren seltenen Klassen.
+* Zusammen mit dem NIR-Negativergebnis zeigt sich, dass der Flaschenhals die Trennbarkeit der Klassen in den Daten ist, nicht das Feature oder der Loss.
+
+
+Methodik
+* Reduziertes Klassenschema: sand und soil zu "ground" (offener Boden) zusammengelegt, other aus Loss und Metrik ausgeschlossen (Ignore-Label), deadwood behalten. Von 8 auf 6 Klassen.
+* Umgesetzt als Label-Umrechnung im Dataloader, ohne Neuerzeugung der Kacheln. Sonst identische Konfiguration (NIR-Kacheln, gewichteter Loss, Batch 32, 64 Epochen). Von Scratch trainiert.
+* Begründung: sand und soil sind am Punkt nicht trennbar und für die Verbuschung irrelevant, other ist eine undefinierte Sammelklasse.
+Ergebnisse
+* Test-mIoU 0,344 über 6 Klassen. Nicht direkt mit den 8-Klassen-Werten vergleichbar, da über weniger Klassen gemittelt.
+* IoU je Klasse: tree 0,96, bush 0,39, graminoid 0,26, heath 0,26, ground 0,19, deadwood 0,005.
+* ground zusammengelegt bei IoU 0,19, gegenüber sand 0,02 und soil 0,03 einzeln.
+* Die Vegetationsklassen bleiben gegenüber der Baseline praktisch unverändert.
+* Overall Accuracy 0,66, mittlere Accuracy 0,45, bestes Modell in Epoche 58.
+Diskussion (für später)
+* Der mIoU-Anstieg ist teils mechanisch, weil other wegfällt, teils echt: das Zusammenlegen macht offenen Boden lernbar. sand und soil waren also gegenseitig verwechselt, nicht grundsätzlich unerkennbar.
+* Die heath-graminoid-bush-Verwechslung bleibt, die Taxonomie löst sie nicht.
+* Das späte Optimum in Epoche 58 statt bei 6 bis 7 zeigt, dass das saubere Schema stabileres Lernen ohne frühes Overfitting ermöglicht.
+* deadwood bleibt trotz eigener Klasse zu selten für eine verlässliche Erkennung.
+
+
+Methodik: Erweiterung des Preprocessings und Läufe run05 bis run09
+Fortsetzung der Ablationsstudie nach run04 (reduziertes 6-Klassen-Schema).
+
+Erweiterung des Exports: Kachelursprung
+Methodik
+* Beim Sliding-Window-Export werden die Punkte jeder Kachel auf die Fenstermitte zentriert, damit das Netz keine absoluten Koordinaten lernt. Die tatsächliche Lage der Kachel ging dabei verloren.
+* Ergänzt wurde eine Begleittabelle tile_offsets.csv mit Kachelname, Bereich, Block, Ursprung in x und y, Kantenlänge und Punktzahl.
+* Rückrechnung in echte Koordinaten: X_absolut = x_zentriert + x_ursprung + Kantenlänge/2, analog für Y.
+* Notwendig für die spätere Zuordnung der Vorhersagen zu Bezugsflächen bei der Berechnung des Verbuschungsgrades sowie für das Auflösen der 50-prozentigen Fensterüberlappung.
+* Die Trainingsdaten selbst bleiben unverändert, es kommt lediglich eine Begleitdatei hinzu.
+
+run05: Lokale Höhenmerkmale
+Methodik
+* Zwei zusätzliche Eingabekanäle je Punkt, damit 9 statt 7 Kanäle (x, y, z, R, G, B, NIR, z_rel, z_range).
+* z_range: Höhenspanne in der 0,5-Meter-Umgebung. Groß bei Büschen mit Ästen und Lücken, klein im geschlossenen Heideteppich, nahe null auf offenem Boden.
+* z_rel: Höhe des Punktes über der medianen Höhe seiner 2,5-Meter-Umgebung. Positiv bei herausragenden Strukturen, nahe null im flächigen Bestand.
+* Begründung: die normalisierte Höhe allein trennt einen 40 Zentimeter hohen Busch nicht von 40 Zentimeter hoher Heide. Was ein Mensch beim Annotieren nutzt, ist die Bestandsstruktur, nicht die absolute Höhe.
+* Berechnung im R-Export auf der vollständigen Punktwolke und nicht auf den auf 4096 Punkte ausgedünnten Kacheln, damit die Nachbarschaften die reale Punktdichte abbilden.
+* Die Berechnung läuft je Gebiet. Ein durchgehendes 0,5-Meter-Raster über Authausen und Cuxhaven gemeinsam überschreitet den adressierbaren Zellbereich, da die Gebiete mehrere hundert Kilometer auseinanderliegen.
+* Beide Merkmale werden bei 5 Metern gekappt. Oberhalb dieser Grenze unterscheiden sie nur noch Baum von Baum, und diese Information liegt bereits in der Höhe und in der Klasse tree. Der Bezugspunkt ist die bestehende Schwellenwertregel, nach der bush ab 3,5 Metern zu tree umklassifiziert wird. Ungekappt reicht z_range bis über 20 Meter und drückt den relevanten Bereich zwischen Heide (rund 0,1 Meter) und Busch (rund 1 Meter) zusammen.
+* Anteil gekappter Punkte: 12 bis 27 Prozent in den Authausener Gebieten (Schneise durch Wald, viel Baumüberhang), 0 bis 8 Prozent in Cuxhaven (offene Heide).
+* Sonst identische Konfiguration wie run04 (6 Klassen, gewichteter Loss, Batch 32, 64 Epochen). Von Scratch trainiert.
+Ergebnis (kurz)
+* Test-mIoU 0,349 gegenüber 0,344 bei run04. Kein belastbarer Effekt.
+
+run06: Binäres Klassenschema
+Methodik
+* Zwei Klassen, Gehölz (bush und tree) gegen alles andere. Umgesetzt als Label-Umrechnung im Dataloader, ohne Neuerzeugung der Kacheln.
+* Begründung: für die Bestimmung des Verbuschungsgrades ist die Trennung von Heide und Gras unerheblich, beide fallen in dieselbe Restklasse. Die Vermutung war, dass die dafür aufgewendete Modellkapazität der Buschklasse zugutekommt.
+* Bewertet wird über IoU, Precision, Recall und F1 der Klasse Gehölz, nicht über die mIoU. Ein Mittelwert über zwei Klassen ist nicht mit dem über sechs vergleichbar, und die dominante Restklasse hebt ihn künstlich an.
+* Als Vergleichsmaßstab dient dasselbe Mehrklassenmodell, dessen Vorhersagen nachträglich zu Gehölz und Rest zusammengefasst werden. Nur wenn das dedizierte binäre Modell diesen Wert übertrifft, ist es ein eigener Beitrag.
+* Das Auswertungsskript wurde entsprechend erweitert und gibt diese Zusammenfassung für jedes Mehrklassenmodell mit aus.
+* Sonst identische Konfiguration wie run05.
+Ergebnis (kurz)
+* Gehölz-IoU 0,777 beim binären Modell gegenüber 0,783 beim nachträglichen Zusammenfassen. Kein Gewinn.
+
+Analyse der Punktdichte
+Methodik
+* Anlass: die mIoU stagnierte über mehrere Ablationsschritte, ohne dass Feature- oder Loss-Änderungen etwas bewirkten. Geprüft wurde daher, ob die Nachbarschaftsparameter des Netzes zur Punktdichte der Daten passen.
+* Gemessen an der klassifizierten Gesamtpunktwolke (11,7 Millionen Punkte): 113 Punkte je Quadratmeter in Authausen, 165 bis 184 in Cuxhaven. Medianer Abstand zum nächsten Nachbarn 7,1 beziehungsweise 2,2 Zentimeter.
+* Der Anteil leerer Zellen bei einer Rasterweite von 25 Zentimetern liegt in vollständig belegten Fenstern zwischen 0,0 und 0,8 Prozent. Die Punktwolke weist also keine flächigen Lücken auf.
+* Ein Fenster von 10 mal 10 Metern enthält im Median 9.700 Punkte in Authausen und 12.800 in Cuxhaven. Beim Export auf 4096 Punkte bleiben davon 32 bis 42 Prozent erhalten.
+* 12 bis 17 Prozent der Fenster liegen am Rand eines gelabelten Bereichs, enthalten weniger als 4096 Punkte und wurden bisher durch Ziehen mit Zurücklegen mit Kopien derselben Punkte aufgefüllt.
+* In den exportierten Kacheln liegen im Median 1 Punkt in einer Kugel mit 0,10 Metern Radius, 5 Punkte bei 0,25 Metern und 11 bis 13 Punkte bei 0,40 Metern.
+* Die erste Set-Abstraction-Stufe sucht bei einem Radius von 0,10 Metern bis zu 32 Nachbarn und findet im Median einen, nämlich den Mittelpunkt selbst. Die fehlenden Plätze werden von der Kugelabfrage (ball query) mit Kopien des Mittelpunkts aufgefüllt, die Stufe lernt dort nichts.
+* Herkunft der Standardradien: die Referenzimplementierung ist auf den Datensatz S3DIS abgestimmt, dessen Blöcke ein mal ein Meter groß sind bei ebenfalls 4096 Punkten. Das entspricht einer rund hundertfach höheren Punktdichte in einer zehnfach kleineren Szene. Eine unveränderte Übertragung auf 10-Meter-Kacheln ist damit nicht zu erwarten.
+
+run07: Anpassung der Nachbarschaftsradien
+Methodik
+* Die Radien der vier Set-Abstraction-Stufen wurden von 0,1 / 0,2 / 0,4 / 0,8 Metern auf 0,25 / 0,5 / 1,0 / 2,0 Meter erhöht, also einheitlich um den Faktor 2,5.
+* Damit findet die erste Stufe im Median rund fünf statt einen Nachbarn, die zweite rund zwanzig.
+* Die Radien wirken ausschließlich auf die Nachbarschaftssuche und nicht auf die Gewichtsstruktur. Vorhandene Checkpoints bleiben ladbar, sofern beim Auswerten dieselben Radien gesetzt werden.
+* Umschaltbar implementiert, damit die Baseline mit den Originalwerten reproduzierbar bleibt.
+* Sonst identische Konfiguration wie run05 (9 Kanäle, 6 Klassen, 4096 Punkte je Kachel).
+Ergebnis (kurz)
+* bush steigt von 0,396 auf 0,458, die Gehölz-IoU von 0,783 auf 0,801. Die mIoU sinkt leicht, weil graminoid und ground verlieren.
+
+run08: Höhere Punktdichte je Kachel
+Methodik
+* Neuer Export mit 8192 statt 4096 Punkten je Kachel, damit jede Nachbarschaftszahl verdoppelt wird.
+* Die Mindestpunktzahl je Fenster wurde auf n_points gesetzt. Fenster mit weniger Punkten werden verworfen statt mit Duplikaten aufgefüllt, das Ziehen mit Zurücklegen entfällt vollständig.
+* Aus derselben Fenstermenge von 4170 entstehen dadurch 3017 statt 3429 Kacheln, es bleiben also 88 Prozent erhalten.
+* Batchgröße von 32 auf 16 halbiert, da die doppelte Punktzahl den Speicherbedarf entsprechend erhöht.
+* Sonst identische Konfiguration wie run07, einziger geänderter Faktor ist die Kacheldefinition.
+Ergebnis (kurz)
+* Auf derselben Testmenge gemessen durchweg schlechter als run07, mIoU 0,361 gegenüber 0,393, Gehölz-IoU 0,730 gegenüber 0,761. Nur ground verbessert sich.
+
+run09: Multi-Scale Grouping
+Methodik
+* Statt eines Radius je Stufe werden zwei Radien parallel abgefragt und die entstehenden Merkmalsvektoren verkettet (Multi-Scale Grouping, MSG). Das Netz erhält feine Textur und groben Kontext nebeneinander.
+* Motivation aus run07 und run08: ein grober Maßstab verbessert bush, ein feiner verbessert graminoid und ground, und keine Konfiguration mit nur einem Radius je Stufe erreicht beides.
+* Radienpaare: der grobe Zweig jeder Stufe entspricht dem Radius aus run07, der feine Zweig ist halb so groß, also 0,125 / 0,25 bis 1,0 / 2,0 Meter.
+* Sonst identische Konfiguration wie run08 (8192 Punkte je Kachel, 9 Kanäle, 6 Klassen, Batch 16).
+Ergebnis (kurz)
+* Schlechtester der drei Läufe bei mIoU (0,347) und Gehölz-IoU (0,701). Nur graminoid verbessert sich auf 0,330.
+
+Vereinheitlichung der Testmenge
+Methodik
+* Mit dem neuen Export änderte sich neben den Trainings- auch die Testkacheln, 468 statt 487, und die durch Duplikate aufgefüllten Randkacheln entfielen. run08 zeigte zunächst eine höhere mIoU als run07, obwohl beide auf unterschiedlichen Testmengen gemessen wurden.
+* Zur Auflösung wurde der run07-Checkpoint zusätzlich gegen die neue Testmenge ausgewertet. PointNet++ verarbeitet beliebige Punktzahlen, die Auswertung ist also ohne Neutraining möglich.
+* Ergebnis: der Vorsprung von run08 verschwand vollständig. Die scheinbare Verbesserung war ein Effekt der Testmenge.
+* Konsequenz für die Ergebnisdarstellung: alle Läufe ab run05 werden auf derselben Testmenge berichtet, da sie neun Eingangskanäle verwenden. run01 bis run04 arbeiten mit sechs oder sieben Kanälen und lassen sich dort nicht auswerten, sie bilden eine eigene Tabelle mit der ursprünglichen Testmenge.
+
+Reproduzierbarkeit
+Methodik
+* Klassenschema und Nachbarschaftsradien sind über Umgebungsvariablen umschaltbar, Trainings- und Auswertungsskript bleiben für alle Varianten unverändert. Der Standard entspricht jeweils der ursprünglichen Konfiguration.
+* Die Zahl der Eingangsmerkmale wird aus der Spaltenzahl der Kacheldateien abgeleitet, sodass Exporte mit 6, 7 oder 9 Merkmalen ohne Codeänderung verarbeitet werden.
+* Gewähltes Schema, Merkmalszahl und Radien werden in jedes Trainings- und Auswertungsprotokoll geschrieben, damit jeder Lauf im Nachhinein eindeutig rekonstruierbar ist.
+* Das Auswertungsskript schreibt je Lauf ein Protokoll mit Konfusionsmatrix, Kennzahlen je Klasse und der Zusammenfassung Gehölz gegen Rest.
+* Das Punkt-Sampling im Export erfolgt mit festem Zufalls-Seed, ein erneuter Lauf erzeugt identische Kacheln.
+
