@@ -28,6 +28,59 @@
 %    als other vorhergesagte Punkte weg (0,15 Prozent, ohne Einfluss).
 % ============================================================
 
+\subsection{Ergebnisse der Ablationsstudie}\label{ergebnis_ablation}
+% Ergebnisse der neun Laeufe. Aufbau der Studie steht in Tabelle~\ref{tab:ablation}
+% im Methodikteil, hier nur die Kennzahlen.
+% Kernaussagen: NIR, Focal Loss, Hoehenmerkmale, binaeres Schema und MSG ohne
+% Wirkung. Einzig die Anpassung der Nachbarschaftsradien wirkt.
+% Vergleiche nur innerhalb einer Testmenge zulaessig, run07 als Bruecke.
+
+% \begin{table}[H]
+%     \centering
+%     \caption[Ergebnisse der Läufe run01 bis run04]{Ergebnisse der Läufe run01
+%     bis run04 auf dem Testsplit von \texttt{training\_tiles\_v3} beziehungsweise
+%     \texttt{v3\_nir} mit 487 Kacheln. Die mIoU von run04 mittelt über sechs statt
+%     acht Klassen und ist mit den darüberliegenden Zeilen nur eingeschränkt
+%     vergleichbar.}
+%     \label{tab:ablation_a}
+%     \begin{tabular}{lrrrrr}
+%     \hline
+%     Lauf & Klassen & OA & mIoU & bush & Val.-mIoU (Ep.) \\
+%     \hline
+%     run01 & 8 & 0,671 & 0,248 & 0,394 & 0,356 (53) \\
+%     run02 & 8 & 0,674 & 0,242 & 0,339 & 0,349 (7)  \\
+%     run03 & 8 & 0,650 & 0,229 & 0,329 & 0,346 (6)  \\
+%     run04 & 6 & 0,662 & 0,344 & 0,393 & 0,447 (58) \\
+%     \hline
+%     \end{tabular}
+%     \\
+%     Quelle: Eigene Darstellung
+% \end{table}
+
+% \begin{table}[H]
+%     \centering
+%     \caption[Ergebnisse der Läufe run05 bis run09]{Ergebnisse der Läufe run05
+%     bis run09 auf dem Testsplit von \texttt{training\_tiles\_v5} mit 468
+%     Kacheln. Die Gehölz-IoU fasst \textit{bush} und \textit{tree} gegen alle
+%     übrigen Klassen zusammen und ist dadurch von der Klassenzahl unabhängig.
+%     Bei run06 steht die mIoU in Klammern, weil ein Mittelwert über zwei Klassen
+%     nicht mit einem über sechs vergleichbar ist.}
+%     \label{tab:ablation_b}
+%     \begin{tabular}{lrrrrrrr}
+%     \hline
+%     Lauf & Kl. & mIoU & bush & Gehölz & Prec. & Rec. & F1 \\
+%     \hline
+%     run05 & 6 & 0,357 & 0,413 & 0,724 & 0,934 & 0,763 & 0,840 \\
+%     run06 & 2 & (0,725) & -- & 0,713 & 0,966 & 0,731 & 0,833 \\
+%     run07 & 6 & \textbf{0,393} & \textbf{0,500} & \textbf{0,761} & 0,930 & 0,808 & \textbf{0,864} \\
+%     run08 & 6 & 0,361 & 0,452 & 0,730 & 0,892 & 0,801 & 0,844 \\
+%     run09 & 6 & 0,347 & 0,359 & 0,701 & 0,942 & 0,733 & 0,824 \\
+%     \hline
+%     \end{tabular}
+%     \\
+%     Quelle: Eigene Darstellung
+% \end{table}
+
 \subsection{Evaluation der semantischen Segmentierung}\label{evaluation_segmentierung}
 % Bewertung des trainierten PointNet++-Modells auf den Validierungsdaten.
 
@@ -69,14 +122,47 @@
 % Schatten/Überbelichtung).
 
 \subsection{Quantifizierung des Verbuschungsgrades}\label{ergebnis_quantifizierung}
-% Anwendung der Rasterisierung auf die segmentierte Punktwolke.
-% Resultierender Flächenanteil der Verbuschung für die Testfläche.
+% Anwendung des Verfahrens auf die vier Authausener Befliegungen.
+% Kennzahlen je Kartierungspolygon, Wahl der Hoehengrenze, Karten.
+% Zahlen liegen in data/ergebnisse/verbuschung_authausen_kennzahlen.txt
+
+% --- Abbildungen, einkommentieren sobald der zugehoerige Text steht ---
 
 % \begin{figure}[H]
-% \caption{Rasterisierte Verbuschungskarte}\label{fig:verbuschungskarte}
-% \includegraphics[width=0.9\textwidth]{verbuschungskarte}
-% \\
-% Quelle: Eigene Darstellung
+%     \centering
+%     \includegraphics[width=\textwidth]{verbuschungskarte_uebersicht}
+%     \caption[Verbuschungsgrad der vier Untersuchungsflächen]{Aus der
+%     semantischen Segmentierung abgeleiteter Verbuschungsgrad der vier
+%     befliegenen Teilflächen im Authausener Wald. Zellgröße 20 m, als
+%     Verbuschung zählen die Klassen \textit{bush} und \textit{tree} mit einer
+%     Kronenhöhe unter 5 m. Koordinatensystem ETRS89 / UTM Zone 32N.
+%     Hintergrund: Google Satellite.}\label{fig:verbuschungskarte_uebersicht}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.75\textwidth]{vegetationsklassen_heidewildnis}
+%     \caption[Vorhergesagte Vegetationsklassen im Gebiet HeideWildnis]{Vom
+%     Modell vorhergesagte Vegetationsklasse je Rasterzelle im Gebiet
+%     HeideWildnis, projiziert aus der klassifizierten Punktwolke. Deutlich
+%     erkennbar ist der geschlossene Ring der Klasse \textit{tree} um die
+%     Offenfläche, aus dem die Notwendigkeit einer Höhengrenze bei der
+%     Definition der Verbuschung folgt. Weiße Umrisse: Polygone der
+%     Biotopkartierung. Hintergrund: Google
+%     Satellite.}\label{fig:vegetationsklassen_heidewildnis}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.75\textwidth]{verbuschungskarte_heidewildnis}
+%     \caption[Verbuschungsgrad im Gebiet HeideWildnis]{Verbuschungsgrad im
+%     selben Ausschnitt wie Abbildung~\ref{fig:vegetationsklassen_heidewildnis},
+%     Zellgröße 1 m. Die Beschriftung gibt den 2014 im Gelände geschätzten
+%     Verbuschungsgrad der jeweiligen Kartierungsfläche an. Die Abweichung bei
+%     der mit einem Prozent kartierten Fläche im Süden erklärt sich aus dem
+%     zeitlichen Abstand: für diese Fläche vermerkt die Kartierung eine kurz
+%     zuvor erfolgte Gehölzentnahme. Hintergrund: Google
+%     Satellite.}\label{fig:verbuschungskarte_heidewildnis}
 % \end{figure}
 
 \subsection{Vergleich mit dem 2D-Ansatz}\label{vergleich_2d}

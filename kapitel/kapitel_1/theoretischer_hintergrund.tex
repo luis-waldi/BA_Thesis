@@ -184,6 +184,14 @@ Der Wurzelwert des mittleren quadratischen Fehlers (Root Mean Squared Error, RMS
     \mathrm{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
 \]
 
+Der RMSE beschreibt die Größe der Abweichung, nicht ihre Richtung. Ob die Vorhersage im Mittel zu hoch oder zu niedrig liegt, zeigt der Versatz (Bias) als vorzeichenbehafteter Mittelwert der Residuen:
+
+\[
+    \mathrm{Bias} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)
+\]
+
+Ein positiver Wert bedeutet, dass die Referenz über der Vorhersage liegt, das Verfahren die Größe also unterschätzt.
+
 Das Bestimmtheitsmaß (Coefficient of Determination, $R^2$) gibt den Anteil der Streuung der Referenzwerte an, der durch die Vorhersage erklärt wird. Es setzt die verbleibende Residualstreuung ins Verhältnis zur Gesamtstreuung der Referenzwerte, wobei $\bar{y}$ deren Mittelwert bezeichnet \cite{Fahrmeir.2023}:
 
 \[
@@ -191,6 +199,8 @@ Das Bestimmtheitsmaß (Coefficient of Determination, $R^2$) gibt den Anteil der 
 \]
 
 $R^2$ nimmt Werte zwischen null und eins an. Ein Wert nahe eins bedeutet, dass die Vorhersagen den Referenzwerten weitgehend folgen, während ein Wert nahe null anzeigt, dass die Vorhersage kaum mehr erklärt als der Mittelwert der Referenz.
+
+Sowohl das Bestimmtheitsmaß als auch der RMSE reagieren bei kleinen Stichproben empfindlich auf einzelne stark abweichende Werte. Ergänzend wird deshalb die Rangkorrelation nach Spearman berichtet. Sie entsteht, indem nicht die Werte selbst, sondern ihre Ränge korreliert werden, sodass allein die Reihenfolge zählt und nicht der Abstand zwischen den Werten \cite{Fahrmeir.2023}. Sie misst damit nicht die Stärke des linearen, sondern die des monotonen Zusammenhangs \cite{Fahrmeir.2023}. Fällt sie deutlich höher aus als das Bestimmtheitsmaß, folgt die Vorhersage der Referenz in der Rangfolge, während einzelne Flächen die Absolutwerte verzerren.
 
 Solche Maße sind in der Heide-Fernerkundung etabliert. Schmidt et al. bewerten die Übereinstimmung ihrer fernerkundlich geschätzten Calluna-Deckung und Bestandshöhen mit Referenzdaten ebenfalls über $R^2$ und RMSE \cite{Schmidt.2017}. Für diese Arbeit erlaubt der RMSE eine Aussage über die durchschnittliche Größe der Abweichung im Verbuschungsgrad, während das Bestimmtheitsmaß die Güte des Zusammenhangs mit der Referenz bewertet.
 
