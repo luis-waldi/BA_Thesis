@@ -18,16 +18,23 @@ Neben der Habitatstruktur (etwa \textit{Calluna}-Lebenszyklusphasen oder Sandant
 
 Dazu wurden mehrere Flächen mehrfach mit einer Drohne beflogen, um hochauflösende RGB-Bilder zu erhalten und aus den überlappenden 2D-Aufnahmen mittels Structure from Motion einen 3D-Datensatz abzuleiten - ein Verfahren, das aus mehreren überlappenden 2D-Bildern eine dreidimensionale Punktwolke der aufgenommenen Fläche rekonstruiert. Diese Daten dienen als Ausgangspunkt für ein Deep-Learning-Modell, das die einzelnen Vegetationsarten segmentiert und jeweils einer Klasse zuordnet, woraus sich anschließend ein Verbuschungsgrad berechnen lässt.
 
-Da nun zwei Arten von Datensätzen vorliegen, ergibt sich daraus eine zentrale Frage. Welcher Datensatz eignet sich besser zur Segmentierung der Vegetationsarten und damit zur Berechnung des Verbuschungsgrades - die RGB-Bilder oder die SfM-Punktwolken? Beide Ansätze nutzen Deep Learning, für die 2D-Daten das CNN U-Net und für den 3D-Ansatz PointNet++, das eigens auf unstrukturierten 3D-Punktmengen spezialisiert ist. Aufgabe dieser Arbeit ist es, den 3D-Ansatz zu entwickeln, zu testen und zu evaluieren und sein Ergebnis mit dem 2D-Ansatz zu vergleichen, um herauszufinden, welcher Datensatz sich besser für die Segmentierung der Vegetationsarten und damit für die Erfassung des Verbuschungsgrades eignet.
+Im Projekt entstehen aus denselben Befliegungen zwei Arten von Datensätzen,
+nämlich die RGB-Orthomosaike und die daraus gerechneten SfM-Punktwolken. Beide
+werden mittels eines Deep Learning Ansatzes ausgewertet, die zweidimensionalen Daten mit dem CNN U-Net und die Punktwolken mit PointNet++, das eigens für unstrukturierte
+3D-Punktmengen entwickelt wurde. Aufgabe dieser Arbeit ist der dreidimensionale
+Weg, also die Entwicklung des Verfahrens, seine Erprobung in einer
+Ablationsstudie und seine Bewertung an einer im Gelände erhobenen Referenz. Ein
+Vergleich beider Ansätze bleibt einer späteren Arbeit vorbehalten, weil die
+Ergebnisse des 2D-Ansatzes zum Zeitpunkt dieser Arbeit noch nicht vorlagen.
 
 Daraus ergeben sich zwei Forschungsfragen (FF) mit jeweils einer untergeordneten Teilfrage (TF), die den Weg von der Datenaufbereitung über die Segmentierung bis zur praktischen Nutzung abbilden:
 
 \begin{enumerate}[label=\textbf{FF\arabic*:}, leftmargin=*, align=left, itemsep=6pt]
-    \item Inwiefern unterscheidet sich die semantische Segmentierung von 3D-SfM-Punktwolken mittels Deep Learning von einem vergleichbaren 2D-Deep-Learning-Ansatz, sowohl quantitativ als auch qualitativ, bei der Erfassung der Verbuschung von Heideflächen?
+    \item Inwiefern eignet sich die semantische Segmentierung von 3D-SfM-Punktwolken mittels Deep Learning dazu, die für die Verbuschung von Heideflächen maßgeblichen Vegetationsklassen voneinander zu trennen?
     \begin{enumerate}[label=\textbf{TF\arabic{enumi}:}, leftmargin=*, align=left, topsep=4pt]
         \item Inwiefern lässt sich ein automatisierter Label-Transfer von 2D-Referenzdaten auf 3D-Punktwolken realisieren, um den Trainingsaufwand für tiefe neuronale Netze effizient zu gestalten?
     \end{enumerate}
-    \item Inwiefern unterscheidet sich die aus der 3D-Punktwolken-Segmentierung abgeleitete Rasterisierung des Verbuschungsgrades in ihrer Genauigkeit von der aus dem 2D-RGB-Ansatz abgeleiteten Rasterisierung?
+    \item Inwiefern stimmt der aus der segmentierten Punktwolke abgeleitete Verbuschungsgrad mit dem im Gelände kartierten Wert überein?
     \begin{enumerate}[label=\textbf{TF\arabic{enumi}:}, leftmargin=*, align=left, topsep=4pt]
         \item Wie stabil und anwenderfreundlich lässt sich das entwickelte Modell in eine bestehende GIS-Umgebung integrieren, um für Naturschutzpraktiker nutzbar zu sein?
     \end{enumerate}

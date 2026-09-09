@@ -10,3 +10,13 @@
 % \\
 % Quelle: Eigene Darstellung
 % \end{figure}s
+
+Noch unverarbeitet bleibt das Gebiet der Cuxhavener Küstenheide. Punktwolke und Biotopkartierung liegen vor, die Inferenz über 415 Millionen Punkte war im Rahmen dieser Arbeit zeitlich nicht mehr zu leisten. Sie nachzuholen wäre der gewinnbringendste nächste Schritt, denn die Fläche würde die Zahl der Referenzpolygone deutlich erhöhen und zugleich die Schieflage auflösen, dass das Modell überwiegend auf einem Landschaftstyp bewertet wird, für den bislang kein Verbuschungsgrad vorliegt.
+
+Der Vergleich mit dem zweidimensionalen Ansatz, der im Projekt parallel entsteht, war ursprünglich Teil dieser Arbeit und musste entfallen, weil dessen Ergebnisse nicht rechtzeitig vorlagen. Nachgeholt werden sollte er auf denselben Kartierungspolygonen und mit denselben Kennzahlen, denn erst dann lässt sich beantworten, ob die dritte Dimension den erheblichen Mehraufwand rechtfertigt.
+
+Methodisch am vielversprechendsten wäre eine objektbezogene statt punktweise Labelkorrektur. Dieses Verfahren würde zusammenhängende Strukturen erkennen und als Ganzes einer Klasse zuweisen, statt sie an einer festen Höhe zu durchschneiden. An ihm ließe sich zugleich die These prüfen, nach der ein Teil der Verwechslung zwischen Heide und Busch aus der Labelvergabe stammt. Daneben würden weitere annotierte Teilflächen den Validierungsteil so weit verbreitern, dass er Modellvarianten wieder unterscheiden kann.
+
+Für den Weg in die Praxis fehlt schließlich ein Werkzeug, das wie Deepness neuronale Netze ausführt, dabei aber auf Punktwolkenlayern arbeitet. Solange es das nicht gibt, bleibt als naheliegende Lösung, die vorhandenen Skripte als Werkzeug in die Verarbeitungsumgebung von QGIS einzuhängen und die Rechenlast auf einen Server auszulagern, sodass mit dem Ergebnis gearbeitet werden kann, ohne die Verarbeitungskette selbst zu betreiben.
+
+Die Daten dieser Arbeit stammen aus dem in der Einleitung genannten Projekt, das die UAS-gestützte Fernerkundung in das Monitoring von FFH-Gebieten überführen will. Für dessen Fragestellung deckt der hier entwickelte Weg einen von mehreren Degradationsindikatoren ab. Die übrigen, etwa der Deckungsgrad von Gras oder von invasiven Neophyten, ließen sich aus derselben Segmentierung ableiten, sobald das Netz die niedrigen Vegetationsklassen zuverlässiger trennt.
