@@ -1,46 +1,43 @@
 \begin{titlepage}
-	\newgeometry{left=2cm, right=2cm, top=2cm, bottom=2cm}
-	\begin{center}
-    \includegraphics[width=2.3cm]{abbildungen/fomLogo} \\
-    \vspace{.5cm}
-		\begin{Large}\textbf{\myHochschulName}\end{Large}\\
-    \vspace{.5cm}
-		\begin{Large}\langde{Hochschulzentrum}\langen{university location} \myHochschulStandort\end{Large}\\
-		\vspace{2cm}
-    \begin{Large}\textbf{\myThesisArt}\end{Large}\\
-    \vspace{.5cm}
-		% \langde{Berufsbegleitender Studiengang}
-		% \langen{part-time degree program}\\
-		% \mySemesterZahl. Semester\\
-    \langde{im Studiengang}\langen{in the study course} \myStudiengang
-		\vspace{1.7cm}
+	\newgeometry{left=2.5cm, right=2.5cm, top=2cm, bottom=2cm}
+	\setlength{\parskip}{0pt}   % verhindert, dass Absatzabstaende die Seite sprengen
+	\setlength{\parindent}{0pt}
 
-		\langde{zur Erlangung des Grades eines}\langen{to obtain the degree of}\\
-    \vspace{0.5cm}
-		\begin{Large}{\myAkademischerGrad}\end{Large}\\
-		% Oder für Hausarbeiten:
-		%\textbf{im Rahmen der Lehrveranstaltung}\\
-		%\textbf{\myLehrveranstaltung}\\
-		\vspace{1.8cm}
-		\langde{über das Thema}
-		\langen{on the subject}\\
-    \vspace{0.5cm}
-		\large{\textbf{\myTitel}}\\
-		\vspace{2cm}
-    \langde{von}\langen{by}\\
-    \vspace{0.5cm}
-    \begin{Large}{\myAutor}\end{Large}\\
+	% Logo zentriert. Breite bei Bedarf an das Seitenverhaeltnis anpassen.
+	% Fuer die Variante oben links stattdessen nur \includegraphics ohne center.
+	\begin{center}
+		\includegraphics[width=7cm]{\myLogo}
 	\end{center}
-	\normalsize
+
+	\vspace{2.5cm}
+
+	\begin{center}
+		% --- Titel ---
+		{\LARGE \myTitel \par}
+
+		\vspace{1.5cm}
+
+		% --- Art der Arbeit und Grad ---
+		{\large \textsc{\langde{Bachelorarbeit}\langen{Bachelor's thesis}} \par}
+		\vspace{0.3cm}
+		\langde{zur Erlangung des akademischen Grades}%
+		\langen{in partial fulfilment of the requirements for the degree of} \\[0.3cm]
+		\myAkademischerGrad
+
+		\vspace{1.5cm}
+
+		% --- Hochschule ---
+		\myHochschulName \\
+		\myInstitut
+	\end{center}
+
 	\vfill
-    \begin{tabular}{ l l }
-        \langde{Betreuer} % für Hausarbeiten
-        %\langde{Erstgutachter} % für Bachelor- / Master-Thesis
-        \langen{Advisor}: & \myBetreuer\\
-        \langde{Matrikelnummer}
-        \langen{Matriculation Number}: & \myMatrikelNr\\
-        \langde{Abgabedatum}
-        \langen{Submission}: & \myAbgabeDatum
-    \\
-    \end{tabular}
+
+	% --- Gutachter und Verfasser ---
+	\langde{Erstgutachter}\langen{First assessor}: \textit{\myErstgutachter} \\[0.4cm]
+	\langde{Zweitgutachter}\langen{Second assessor}: \textit{\myZweitgutachter} \\[0.4cm]
+	\langde{Vorgelegt von}\langen{Submitted by}: \textit{\myAutor} \\
+	\langde{Matrikelnummer}\langen{Matriculation number}: \myMatrikelNr \\[0.8cm]
+	\myOrt, \myAbgabeDatum
+
 \end{titlepage}

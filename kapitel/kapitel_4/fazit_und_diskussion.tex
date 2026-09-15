@@ -1,5 +1,7 @@
 \newpage
-\section{Fazit und Diskussion}\label{diskussion}
+\section{Ergebnisse und Diskussion}\label{diskussion}
+
+Befund und Deutung bleiben in diesem Kapitel getrennt. Die Ergebnisse der neun Ablationsläufe, der Segmentierung und der Verbuschungsberechnung werden zunächst berichtet, ihre Einordnung folgt geschlossen im Diskussionsteil.
 
 \subsection{Ergebnisse der Ablationsstudie}\label{ergebnis_ablation}
 
@@ -8,14 +10,12 @@ Getrennt nach den beiden Testmengen, die in Abschnitt~\ref{ablation} erläutert 
 \begin{table}[H]
     \centering
     \caption[Ergebnisse der Läufe run01 bis run04]{Ergebnisse der Läufe run01
-    bis run04 auf dem Testsplit von \texttt{training\_tiles\_v3} beziehungsweise
-    \texttt{v3\_nir} mit 487 Kacheln. Die mIoU von run04 mittelt über sechs statt
-    acht Klassen und ist mit den darüberliegenden Zeilen nur eingeschränkt
-    vergleichbar. [Eigene Darstellung].}
+    bis run04 auf der Testmenge mit 487 Kacheln. Die mIoU von run04 mittelt
+    über sechs statt acht Klassen. Eigene Darstellung.}
     \label{tab:ablation_a}
     \begin{tabular}{lrrrrr}
     \hline
-    Lauf & Klassen & OA & mIoU & bush & Val.-mIoU (Ep.) \\
+    Lauf & Klassen & OA & mIoU & IoU bush & Val.-mIoU (Ep.) \\
     \hline
     run01 & 8 & 0,671 & 0,248 & 0,394 & 0,356 (53) \\
     run02 & 8 & 0,674 & 0,242 & 0,339 & 0,349 (7)  \\
@@ -25,26 +25,24 @@ Getrennt nach den beiden Testmengen, die in Abschnitt~\ref{ablation} erläutert 
     \end{tabular}
 \end{table}
 
-Vom Nahinfrarotkanal bleibt in der Gesamtbilanz nichts übrig, denn mittlere IoU und Gesamtgenauigkeit ändern sich nicht. Klassenweise verschieben sich lediglich die Gewichte, weil die IoU von \texttt{graminoid} von 0,292 auf 0,375 steigt, während \texttt{heath} von 0,262 auf 0,177 zurückfällt. Aufschlussreicher als die Kennzahlen selbst ist der Zeitpunkt des besten Modells, das statt in Epoche 53 bereits in Epoche 7 erreicht wird, denn ein Kanal ohne zusätzlichen Informationsgehalt führt das Netz früher in die Überanpassung. Naheliegend ist, dass sich die grünen Vegetationsklassen auch im Nahinfrarot zu ähnlich verhalten und gerade die Trennung ausbleibt, auf die es ankommt.
+Der Nahinfrarotkanal bringt in der Gesamtbilanz keinen Gewinn, denn mittlere IoU und Gesamtgenauigkeit bleiben unverändert. Zwischen den Klassen verschiebt sich lediglich die Güte, denn die IoU von \texttt{graminoid} steigt von 0,292 auf 0,375, wohingegen \texttt{heath} von 0,262 auf 0,177 zurückfällt. Aufschlussreicher als die Kennzahlen selbst ist der Zeitpunkt des besten Modells, das statt in Epoche 53 bereits in Epoche 7 erreicht wird, denn ein Kanal ohne zusätzlichen Informationsgehalt führt das Netz früher in die Überanpassung. Naheliegend ist, dass sich die grünen Vegetationsklassen auch im Nahinfrarot zu ähnlich verhalten und gerade die Trennung ausbleibt, auf die es ankommt.
 
 Noch deutlicher fällt das Urteil über den Focal Loss aus, der klassenweise durchweg schlechtere Werte liefert und auch die Gesamtgenauigkeit senkt. Am härtesten trifft es die ohnehin schwachen Klassen, denn die IoU von \texttt{soil} bricht von 0,035 auf 0,001 ein und \texttt{other} verschwindet ganz. Zusammen mit den bereits kräftigen Klassengewichten überbetont der Focal Loss offenbar die seltenen Klassen, die sich in diesem Datensatz grundsätzlich nicht trennen lassen und verschlechtert im selben Zug die Klassen, die schon vorher gut trennbar waren.
 
-Der Wechsel auf sechs Klassen hebt die mittlere IoU von 0,242 auf 0,344, doch der größere Teil dieses Sprungs ist mechanisch bedingt. Bildet man die Vorhersagen von run02 nachträglich auf dasselbe Schema ab, indem \texttt{sand} und \texttt{soil} zu \texttt{ground} zusammengefasst und die Klasse \texttt{other} entfernt wird, so ergibt sich bereits eine mittlere IoU von 0,336. Auf das Training mit weniger Klassen entfällt somit nur der kleinere Rest. Aufschlussreich ist trotzdem die Klasse \texttt{ground}, die durch das bloße Zusammenfassen von einer IoU um 0,04 auf 0,162 springt, denn Sand und offener Boden wurden gegeneinander verwechselt und nicht grundsätzlich übersehen. Von Vorteil für die Fragestellung dieser Arbeit ist außerdem die Umverteilung zwischen den Vegetationsklassen, bei der \texttt{bush} und \texttt{heath} gewinnen, während \texttt{graminoid} entsprechend verliert. Die Kernverwechslung löst die neue Taxonomie nicht, wohl aber erlaubt sie ein stabileres Training, wie das späte Optimum in Epoche 58 statt in Epoche 6 oder 7 zeigt.
+Der Wechsel auf sechs Klassen hebt die mittlere IoU von 0,242 auf 0,344, doch der größere Teil dieses Sprungs ist mechanisch bedingt. Bildet man die Vorhersagen von run02 nachträglich auf dasselbe Schema ab, indem \texttt{sand} und \texttt{soil} zu \texttt{ground} zusammengefasst und die Klasse \texttt{other} entfernt wird, so ergibt sich bereits eine mittlere IoU von 0,336. Auf das Training mit weniger Klassen entfällt somit nur der kleinere Rest. Aufschlussreich ist trotzdem die Klasse \texttt{ground}, die durch das bloße Zusammenfassen von einer IoU um 0,04 auf 0,162 springt, denn Sand und offener Boden wurden gegeneinander verwechselt und nicht grundsätzlich übersehen. Für die Fragestellung dieser Arbeit günstig ist außerdem, wie sich die Güte zwischen den Vegetationsklassen verschiebt, denn die IoU von \texttt{bush} steigt von 0,339 auf 0,393 und die von \texttt{heath} von 0,177 auf 0,255, zulasten von \texttt{graminoid}, das von 0,375 auf 0,258 zurückfällt. Die Kernverwechslung löst die neue Taxonomie nicht, wohl aber erlaubt sie ein stabileres Training, wie das späte Optimum in Epoche 58 statt in Epoche 6 oder 7 zeigt.
 
-Von den beiden lokalen Höhenmerkmalen war zu erwarten, dass sie Büsche und gleich hohe Heide voneinander lösen, doch die mittlere IoU steigt nur von 0,344 auf 0,348. Unverändert sagt das Netz gut vier von zehn Buschpunkten als \texttt{graminoid} voraus. Verantwortlich ist die Auflösung der Merkmale, denn \texttt{z\_range} und \texttt{z\_rel} beruhen auf Rasterzellen von 0,5 beziehungsweise 2,5 Metern, sodass alle Punkte einer Zelle denselben Bezugswert erhalten und ein Grasbüschel neben einem Busch dessen Höhenspanne erbt. Genau an dieser Stelle sitzt der Fehler, den die Merkmale beheben sollten.
+Von den beiden lokalen Höhenmerkmalen war zu erwarten, dass sie Büsche und gleich hohe Heide voneinander lösen, doch die mittlere IoU steigt nur von 0,344 auf 0,348. Nach wie vor sagt das Netz gut vier von zehn Buschpunkten als \texttt{graminoid} voraus. Verantwortlich ist die Auflösung der Merkmale, denn \texttt{z\_range} und \texttt{z\_rel} beruhen auf Rasterzellen von 0,5 beziehungsweise 2,5 Metern, sodass alle Punkte einer Zelle denselben Bezugswert erhalten und ein Grasbüschel neben einem Busch dessen Höhenspanne erbt. Genau an dieser Stelle sitzt der Fehler, den die Merkmale beheben sollten.
 
 \begin{table}[H]
     \centering
     \caption[Ergebnisse der Läufe run05 bis run09]{Ergebnisse der Läufe run05
-    bis run09 auf dem Testsplit von \texttt{training\_tiles\_v5} mit 468
-    Kacheln. Die Gehölz-IoU fasst \textit{bush} und \textit{tree} gegen alle
-    übrigen Klassen zusammen und ist dadurch von der Klassenzahl unabhängig.
-    Bei run06 steht die mIoU in Klammern, weil ein Mittelwert über zwei Klassen
-    nicht mit einem über sechs vergleichbar ist. [Eigene Darstellung].}
+    bis run09 auf der Testmenge mit 468 Kacheln. Die mIoU von run06 steht in
+    Klammern, weil sie über zwei statt sechs Klassen mittelt.
+    Eigene Darstellung.}
     \label{tab:ablation_b}
     \begin{tabular}{lrrrrrrr}
     \hline
-    Lauf & Kl. & mIoU & bush & Gehölz & Prec. & Rec. & F1 \\
+    Lauf & Klassen & mIoU & IoU bush & IoU Gehölz & Precision & Recall & F1 \\
     \hline
     run05 & 6 & 0,357 & 0,413 & 0,724 & 0,934 & 0,763 & 0,840 \\
     run06 & 2 & (0,725) & -- & 0,713 & 0,966 & 0,731 & 0,833 \\
@@ -55,19 +53,19 @@ Von den beiden lokalen Höhenmerkmalen war zu erwarten, dass sie Büsche und gle
     \end{tabular}
 \end{table}
 
-Mit run06 wird das Klassenschema ein zweites Mal vereinfacht, diesmal bis auf zwei Klassen, sodass das Netz von Grund auf nur noch Gehölz gegen alles Übrige lernt. Dahinter stand die Überlegung, dass ein Teil der Kapazität auf die schwierige Trennung von Heide und Gras entfällt, die für den Verbuschungsgrad keine Rolle spielt. Ein eigens binär trainiertes Modell lohnt sich nur, wenn es den einfacheren Weg schlägt, nämlich die sechs Klassen von run05 im Nachhinein zu Gehölz und Rest zusammenzufassen. Das gelingt nicht, denn das binäre Modell bleibt bei Gehölz-IoU und F1-Wert knapp hinter dem zusammengefassten Sechsklassenmodell zurück und verschiebt lediglich das Verhältnis von Precision und Recall, indem es die Klasse Gehölz seltener vergibt und dabei seltener irrt. Die Vermutung, das Netz verschwende Kapazität, bestätigt sich somit nicht. Die Grenze zwischen Gehölz und niedriger Vegetation ist in den Daten selbst schwach ausgeprägt und wird nicht erst durch das Klassenschema verdeckt.
+Mit run06 wird das Klassenschema ein zweites Mal vereinfacht, diesmal bis auf zwei Klassen, sodass das Netz von Grund auf nur noch Gehölz gegen alles Übrige lernt. Dahinter stand die Überlegung, dass ein Teil der Kapazität auf die schwierige Trennung von Heide und Gras entfällt, die für den Verbuschungsgrad keine Rolle spielt. Gemessen wird es deshalb am einfacheren Weg, die sechs Klassen von run05 im Nachhinein zusammenzufassen (Abschnitt~\ref{evaluation}). Das gelingt nicht, denn das binäre Modell bleibt bei Gehölz-IoU und F1-Wert knapp hinter dem zusammengefassten Sechsklassenmodell zurück und verschiebt lediglich das Verhältnis von Precision und Recall, indem es die Klasse Gehölz seltener vergibt und dabei seltener irrt. Die Vermutung, das Netz verschwende Kapazität, bestätigt sich somit nicht. Die Grenze zwischen Gehölz und niedriger Vegetation ist in den Daten selbst schwach ausgeprägt und wird nicht erst durch das Klassenschema verdeckt.
 
-Wirkung zeigt einzig die Vergrößerung der Nachbarschaftsradien, die aus der in Abschnitt~\ref{ablation} beschriebenen Messung der Punktdichte hervorging. Auf der Testmenge mit 468 Kacheln steigen alle für die Fragestellung wichtigen Kennzahlen deutlich, die IoU von \texttt{bush} von 0,413 auf 0,500 und die Gehölz-IoU von 0,724 auf 0,761. Auf der ursprünglichen Testmenge mit 487 Kacheln sinkt die mittlere IoU im selben Vergleich dagegen von 0,348 auf 0,336, weil \texttt{graminoid} und \texttt{ground} verlieren. In dieser Gegenläufigkeit zeigt sich ein Skalenkonflikt: Ein Busch ist ein großes Objekt und braucht Kontext, wohingegen die Unterscheidung von Gras und Zwergstrauchheide an feiner Textur hängt und mit größeren Nachbarschaften verwischt wird. Für diese Arbeit ist der Tausch günstig, weil sie eine verlässliche Gehölzerkennung braucht und die Trennung von Gras und Heide für den Verbuschungsgrad ohne Bedeutung ist.
+Wirkung zeigt einzig die Vergrößerung der Nachbarschaftsradien, die aus der in Abschnitt~\ref{ablation} beschriebenen Messung der Punktdichte hervorging. Auf der Testmenge mit 468 Kacheln steigen alle für die Fragestellung wichtigen Kennzahlen deutlich, die IoU von \texttt{bush} von 0,413 auf 0,500 und die Gehölz-IoU von 0,724 auf 0,761. Auf der ursprünglichen Testmenge mit 487 Kacheln sinkt die mittlere IoU im selben Vergleich dagegen von 0,348 auf 0,336, weil \texttt{graminoid} und \texttt{ground} verlieren. In dieser Gegenläufigkeit zeigt sich ein Skalenkonflikt, denn ein Busch ist ein großes Objekt und braucht Kontext, wohingegen die Unterscheidung von Gras und Zwergstrauchheide an feiner Textur hängt und mit größeren Nachbarschaften verwischt wird. Für diese Arbeit ist der Tausch günstig, weil sie vor allem eine verlässliche Gehölzerkennung braucht.
 
-Die zweite mögliche Antwort auf die geringe Punktdichte, nämlich 8.192 statt 4.096 Punkte je Kachel, verschlechtert das Ergebnis auf identischer Testmenge durchweg, und einzig \texttt{ground} verbessert sich. Auch Multi-Scale Grouping bringt keinen Gewinn und bleibt der schwächste Lauf der Reihe, wobei einzig \texttt{graminoid} den zweitbesten Wert aller Läufe erreicht. Sein zusätzlicher feiner Zweig arbeitet mit einem Radius von 0,125 Metern und findet nach der gemessenen Punktdichte selbst bei 8.192 Punkten je Kachel nur ein bis zwei Nachbarn, sodass er keine zusätzliche Information über einen Punkt liefert.
+Die zweite mögliche Antwort auf die geringe Punktdichte, die verdoppelte Punktzahl je Kachel, verschlechtert das Ergebnis auf identischer Testmenge durchweg, wobei sich einzig \texttt{ground} verbessert. Auch Multi-Scale Grouping bringt keinen Gewinn und bleibt der schwächste Lauf der Reihe, wobei einzig \texttt{graminoid} den zweitbesten Wert aller Läufe erreicht. Sein zusätzlicher feiner Zweig arbeitet mit einem Radius von 0,125 Metern und findet nach der gemessenen Punktdichte selbst bei 8.192 Punkten je Kachel nur ein bis zwei Nachbarn, sodass er keine zusätzliche Information über einen Punkt liefert.
 
 Über alle Läufe hinweg blieb die Verwechslung zwischen Zwergstrauchheide, Gras und Busch bestehen, obwohl mit dem Nahinfrarot, dem Focal Loss, dem reduzierten Klassenschema, den expliziten Höhenmerkmalen und dem binären Modell fünf voneinander unabhängige Ansätze an ihr angesetzt haben. Dass am Ende ein Parameter der Nachbarschaftssuche wirkt und kein zusätzliches Merkmal, spricht dafür, dass dem Netz nicht Informationen fehlte, sondern eine zur Punktdichte passende räumliche Bezugsgröße. Bemerkenswert ist daneben die Klasse \texttt{tree}, deren IoU in allen acht Mehrklassenläufen zwischen 0,937 und 0,963 liegt. Strukturell eindeutige Objekte werden zuverlässig erkannt und die Schwäche betrifft ausschließlich die niedrige Vegetation.
 
-Als finales Modell dient deshalb run07. Es erreicht auf der Testmenge mit 468 Kacheln zugleich die beste mittlere IoU und die beste Gehölzerkennung, und seine Radien gehen auf die gemessene Punktdichte der Kacheln zurück statt auf Ausprobieren. Abschnitt~\ref{evaluation_segmentierung} betrachtet seine Ergebnisse im Einzelnen.
+Für alle Vergleiche in beiden Tabellen gilt allerdings eine Einschränkung, die aus dem Zuschnitt des Validierungsteils folgt. Die besten Validierungswerte von run07, run08 und run09 liegen bei 0,4684, 0,4685 und 0,4656 und somit praktisch gleichauf. Auf dem Testteil streuen dieselben Modelle dagegen zwischen 0,347 und 0,393. Der Validierungsteil besteht aus drei räumlich getrennten Blöcken, von denen ein einziger 378 der 455 Kacheln stellt, sodass das Auswahlkriterium im Wesentlichen an einer Teilfläche hängt. Welche der drei Varianten als bestes Modell gespeichert wird, entscheidet sich deshalb zu einem erheblichen Teil zufällig und Unterschiede von wenigen Tausendsteln sind nicht als Effekt zu deuten.
 
-Für alle Vergleiche in beiden Tabellen gilt allerdings eine Einschränkung, die aus dem Zuschnitt des Validierungsteils folgt. Die besten Validierungswerte von run07, run08 und run09 liegen bei 0,4684, 0,4685 und 0,4656 und somit praktisch gleichauf, während dieselben Modelle auf dem Testteil zwischen 0,347 und 0,393 streuen. Der Validierungsteil besteht aus drei räumlich getrennten Blöcken, von denen ein einziger 378 der 455 Kacheln stellt, sodass das Auswahlkriterium im Wesentlichen an einer Teilfläche hängt. Welche der drei Varianten als bestes Modell gespeichert wird, entscheidet sich deshalb zu einem erheblichen Teil zufällig und Unterschiede von wenigen Tausendsteln sind nicht als Effekt zu deuten.
+Als finales Modell dient deshalb run07. Es erreicht auf der Testmenge mit 468 Kacheln zugleich die beste mittlere IoU und die beste Gehölzerkennung. Seine Radien gehen zudem auf die gemessene Punktdichte der Kacheln zurück. Abschnitt~\ref{evaluation_segmentierung} betrachtet seine Ergebnisse im Einzelnen.
 
-\subsection{Evaluation der semantischen Segmentierung}\label{evaluation_segmentierung}
+\subsection{Güte der semantischen Segmentierung}\label{evaluation_segmentierung}
 
 Ausgewertet wird run07 auf dem Testteil der annotierten Kacheln, der während
 des gesamten Trainings unberührt geblieben ist. Dort erreicht das Modell eine
@@ -79,12 +77,9 @@ klassenweise aufschlüsselt. Bäume erkennt das Modell nahezu fehlerfrei,
 
 \begin{table}[H]
     \centering
-    \caption[Klassenweise Evaluationsmetriken des Modells run07]{Klassenweise
-    Evaluationsmetriken des Modells run07 auf dem Testsplit von
-    \texttt{training\_tiles\_v5}. Die letzte Zeile fasst \textit{bush} und
-    \textit{tree} zu Gehölz gegen alle übrigen Klassen zusammen. Der Anteil
-    bezieht sich auf die wahren Punkte der jeweiligen Klasse.
-    [Eigene Darstellung].}
+    \caption[Klassenweise Kennzahlen des Modells run07]{Klassenweise Kennzahlen
+    des Modells run07 auf dem Testteil. Der Anteil gibt die wahren Punkte der
+    Klasse an. Eigene Darstellung.}
     \label{tab:metriken}
     \begin{tabular}{lrrrrr}
     \hline
@@ -104,17 +99,15 @@ klassenweise aufschlüsselt. Bäume erkennt das Modell nahezu fehlerfrei,
 
 Maßgeblich für die Fragestellung ist die letzte Zeile dieser Tabelle. Auf
 der Ebene von Gehölz gegen Rest findet das Modell vier von fünf tatsächlich
-vorhandenen Gehölzpunkten (Recall), und von den als Gehölz ausgewiesenen Punkten gehören über neun von zehn wirklich dazu (Precision). Die mittlere IoU fällt vor allem deshalb so niedrig aus, weil ein erheblicher Teil der Fehler zwischen \texttt{graminoid} und \texttt{heath} entsteht. Diese Verwechslung bleibt jedoch für den Verbuschungsgrad ohne Folgen.
+vorhandenen Gehölzpunkten (Recall). Von den als Gehölz ausgewiesenen Punkten gehören über neun von zehn wirklich dazu (Precision). Die mittlere IoU fällt vor allem deshalb so niedrig aus, weil ein erheblicher Teil der Fehler zwischen \texttt{graminoid} und \texttt{heath} entsteht.
 
-Wo genau die Fehler auftreten, zeigt die Konfusionsmatrix in Tabelle~\ref{tab:konfusion}. Mehr als die Hälfte der Graspunkte weist das Modell der Zwergstrauchheide zu, die falsch zugeordneten Buschpunkte verteilen sich auf \texttt{graminoid} und \texttt{heath}, während offener Boden zu mehr als zwei Dritteln an \texttt{heath} verloren geht. Sämtliche dieser Verwechslungen betreffen niedrige Bestände, die sich in Höhe und Farbe überschneiden. Bäume dagegen ordnet das Modell zu 96,5 Prozent richtig zu, und die wenigen Fehler betreffen fast nur die Klasse \texttt{bush}, die für den Verbuschungsgrad ohnehin mit \texttt{tree} zusammengefasst wird.
+Wo genau die Fehler auftreten, zeigt die Konfusionsmatrix in Tabelle~\ref{tab:konfusion}. Mehr als die Hälfte der Graspunkte weist das Modell der Zwergstrauchheide zu, die falsch zugeordneten Buschpunkte verteilen sich auf \texttt{graminoid} und \texttt{heath}, und offener Boden geht zu mehr als zwei Dritteln an \texttt{heath} verloren. Sämtliche dieser Verwechslungen betreffen niedrige Bestände, die sich in Höhe und Farbe überschneiden. Bäume dagegen ordnet das Modell zu 96,5 Prozent richtig zu. Die wenigen Fehler betreffen fast nur die Klasse \texttt{bush}.
 
 \begin{table}[H]
     \centering
-    \caption[Normalisierte Konfusionsmatrix des Modells run07]{Normalisierte
-    Konfusionsmatrix des Modells run07, angegeben in Prozent der wahren
-    Klasse. Zeilen enthalten die wahre, Spalten die vorhergesagte Klasse, die
-    Hauptdiagonale entspricht der Accuracy je Klasse.
-    [Eigene Darstellung].}
+    \caption[Konfusionsmatrix des Modells run07]{Konfusionsmatrix des Modells
+    run07 in Prozent der wahren Klasse. Die Hauptdiagonale entspricht der
+    Accuracy je Klasse. Eigene Darstellung.}
     \label{tab:konfusion}
     \begin{tabular}{lrrrrrr}
     \hline
@@ -130,8 +123,8 @@ Wo genau die Fehler auftreten, zeigt die Konfusionsmatrix in Tabelle~\ref{tab:ko
     \end{tabular}
 \end{table}
 
-Die niedrigsten IoU-Werte erreichen mit \texttt{deadwood} und \texttt{ground}  zugleich die beiden seltensten Klassen, denn sie stellen zusammen nur gut zwei Prozent der Testpunkte. Trotz der Gewichtung im Verlust (Abschnitt~\ref{verlustfunktion}) lernt das Netz sie kaum, und da die mittlere IoU alle Klassen gleich gewichtet, ziehen sie den Mittelwert spürbar nach unten. Für die Zielgröße
-bleibt das folgenlos, weil weder Totholz noch offener Boden in den Verbuschungsgrad eingehen. Festhalten lässt sich somit, dass das Modell die Trennung von Gehölz und offener Vegetation verlässlich leistet, während die Gliederung innerhalb der niedrigen Vegetation unsicher bleibt.
+Die niedrigsten IoU-Werte erreichen mit \texttt{deadwood} und \texttt{ground}  zugleich die beiden seltensten Klassen, denn sie stellen zusammen nur gut zwei Prozent der Testpunkte. Trotz der Gewichtung im Verlust (Abschnitt~\ref{verlustfunktion}) lernt das Netz sie kaum. Da die mittlere IoU alle Klassen gleich gewichtet, ziehen sie den Mittelwert spürbar nach unten. Für die Zielgröße
+bleibt das folgenlos, weil weder Totholz noch offener Boden in den Verbuschungsgrad eingehen.
 
 \subsection{Anwendung auf die Befliegungsgebiete}\label{ergebnis_inferenz}
 
@@ -148,8 +141,8 @@ vorlag.
     \includegraphics[width=0.75\textwidth]{vegetationsklassen_heidewildnis}
     \caption[Vorhergesagte Vegetationsklassen im Gebiet HeideWildnis]{Vom
     Modell run07 vorhergesagte Vegetationsklassen im Gebiet HeideWildnis,
-    weiße Umrisse: Polygone der Biotopkartierung. [Eigene Darstellung,
-    Hintergrund: Google Satellite].}
+    weiße Umrisse: Polygone der Biotopkartierung. Eigene Darstellung,
+    Hintergrund: Google Satellite.}
     \label{fig:vegetationsklassen_heidewildnis}
 \end{figure}
 
@@ -166,7 +159,7 @@ Umgebung der Trasse entspricht, gut ein Zehntel auf \texttt{bush} und der
 übrige Anteil überwiegend auf \texttt{graminoid} und \texttt{heath}.
 Aussagekräftiger als die Verteilung selbst ist die je Punkt mitgeführte
 Sicherheit, denn sie ordnet sich in derselben Reihenfolge wie die Güte auf dem
-Testteil: bei Bäumen liegt sie im Mittel bei 0,98, bei \texttt{deadwood} mit
+Testteil. Bei Bäumen liegt sie im Mittel bei 0,98, bei \texttt{deadwood} mit
 0,58 am tiefsten. Unsicher ist sich das Modell genau dort, wo es nachweislich
 häufig falsch liegt.
 
@@ -178,36 +171,33 @@ Prozent seiner Fläche mit Vorhersagen belegt sind
 (Abschnitt~\ref{validierung}).
 
 Wie belastbar diese Vorhersagen sind, hängt daran, wo die annotierten
-Teilflächen liegen. Von den 16 liegen elf in Authausen, und zwar acht in der
-Schneise I und drei in der 110-kV-Trasse, die übrigen fünf in Cuxhaven. In der
-HeideWildnis-Punktwolkeund in den Schneisen IV und V hat das Modell folglich nie
-trainiert, sodass jede dortige Vorhersage, auch die in
+Teilflächen liegen. Acht der elf Authausener Teilflächen liegen in der
+Schneise I, die übrigen drei in der 110-kV-Trasse. In der
+HeideWildnis-Punktwolke und in den Schneisen IV und V hat das Modell folglich
+nie trainiert, sodass jede dortige Vorhersage, auch die in
 Abbildung~\ref{fig:vegetationsklassen_heidewildnis} gezeigte, eine Übertragung
-auf unbekanntes Gelände ist. Umgekehrt liegen in der 110-kV-Trasse und in der
-Schneise I Ausschnitte, auf denen das Modell trainiert hat. Klassifiziert wird
-jedes Gebiet lückenlos, denn der Verbuschungsgrad soll gerade für die Flächen
-außerhalb der annotierten Ausschnitte entstehen. Zusammen machen diese rund
-fünf Prozent der klassifizierten Fläche aus, in der kleinen Schneise I
-allerdings über die Hälfte. Für die Frage, ob sich das Verfahren übertragen
-lässt, sind deshalb die Flächen der HeideWildnis-Punktwolke und in den Schneisen IV
-und V die aussagekräftigsten.
+auf unbekanntes Gelände ist und für die Frage der Übertragbarkeit am meisten
+aussagt. Klassifiziert wird trotzdem jedes Gebiet lückenlos, denn der
+Verbuschungsgrad soll gerade für die Flächen außerhalb der annotierten
+Ausschnitte entstehen. Diese Ausschnitte bedecken rund fünf Prozent der
+klassifizierten Fläche, in der kleinen Schneise I allerdings über die Hälfte.
 
-\subsection{Quantifizierung des Verbuschungsgrades}\label{ergebnis_quantifizierung}
+\subsection{Berechneter Verbuschungsgrad im Vergleich zur Kartierung}\label{ergebnis_quantifizierung}
 
-Als Referenz gehen 43 Offenlandpolygone der Kartierung von 2014 in die Auswertung ein, die zusammen 24,9 Hektar bedecken und die in Abschnitt~\ref{validierung} genannten Bedingungen erfüllen. Dem Lebensraumtyp 4030 der trockenen europäischen Heiden gehören 14 von ihnen mit zusammen 9,9 Hektar an. Sieben Polygone tragen im Bemerkungsfeld einen Hinweis auf eine kurz vor der Kartierung erfolgte Pflegemaßnahme. Gemessen an den 64,5 Hektar, für die das Verfahren einen Wert liefert, lässt sich gut ein Drittel der Fläche überprüfen.
+Als Referenz gehen 43 Offenlandpolygone der Kartierung von 2014 in die Auswertung ein, die zusammen 24,9 Hektar bedecken und die in Abschnitt~\ref{validierung} genannten Bedingungen erfüllen. Dem Lebensraumtyp 4030 der trockenen europäischen Heiden gehören 14 von ihnen mit zusammen 9,9 Hektar an. Sieben Polygone tragen im Bemerkungsfeld einen Hinweis auf eine kurz vor der Kartierung erfolgte Pflegemaßnahme. Die Kennzahlen der folgenden Abschnitte beruhen auf den 14 Heidepolygonen mit zusammen 9,9 Hektar, der Vergleich der Höhengrenzen nur auf den sieben Flächen ohne Pflegevermerk mit 5,8 Hektar. Gemessen an den 64,5 Hektar, für die das Verfahren einen Wert liefert, sind das 15 beziehungsweise 9 Prozent.
 
 \begin{table}[H]
     \centering
     \caption[Vergleich der Verbuschungsdefinitionen]{Übereinstimmung des
-    berechneten mit dem kartierten Verbuschungsgrad für sechs Definitionen der
-    Verbuschung, gerechnet über die sieben Heidepolygone ohne Pflegevermerk.
-    Fehler und Versatz in Prozentpunkten. [Eigene Darstellung].}
+    berechneten mit dem kartierten Verbuschungsgrad für sechs Definitionen,
+    gerechnet über die sieben Heidepolygone ohne Pflegevermerk. RMSE und
+    Versatz in Prozentpunkten. Eigene Darstellung.}
     \label{tab:hoehengrenze}
     \begin{tabular}{lrrrrr}
     \hline
     Definition & RMSE & Versatz & $R^2$ & Pearson & Spearman \\
     \hline
-    nur \textit{bush}          & 15,5 & $-6,9$ & 0,07 & 0,53 & 0,45 \\
+    nur \texttt{bush}          & 15,5 & $-6,9$ & 0,07 & 0,53 & 0,45 \\
     Gehölz ohne Grenze         & 16,9 & $+9,2$ & $-0,10$ & 0,72 & 0,04 \\
     Gehölz unter 2 m           & 16,4 & $-7,6$ & $-0,03$ & 0,46 & 0,45 \\
     Gehölz unter 3 m           & 12,4 & $-4,6$ & 0,41 & 0,72 & 0,38 \\
@@ -219,15 +209,15 @@ Als Referenz gehen 43 Offenlandpolygone der Kartierung von 2014 in die Auswertun
 
 Welche Höhengrenze die beste Übereinstimmung liefert, zeigt Tabelle~\ref{tab:hoehengrenze}. Die Grenze von fünf Metern erreicht mit 9,5 Prozentpunkten den kleinsten mittleren Fehler und mit $+1,8$ Prozentpunkten zugleich den geringsten Versatz. Ohne jede Begrenzung überschätzt das Verfahren die Verbuschung deutlich, weil die überhängenden Kronen des angrenzenden Waldes mit in die Berechnung eingehen. Im Polygon 13001\_2623 etwa werden 71,7 Prozent der Fläche als \texttt{tree} vorhergesagt, während die Kartierung dort 15 Prozent Verbuschung nennt. Der größte Teil dieser Baumfläche gehört zum umgebenden Wald und nicht zum Gehölzaufwuchs auf der Offenfläche. Zwei und drei Meter als Grenze schließen umgekehrt das inzwischen herausgewachsene Gehölz aus und unterschätzen den Verbuschungsgrad entsprechend.
 
-Dass hinter der Klasse \texttt{tree} zwei fachlich verschiedene Dinge stehen, lässt sich an der Kronenhöhe ablesen. Auf der stark verbuschten Fläche 13001\_4443 liegt die mediane Kronenhöhe der als Gehölz vorhergesagten Zellen bei 3,4 Metern, auf der fast offenen Fläche 13001\_2611 dagegen bei 11,6 Metern. Die Grenze bei acht Metern liefert nahezu dieselben Kennzahlen wie die bei fünf, was für eine breite Lücke zwischen aufkommendem Gehölz und Altbestand spricht. Die Wahl der Grenze hängt somit nicht an einem genauen Wert.
+Belegen lässt sich das an der Kronenhöhe. Auf der stark verbuschten Fläche 13001\_4443 liegt die mediane Kronenhöhe der als Gehölz vorhergesagten Zellen bei 3,4 Metern, auf der fast offenen Fläche 13001\_2611 dagegen bei 11,6 Metern. Die Grenze bei acht Metern liefert nahezu dieselben Kennzahlen wie die bei fünf, was für eine breite Lücke zwischen aufkommendem Gehölz und Altbestand spricht. Die Wahl der Grenze hängt somit nicht an einem genauen Wert.
 
 \begin{table}[H]
     \centering
     \caption[Kartierter und berechneter Verbuschungsgrad der
     Heidepolygone]{Kartierter und berechneter Verbuschungsgrad der 14 Polygone
     des Lebensraumtyps 4030, sortiert nach dem kartierten Wert. Die Kronenhöhe
-    ist der Median über die als Gehölz vorhergesagten Zellen. [Eigene
-    Darstellung].}
+    ist der Median der als Gehölz vorhergesagten Zellen.
+    Eigene Darstellung.}
     \label{tab:heidepolygone}
     \begin{tabular}{lrrrc}
     \hline
@@ -251,19 +241,19 @@ Dass hinter der Klasse \texttt{tree} zwei fachlich verschiedene Dinge stehen, l�
     \end{tabular}
 \end{table}
 
-Mit dieser Grenze ergeben sich für die Heidepolygone die Werte in Tabelle~\ref{tab:heidepolygone}. Bei den stark verbuschten Flächen stimmen Kartierung und Verfahren gut überein, am deutlichsten auf der Fläche 13001\_4443, deren kartierte 50 Prozent zugleich der höchste Wert sind, den die Kartierung im gesamten Authausener Wald vergibt. Sie gehört zusammen mit 13001\_4444 und 13001\_4442 zur HeideWildnis, in der keine annotierte Teilfläche liegt (Abbildung~\ref{fig:verbuschungskarte_heidewildnis}). Diese drei Flächen tragen mit 50, 15 und einem Prozent die gesamte Spannweite der Referenz, und sie stammen aus einem Gebiet, das das Modell nie gesehen hat. Über alle 14 Heidepolygone hinweg beträgt der mittlere Fehler 11,2 Prozentpunkte bei einem Versatz von $+5,4$ Prozentpunkten und einem Bestimmtheitsmaß von 0,28. Der Unterschied zu Tabelle~\ref{tab:hoehengrenze} geht allein auf die sieben Flächen mit Pflegevermerk zurück, die dort nicht enthalten sind.
+Mit dieser Grenze ergeben sich für die Heidepolygone die Werte in Tabelle~\ref{tab:heidepolygone}. Bei den stark verbuschten Flächen stimmen Kartierung und Verfahren gut überein, am deutlichsten auf der Fläche 13001\_4443, deren kartierte 50 Prozent zugleich der höchste Wert sind, den die Kartierung im gesamten Authausener Wald vergibt. Sie gehört zusammen mit 13001\_4444 und 13001\_4442 zur HeideWildnis (Abbildung~\ref{fig:verbuschungskarte_heidewildnis}). Diese drei Flächen tragen mit 50, 15 und einem Prozent die gesamte Spannweite der Referenz und stammen aus einem Gebiet, in dem keine annotierte Teilfläche liegt. Über alle 14 Heidepolygone hinweg beträgt der mittlere Fehler 11,2 Prozentpunkte bei einem Versatz von $+5,4$ Prozentpunkten und einem Bestimmtheitsmaß von 0,28. Der Unterschied zu Tabelle~\ref{tab:hoehengrenze} geht allein auf die sieben Flächen mit Pflegevermerk zurück, die dort nicht enthalten sind.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{verbuschungskarte_heidewildnis}
     \caption[Verbuschungsgrad im Gebiet HeideWildnis]{Berechneter
     Verbuschungsgrad im Gebiet HeideWildnis, Zellgröße ein Meter, beschriftet
-    mit dem 2014 geschätzten Wert. [Eigene Darstellung, Hintergrund: Google
-    Satellite].}
+    mit dem 2014 geschätzten Wert. Eigene Darstellung, Hintergrund: Google
+    Satellite.}
     \label{fig:verbuschungskarte_heidewildnis}
 \end{figure}
 
-Bei den schwach verbuschten Flächen geht diese Übereinstimmung verloren. Sieben der 14 Flächen tragen einen Pflegevermerk, und bei ihnen liegt der berechnete Wert ausnahmslos über dem kartierten. Auch ohne diese Flächen bleibt die Rangkorrelation nach Spearman mit 0,23 niedrig, das Verfahren bringt die schwach verbuschten Flächen also nicht in die richtige Reihenfolge. Die Ursache wird in Abschnitt~\ref{diskussion_teil} behandelt.
+Bei den schwach verbuschten Flächen geht diese Übereinstimmung verloren. Bei den sieben der 14 Flächen, die einen Pflegevermerk tragen, liegt der berechnete Wert ausnahmslos über dem kartierten. Auch ohne diese Flächen bleibt die Rangkorrelation nach Spearman mit 0,23 niedrig, das Verfahren bringt die schwach verbuschten Flächen also nicht in die richtige Reihenfolge. Die Ursache wird in Abschnitt~\ref{diskussion_teil} behandelt.
 
 Unabhängig von den Referenzflächen liefert das Verfahren für jede Rasterzelle des Untersuchungsgebiets einen Wert. Über alle vier Befliegungen sind das 64,5 Hektar oder rund 25.800 Zellen. Die Hälfte dieser Zellen liegt unter 4,2 Prozent Verbuschung, der Mittelwert beträgt dagegen 20,0 Prozent, denn gut ein Viertel der Zellen überschreitet 30 Prozent und zieht ihn nach oben. Wie Abbildung~\ref{fig:verbuschungskarte_uebersicht} zeigt, stehen große offene Bereiche einzelnen, stark verbuschten Teilflächen gegenüber. Eine einzelne Kennzahl beschreibt eine so verteilte Fläche deshalb schlecht.
 
@@ -271,23 +261,23 @@ Unabhängig von den Referenzflächen liefert das Verfahren für jede Rasterzelle
     \centering
     \includegraphics[width=\textwidth]{verbuschungskarte_uebersicht}
     \caption[Verbuschungsgrad der vier Befliegungsgebiete]{Berechneter
-    Verbuschungsgrad der vier Befliegungsgebiete, Zellgröße 20 Meter. [Eigene
-    Darstellung, Hintergrund: Google Satellite].}
+    Verbuschungsgrad der vier Befliegungsgebiete, Zellgröße 20 Meter. Eigene
+    Darstellung, Hintergrund: Google Satellite.}
     \label{fig:verbuschungskarte_uebersicht}
 \end{figure}
 
 
 \subsection{Diskussion}\label{diskussion_teil}
 
+Die bisherigen Abschnitte haben die Zahlen berichtet, die folgenden ordnen sie ein. Im Mittelpunkt steht dabei die Frage, welcher Anteil der Abweichungen dem Modell zuzuschreiben ist und welcher der Referenz oder dem Verfahren, aus dem die Labels stammen.
+
 \subsubsection{Bedeutung der Höheninformation}
 
 Den größten Einzeleffekt in der gesamten Auswertung hat nicht die Wahl des
 Modells, sondern die Höhengrenze. Sie senkt den mittleren Fehler von 16,9 auf
 9,5 Prozentpunkte und hebt das Bestimmtheitsmaß von einem negativen Wert auf
-0,65. Der Grund liegt darin, dass die Klasse \texttt{tree} zwei fachlich
-verschiedene Dinge zusammenfasst, nämlich die aufkommende Birke auf der
-Offenfläche und den angrenzenden Kiefernwald, dessen Kronen über die
-Polygongrenze ragen. Bestätigt wird das durch die Kartierung von 2014, die
+0,65. Der Grund liegt darin, dass die Klasse \texttt{tree} Pioniergehölz und
+Altbestand nicht trennt (Abschnitt~\ref{verbuschungsmass}). Bestätigt wird das durch die Kartierung von 2014, die
 13001\_4443 als \enquote{Stark von Birke (50 \%, bis 3 m hoch) verbuschte
 Callunaheide} beschreibt, während die photogrammetrisch gemessene Kronenhöhe
 dort im Median bei 3,4 Metern liegt. Aus der Klasse allein ist diese
@@ -298,7 +288,7 @@ auf offener Fläche meint und nicht den benachbarten Wald.
 
 \subsubsection{Zeitlicher Abstand zwischen Kartierung und Befliegung}
 
-Zwischen Kartierung und Befliegung liegen elf Jahre, und Verbuschung ist genau
+Zwischen Kartierung und Befliegung liegen elf Jahre. Verbuschung ist genau
 der Prozess, der sich in dieser Zeit verändert. Sieben der 14 Heidepolygone
 tragen einen Vermerk über eine kurz zuvor durchgeführte Gehölzentnahme. Gerade
 bei ihnen liegt der berechnete Wert ausnahmslos über dem kartierten, am
@@ -307,22 +297,21 @@ erfolgte Freistellung unter der Stromleitung vermerkt und das Verfahren eine
 Verbuschung von 15,1 Prozent ausweist.
 
 Der im Feld \texttt{VERBUP} erhobene Wert von null Prozent war im Jahr 2014
-durchaus richtig, für 2025 gilt er jedoch nicht mehr. An den Stellen, wo das Verfahren mehr Verbuschung ausweist als die Kartierung, ist deshalb nicht zwangsläufig das Modell im Unrecht, sondern in mehreren Fällen die Referenz veraltet. Aus demselben Grund bleibt auch die Höhengrenze ein Kompromiss
-zwischen zwei Fehlern, denn eine zu niedrige Grenze schließt inzwischen herausgewachsene Verbuschung aus, während eine zu hohe den Altbestand hereinholt.
+durchaus richtig, für 2025 gilt er jedoch nicht mehr. An den Stellen, wo das Verfahren mehr Verbuschung ausweist als die Kartierung, ist deshalb nicht zwangsläufig das Modell im Unrecht, sondern in mehreren Fällen die Referenz veraltet. Aus demselben Grund bleibt auch die Wahl der Höhengrenze ein Kompromiss, weil in elf Jahren herangewachsenes Gehölz genau in dem Bereich liegt, den die Grenze abschneidet.
 
-\subsubsection{Grenzen des Vergleichs mit der Geländekartierung}
+\subsubsection{Vergleich mit der Geländekartierung}
 
 Ob ein mittlerer Fehler von 9,5 Prozentpunkten gut ist, zeigt erst der
 Vergleich mit publizierten Arbeiten. Schmidt et al. erreichen bei der
 fernerkundlichen Schätzung der Calluna-Deckung ein Bestimmtheitsmaß von 0,79
 bei einem mittleren Fehler von 15,7 Prozentpunkten, gestützt auf 700
-Stichprobenpunkte \cite{Schmidt.2017}. Die hier erreichten Werte liegen in derselben Größenordnung, beruhen jedoch auf sieben Flächen, und der dortige Wertebereich reicht mit null bis 96 Prozent etwa doppelt so weit. Aussagekräftiger als der Mittelwert ist ohnehin die Verteilung der Abweichungen, denn drei der sieben Flächen liegen innerhalb von drei Prozentpunkten, während drei weitere um 13 bis 14 Punkte abweichen. Der Versatz von $+1,8$ Prozentpunkten zeigt zugleich, dass sich diese Abweichungen weitgehend ausgleichen und das Verfahren nicht systematisch über- oder
+Stichprobenpunkte \cite{Schmidt.2017}. Die hier erreichten Werte liegen in derselben Größenordnung, beruhen jedoch auf sieben Flächen. Der dortige Wertebereich reicht mit null bis 96 Prozent etwa doppelt so weit. Aussagekräftiger als der Mittelwert ist ohnehin die Verteilung der Abweichungen, denn drei der sieben Flächen liegen innerhalb von drei Prozentpunkten, drei weitere weichen um 13 bis 14 Punkte ab. Der Versatz von $+1,8$ Prozentpunkten zeigt zugleich, dass sich diese Abweichungen weitgehend ausgleichen und das Verfahren nicht systematisch über- oder
 unterschätzt.
 
 Wie stark die Übereinstimmung bei den kräftig verbuschten Flächen von einer einzigen
 getragen wird, zeigt eine Kontrollrechnung ohne 13001\_4443, bei der die
 Korrelation von 0,86 auf 0,32 fällt. Bei sieben Beobachtungen und einem Wert,
-der mehr als dreimal so hoch liegt wie alle übrigen, ist das zu erwarten. Die gegen Ausreißer robuste Rangkorrelation von 0,23 liegt deutlich unter dem Bestimmtheitsmaß von 0,65 und zeigt somit, dass das Verfahren die Flächen nicht in die richtige Rangfolge bringt.
+der mehr als dreimal so hoch liegt wie alle übrigen, ist das zu erwarten. Dass die gegen Ausreißer robuste Rangkorrelation mit 0,23 weit unter dem Bestimmtheitsmaß von 0,65 liegt, zeigt, dass die Übereinstimmung an den Absolutwerten einzelner Flächen hängt und nicht an einer durchgängig richtigen Rangfolge.
 
 Erklären lassen sich die größten Abweichungen über die Bemerkungsfelder. Für
 die Fläche 13001\_2615 nennt die Kartierung eine beginnende Verbuschung mit
@@ -334,30 +323,27 @@ Gehölzanteil als Wesenszug des Biotoptyps gilt und nicht als Verbuschung. Darin
 zeigt sich, dass Referenz und Verfahren bei den schwach verbuschten Flächen verschiedene Dinge messen, denn der Kartierer bewertet, ob der Prozess eingesetzt hat, wohingegen das Verfahren überschirmte Fläche misst. Das ist keine Schwäche des
 Modells, sondern eine inhaltliche Grenze des Vergleichs.
 
-\subsubsection{Grenzen der Segmentierung und Herkunft der Labels}
+\subsubsection{Segmentierungsgüte und Herkunft der Labels}
 
 Einordnen lässt sich die erreichte Güte über veröffentlichte Ergebnisse
 derselben Architektur. Auf dem Straßenraumdatensatz Toronto3D erreicht
 PointNet++ eine mittlere IoU von 0,418 \cite{Diab.2022} und liegt damit dicht
 bei den hier erzielten 0,393, wobei sich beide Datensätze in Sensorik und
 Klassenschema unterscheiden und deshalb nur die Größenordnung vergleichbar ist.
-Aufschlussreicher als der Mittelwert ist ohnehin die Verteilung über die
-Klassen, denn großflächige und strukturell eindeutige Klassen wie Straße und
-Vegetation erreichen dort 0,893 und 0,690, während Fahrbahnmarkierungen und
+Der Mittelwert verdeckt dabei, wie ungleich sich die Güte über die Klassen
+verteilt, denn großflächige und strukturell eindeutige Klassen wie Straße und
+Vegetation erreichen dort 0,893 und 0,690, wohingegen Fahrbahnmarkierungen und
 Zäune bei 0,000 und 0,030 liegen. Die schwachen Werte für seltene Klassen wie
 \texttt{deadwood} und \texttt{ground} folgen demnach einem bekannten Muster
 dieser Architektur.
 
 Anders verhält es sich mit der Verwechslung zwischen Zwergstrauchheide, Gras
-und Busch, die über die gesamte Ablationsstudie bestehen blieb, obwohl fünf
-voneinander unabhängige Ansätze an ihr angesetzt haben. Dass am Ende allein die Anpassung der
-Nachbarschaftsradien wirkte, spricht dafür, dass dem Netz keine Information
-fehlte, sondern eine zur Punktdichte passende räumliche Bezugsgröße.
+und Busch, die allen fünf Ansätzen der Ablationsstudie standgehalten hat und
+erst auf die Nachbarschaftsradien reagierte (Abschnitt~\ref{ergebnis_ablation}).
 
 Neben der Punktdichte kommt die Herkunft der Labels als Erklärung in Betracht,
-denn die Polygone wurden auf der von oben sichtbaren Oberfläche gezeichnet,
-ihre Klasse wird beim Verschnitt jedoch auf die gesamte darunterliegende
-Punktsäule übertragen. Heide unter einer überhängenden Krone erhält dadurch das Label \texttt{tree}, während Punkte auf einzelnen Zweigen, die über die vereinfachte Polygongrenze hinausragen, das Label der darunter liegenden Heide- oder Grasfläche tragen. Beide Fehlerrichtungen greift die höhenbasierte Korrektur auf, die sich dabei allerdings eine eigene Schwäche einhandelt, weil sie punktweise und nicht objektbezogen arbeitet. Ein Strauch beispielsweise, dessen Basis am Boden ansetzt, wird an der Grenze von 0,5 Metern waagerecht durchgeschnitten. Hinzu kommt die Reihenfolge der Regeln, denn 40,6 Prozent aller Punkte, die neu die Klasse \texttt{bush} erhalten, durchlaufen zuvor eine Hochstufung zu \texttt{tree} und werden erst von der Abwärtsregel wieder zurückgestuft.
+denn der Verschnitt überträgt die Klasse eines Polygons auf die gesamte
+Punktsäule darunter (Abschnitt~\ref{label_transfer}). Diesen Fehler in beide Richtungen greift die höhenbasierte Korrektur auf, die sich dabei allerdings eine eigene Schwäche einhandelt, weil sie punktweise und nicht objektbezogen arbeitet. Ein Strauch beispielsweise, dessen Basis am Boden ansetzt, wird an der Grenze von 0,5 Metern waagerecht durchgeschnitten. Hinzu kommt die Reihenfolge der Regeln, denn 40,6 Prozent aller Punkte, die neu die Klasse \texttt{bush} erhalten, durchlaufen zuvor eine Hochstufung zu \texttt{tree} und werden erst von der Abwärtsregel wieder zurückgestuft.
 
 Daraus folgt eine These, die sich mit den vorliegenden Daten nicht abschließend
 prüfen lässt, als Erklärungsansatz aber gut begründet ist. Das Netz wird auf
@@ -381,9 +367,8 @@ Kacheln der Cuxhavener Küstenheide, während der Verbuschungsgrad ausschließli
 für die Authausener Flächen berechnet wurde. Bewertet wird das Modell also
 überwiegend auf einem Landschaftstyp, für den keine Verbuschungsberechnung
 vorliegt. Der Validierungsteil kann zudem die letzten drei Modellvarianten
-nicht unterscheiden, da ihre besten Werte bei 0,4684, 0,4685 und 0,4656 liegen,
-auf dem Testteil aber zwischen 0,347 und 0,393 streuen, sodass die
-Modellauswahl zu einem Teil zufällig ausfällt.
+nicht unterscheiden, sodass die Modellauswahl zu einem Teil zufällig ausfällt
+(Abschnitt~\ref{ergebnis_ablation}).
 
 Schließlich beruhen die Schwellenwerte der Labelkorrektur auf den 16
 annotierten Teilflächen und wären bei einer Erweiterung des Datensatzes neu zu
@@ -398,7 +383,7 @@ berücksichtigen.
 Als Ausgangsproblem nennt die Einleitung, dass eine Geländekartierung zeit- und
 kostenintensiv ist und deshalb immer nur einen Bruchteil der Fläche abdeckt.
 Genau dieses Verhältnis kehrt das Verfahren um, denn es liefert Werte für 64,5
-Hektar, von denen sich nur 24,9 Hektar überprüfen lassen, und macht den
+Hektar, von denen sich nur 9,9 überprüfen lassen, und macht den
 Verbuschungsgrad für jede beliebige Bezugsfläche berechenbar. Hinzu kommt die
 Wiederholbarkeit, denn eine erneute Befliegung liefert mit demselben Modell
 unmittelbar eine Veränderungsanalyse, was eine einmalige Geländekartierung
@@ -427,42 +412,6 @@ Verarbeitungsumgebung von QGIS.
 
 Für die Praxis folgt daraus eine Aufgabenteilung. Stark verbuschte Flächen
 trennt das Verfahren zuverlässig von offenen, sodass sich damit eine Rangfolge
-für anstehende Pflegemaßnahmen aufstellen lässt. Eine feine Abstufung im
-unteren Bereich der Skala, etwa zwischen einem und zehn Prozent Verbuschung,
-liefert es dagegen nicht. Die Geländekartierung ersetzt es dort nicht, wohl
+für anstehende Pflegemaßnahmen aufstellen lässt. Schwach verbuschte Flächen, etwa solche zwischen einem und zehn Prozent,
+stuft es dagegen nicht zuverlässig ab. Die Geländekartierung ersetzt es dort nicht, wohl
 aber weist es ihr die Flächen zu, auf denen sie sich lohnt.
-
-\subsection{Fazit}\label{fazit}
-
-Ziel dieser Arbeit war es, den Verbuschungsgrad von Heideflächen objektiv,
-flächendeckend und wiederholbar aus dreidimensionalen SfM-Punktwolken
-abzuleiten. Dafür wurde PointNet++ auf 16 annotierten Teilflächen trainiert, in
-neun Läufen einer Ablationsstudie angepasst und auf vier Befliegungen im
-Authausener Wald angewendet.
-
-Die erste Forschungsfrage nach der Trennbarkeit der maßgeblichen
-Vegetationsklassen ist differenziert zu beantworten. Gehölz und offene
-Vegetation trennt das Modell verlässlich, mit einer IoU von 0,761 und einem
-F1-Wert von 0,864. Innerhalb der niedrigen Vegetation gelingt die Trennung nicht, und von acht geprüften Eingriffen hat allein die Anpassung der Nachbarschaftsradien an die gemessene Punktdichte gewirkt.
-
-Der automatisierte Label-Transfer der ersten Teilfrage ist möglich und macht
-den Trainingsdatensatz erst praktikabel, er erzeugt jedoch systematische Fehler
-an genau den Klassengrenzen, an denen das Modell scheitert.
-
-Die zweite Forschungsfrage nach der Übereinstimmung mit der Geländekartierung
-ist ebenfalls zweigeteilt zu beantworten. Auf den sieben Heidepolygonen ohne
-Pflegevermerk beträgt der mittlere Fehler 9,5 Prozentpunkte bei einem
-Bestimmtheitsmaß von 0,65, und auf der am stärksten verbuschten Fläche stehen
-53,0 berechnete gegen 50,0 kartierte Prozent, obwohl das Modell dort nie
-trainiert hat. Die Reihenfolge der schwach verbuschten Flächen trifft das
-Verfahren dagegen nicht.
-
-Für die zweite Teilfrage gilt, dass sich die Ergebnisse unmittelbar in eine
-bestehende GIS-Umgebung übernehmen lassen, während die Inferenz selbst vorerst
-außerhalb davon läuft.
-
-Der in der Einleitung angestrebte durchgängige Weg von der Befliegung bis zum
-Verbuschungsgrad steht damit. Für das Monitoring des Erhaltungszustands liefert
-er eine wiederholbare Grundlage, auf der sich Pflegemaßnahmen planen und ihr
-Erfolg später überprüfen lassen. Eine Geländekartierung ersetzt er noch nicht,
-und wo die verbleibenden Ansatzpunkte liegen, zeigt der folgende Ausblick.

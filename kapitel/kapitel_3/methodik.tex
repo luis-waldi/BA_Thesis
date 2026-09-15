@@ -15,39 +15,38 @@
 % Kennzahl, nicht der zeitlichen Abfolge der Bearbeitung.
 % ============================================================
 
+Die folgenden Abschnitte beschreiben den Weg von den bereitgestellten Punktwolken bis zum berechneten Verbuschungsgrad. Die Gliederung folgt dabei dem Datenfluss und nicht der zeitlichen Abfolge der Bearbeitung.
+
 \subsection{Untersuchungsgebiete und Datengrundlage}\label{gebiete_daten}
 
 \subsubsection{Untersuchungsgebiete}\label{untersuchungsgebiet}
 
-Die Daten stammen aus zwei Gebieten, die beide zum DBU Naturerbe gehören und beide zuvor militärisch genutzt wurden. Dieser Umstand ist kein Zufall, denn die jahrzehntelange Nutzung als Übungsgelände hat den Aufwuchs von Wald verhindert und die Heideflächen damit überhaupt erst entstehen lassen.
+Der Authausener Wald liegt in Sachsen nordöstlich von Leipzig und umfasst rund 2.200 Hektar. Ab 1937 beanspruchte das Militär die Fläche, ab 1955 bewirtschaftete sie die DDR als Militärforst und bis 1995 unterhielt die Bundeswehr dort ein Materiallager. Aus dieser Nutzung sind drei kleine Heideflächen innerhalb eines ausgedehnten Waldgebietes hervorgegangen, deren Erhalt und Verbesserung zu den Entwicklungszielen der Fläche zählt \cite{DBU.Authausen}. Beflogen wurden für diese Arbeit vier Gebiete, nämlich die Schneise I, die zusammen beflogenen Schneisen IV und V, die HeideWildnis sowie der Korridor einer 110-kV-Trasse. Bis auf die kompaktere HeideWildnis-Fläche handelt es sich um schmale, von Wald gesäumte Streifen.
 
-Der Authausener Wald liegt in Sachsen nordöstlich von Leipzig und umfasst rund 2.200 Hektar. Ab 1937 beanspruchte das Militär die Fläche, ab 1955 bewirtschaftete sie die DDR als Militärforst, und bis 1995 unterhielt die Bundeswehr dort ein Materiallager. Aus dieser Nutzung sind drei kleine Heideflächen innerhalb eines ausgedehnten Waldgebietes hervorgegangen, deren Erhalt zu den Entwicklungszielen der Fläche zählt \cite{DBU.Authausen}. Beflogen wurden für diese Arbeit vier Bereiche, nämlich die Schneise I, die Schneisen IV und V, die HeideWildnis sowie der Korridor einer 110-kV-Trasse. Bis auf die kompaktere HeideWildnis handelt es sich um schmale, von Wald gesäumte Streifen.
-
-Die Cuxhavener Küstenheiden in Niedersachsen umfassen rund 1.400 Hektar und bilden das größte zusammenhängende Heidegebiet auf dem Festland der deutschen Nordseeküste. Auch dort geht die Offenhaltung auf militärische Nutzung zurück. Ab 1915 gab es dort einen Marineschießplatz und von 1956 bis 2003 einen Truppenübungsplatz der Bundeswehr. Heute wird die Fläche durch Beweidung mit Schafen, Pferden und Rindern offengehalten \cite{DBU.Cuxhaven}.
+Die Cuxhavener Küstenheiden in Niedersachsen umfassen rund 1.400 Hektar und bilden das größte zusammenhängende Heidegebiet auf dem Festland der deutschen Nordseeküste. Auch dort geht die Offenhaltung auf militärische Nutzung zurück, zunächst auf einen Marineschießplatz ab 1915 und später auf einen Truppenübungsplatz der Bundeswehr von 1956 bis 2003. Heute wird die Fläche durch Beweidung mit Schafen, Pferden und Rindern offengehalten \cite{DBU.Cuxhaven}.
 
 \subsubsection{Befliegung und photogrammetrische Auswertung}\label{datengrundlage}
 
-Befliegung und photogrammetrische Auswertung lagen nicht in der Hand dieser Arbeit. Beides erfolgte im Rahmen des Projekts durch die Deutsche Bundesstiftung Umwelt, die die fertigen Orthomosaike und Punktwolken bereitgestellt hat. Die folgenden Angaben geben deshalb wieder, was seitens der DBU dokumentiert vorliegt.
+Befliegung und photogrammetrische Auswertung lagen nicht in der Hand dieser Arbeit, sondern erfolgten im Rahmen des Projekts durch die Deutsche Bundesstiftung Umwelt, die die fertigen Orthomosaike und Punktwolken bereitgestellt hat. Die folgenden Angaben geben deshalb wieder, was seitens der DBU dokumentiert vorliegt.
 
-Zum Einsatz kam eine DJI Mavic 3M. Sie trägt eine RGB-Kamera mit 20 Megapixeln sowie vier Multispektralkameras mit
-je fünf Megapixeln, darunter eine für das Nahinfrarot bei 860 Nanometern. Aus diesem Band stammt der Nahinfrarotkanal, dessen Nutzen
-als zusätzliches Eingabemerkmal in Abschnitt~\ref{ablation} geprüft wird. Georeferenziert wurde über das RTK-Modul der Drohne, Bodenpasspunkte kamen dabei nicht zum Einsatz. Für den fixierten RTK-Betrieb gibt der Hersteller eine Lagegenauigkeit von einem Zentimeter zuzüglich eines Millionstels der Basislinienlänge an \cite{DJI.Mavic3M}.
+Zum Einsatz kam eine DJI Mavic 3M. Sie trägt eine RGB-Kamera mit 20 Megapixeln sowie vier Multispektralkameras mit je fünf Megapixeln, darunter eine für das Nahinfrarot bei 860 Nanometern. Aus diesem Band stammt der Nahinfrarotkanal, dessen Nutzen
+als zusätzliches Eingabemerkmal in Abschnitt~\ref{ablation} geprüft wird. Georeferenziert wurde über das RTK-Modul der Drohne, ohne dass Bodenpasspunkte zum Einsatz kamen. Für den fixierten RTK-Betrieb gibt der Hersteller eine Lagegenauigkeit von einem Zentimeter zuzüglich eines Millionstels der Basislinienlänge an \cite{DJI.Mavic3M}.
 
 Die Authausener Flächen wurden im Mai 2025 beflogen, die Cuxhavener Küstenheide ebenfalls im Jahr 2025. Der Aufnahmezeitpunkt ist insofern von Bedeutung, als sich das Erscheinungsbild der Heide im Jahresverlauf deutlich verändert und blühende Besenheide spektral anders auftritt als nicht blühende.
 
-Die Rekonstruktion der Punktwolken erfolgte mit Agisoft Metashape. Aus ihr gingen fünf getrennte Punktwolken hervor, vier für den Authausener Wald und eine für die Cuxhavener Küstenheide. Im Authausener Wald umfasst die Wolke der Schneise I 8,3 Millionen Punkte auf einer Ausdehnung von rund 529 mal 263 Metern, die der HeideWildnis 12,4 Millionen Punkte auf rund 323 mal 491 Metern, die der Schneisen IV und V 12,6 Millionen Punkte auf rund 727 mal 557 Metern und die der 110-kV-Trasse 67,4 Millionen Punkte auf rund 3.900 mal 1.000 Metern. Die Cuxhavener Wolke ist mit 415,3 Millionen Punkten auf rund 2.800 mal 2.150 Metern die mit Abstand größte. Annotierte Teilflächen liegen allein in der Schneise I, in der 110-kV-Trasse und in Cuxhaven, sodass Training und Bewertung sich auf diese drei Wolken stützen, während die beiden übrigen erst bei der Anwendung des Modells hinzukommen (Abschnitt~\ref{inferenz_preprocessing}). Die Punktdichte liegt in Authausen zwischen 151 und 184 Punkten je Quadratmeter und in Cuxhaven bei rund 113. Nicht dokumentiert sind dagegen Flughöhe, Bodenauflösung, Überlappungsgrad sowie die verwendete Programmversion und ihre Einstellungen. Für die vorliegende Arbeit ist das nicht relevant, weil die Punktwolken als gegeben verarbeitet werden.
+Die Rekonstruktion der Punktwolken erfolgte mit Agisoft Metashape. Aus ihr gingen fünf getrennte Punktwolken hervor, vier für den Authausener Wald mit zusammen 100,6 Millionen Punkten und eine für die Cuxhavener Küstenheide mit 415,3 Millionen Punkten. Annotierte Teilflächen liegen allein in der Schneise I, in der 110-kV-Trasse und in Cuxhaven, sodass sich Training und die Bewertung anhand gelabelter Testkacheln auf diese drei Wolken stützen, während die übrigen beiden erst bei der Anwendung des Modells auf die gesamte Fläche hinzukommen (Abschnitt~\ref{inferenz_preprocessing}). Die Punktdichte liegt in den Authausener Gebieten zwischen 116 und 156 Punkten je Quadratmeter und in Cuxhaven bei rund 98. Sie bestimmt mit, wie viele Punkte dem Netz bei einem gegebenen Nachbarschaftsradius zur Verfügung stehen. Flughöhe, Bodenauflösung, Überlappungsgrad sowie die verwendete Programmversion und ihre Einstellungen sind dagegen nicht dokumentiert, was für diese Arbeit unerheblich ist, weil die Punktwolken ohnehin als gegebene Eingabe verarbeitet werden.
 
 \subsubsection{Manuelle Annotation und Klassenschema}\label{annotation}
 
-Die Grundlage für Training und Bewertung bilden manuell annotierte Referenzflächen. Bearbeitet wurden dafür einzelne Ausschnitte der Orthomosaike, im Folgenden Teilflächen genannt. Die Flächen darin wurden nicht von Hand gezeichnet. Ein Segmentierungsverfahren zerlegt jedes Orthomosaik zunächst in kleine, in sich einheitliche Bildregionen, die anschließend manuell einer Klasse zugeordnet werden. Verwendet wurde dafür in R das Verfahren Simple Non-Iterative Clustering (SNIC), das benachbarte Pixel nach spektraler Ähnlichkeit und räumlicher Nähe zu kompakten, zusammenhängenden Regionen zusammenfasst \cite{Achanta.2017}. Die daraus entstehenden Segmente liegen als Polygone vor.
+Die Grundlage für Training und Bewertung bilden manuell annotierte Referenzflächen, für die einzelne Ausschnitte der Orthomosaike bearbeitet wurden, im Folgenden Teilflächen genannt. Statt die Flächen von Hand zu zeichnen, zerlegt ein Segmentierungsverfahren jedes Orthomosaik zunächst in kleine, in sich einheitliche Bildregionen, die anschließend manuell einer Klasse zugeordnet werden. Verwendet wurde dafür in R das Verfahren Simple Non-Iterative Clustering (SNIC), das benachbarte Pixel nach spektraler Ähnlichkeit und räumlicher Nähe zu kompakten, zusammenhängenden Regionen zusammenfasst \cite{Achanta.2017}. Die daraus entstehenden Segmente liegen als Polygone vor.
 
 Vergeben wurden die acht Klassen \texttt{bush}, \texttt{deadwood},
 \texttt{graminoid}, \texttt{heath}, \texttt{other}, \texttt{sand},
 \texttt{soil} und \texttt{tree}. Für die Fragestellung tragen vor allem \texttt{bush} und \texttt{tree} bei, die zusammen die Gehölze bilden, sowie \texttt{heath} und \texttt{graminoid} als die davon abzugrenzende niedrige Vegetation. Eine neunte Klasse für Wasser ist in der Verarbeitung vorgesehen, in den Annotationen jedoch nicht belegt.
 
-Neben der Klasse wurden je Segment drei Angaben zur Aufnahmequalität erfasst. Zwei davon sind binär und halten fest, ob ein Segment verschattet oder überbelichtet ist, die dritte ist die Sicherheit der Zuordnung auf einer Skala von null bis zehn. Diese Angaben gehen nicht als Merkmal in das Netz ein, sondern steuern das Gewicht eines Punktes im Verlust (Abschnitt~\ref{verlustfunktion}).
+Neben der Klasse wurden je Segment drei Angaben zur Aufnahmequalität erfasst. Zwei davon sind binär und halten fest, ob ein Segment verschattet oder überbelichtet ist. Die dritte gibt die Sicherheit der Zuordnung auf einer Skala von null bis zehn an. Diese Angaben steuern das Gewicht eines Punktes im Verlust (Abschnitt~\ref{verlustfunktion}).
 
-Annotiert wurden 16 Teilflächen mit 76.193 Segmenten auf 8,92 Hektar, elf davon im Authausener Wald mit 3,39 Hektar und fünf in der Cuxhavener Küstenheide mit 5,53 Hektar. Während die Authausener Flächen als schmale Streifen von rund 100 Metern Länge vorliegen, ist die Cuxhavener Fläche nahezu quadratisch mit rund 107 mal 111 Metern.
+Annotiert wurden 16 Teilflächen mit 76.193 Segmenten auf 8,92 Hektar, elf davon im Authausener Wald mit 3,39 Hektar und fünf in der Cuxhavener Küstenheide mit 5,53 Hektar.
 
 \subsection{Datenvorverarbeitung}\label{datenvorverarbeitung}
 
@@ -61,17 +60,17 @@ Geladen wird je Teilfläche nur der Ausschnitt, der innerhalb des umschließende
 
 \subsubsection{Bodenerkennung und Höhennormalisierung}\label{hoehennormalisierung}
 
-Die Z-Koordinate der Rohpunkte gibt die absolute Höhe an und ist für eine vegetationskundliche Auswertung wenig aussagekräftig, weil sie das Relief des Geländes enthält. Für die Unterscheidung von Heide, Gras und Gehölzen ist dagegen die Höhe über dem Boden entscheidend, also die Wuchshöhe der Pflanze an ihrem Standort. Die Punktwolke wird deshalb höhennormalisiert, wodurch jeder Punkt statt seiner absoluten Höhe seinen vertikalen Abstand zur Geländeoberfläche erhält.
+Die Z-Koordinate der Rohpunkte gibt die absolute Höhe an und ist für eine vegetationskundliche Auswertung wenig aussagekräftig, weil sie das Relief des Geländes enthält. Für die Unterscheidung von Heide, Gras und Gehölzen ist dagegen die Höhe über dem Boden entscheidend, das heißt die Wuchshöhe der Pflanze an ihrem Standort. Die Punktwolke wird deshalb höhennormalisiert, wodurch jeder Punkt statt seiner absoluten Höhe seinen vertikalen Abstand zur Geländeoberfläche erhält.
 
-Der erste Schritt ist die automatische Erkennung der Bodenpunkte mit einem Cloth Simulation Filter (CSF) \cite{Zhang.2016}. Anschaulich lässt sich das Verfahren so verstehen, dass die Punktwolke auf den Kopf gestellt wird und ein virtuelles Tuch auf die dabei entstandene Oberfläche fällt. Dessen Form nähert nach dem Absinken die Geländeoberfläche an, und alle Punkte, deren Abstand zu dieser Fläche unter einem Schwellenwert liegt, werden als Boden klassifiziert. Gegenüber älteren hangneigungs- und morphologiebasierten Filtern kommt CSF mit wenigen, einfach zu setzenden Parametern aus \cite{Zhang.2016}. Gesetzt wurden der horizontale Abstand zweier benachbarter Tuchknoten (grid resolution) auf 0,5 Meter, der Abstandsschwellenwert für die Trennung von Boden- und Objektpunkten auf 0,3 Meter sowie die Steifigkeit des Tuchs (rigidness) auf 2, den mittleren der drei zulässigen Werte.
+Zunächst werden die Bodenpunkte automatisch mit einem Cloth Simulation Filter (CSF) erkannt \cite{Zhang.2016}. Anschaulich lässt sich das Verfahren so verstehen, dass die Punktwolke auf den Kopf gestellt wird und ein virtuelles Tuch auf die dabei entstandene Oberfläche fällt, dessen Form sich nach dem Absinken der Geländeoberfläche annähert. Alle Punkte, deren Abstand zu dieser Fläche unter einem Schwellenwert liegt, werden als Boden klassifiziert. Gegenüber älteren hangneigungs- und morphologiebasierten Filtern kommt CSF mit wenigen, einfach zu setzenden Parametern aus \cite{Zhang.2016}. Gesetzt wurden der horizontale Abstand zweier benachbarter Tuchknoten (grid resolution) auf 0,5 Meter, der Abstandsschwellenwert für die Trennung von Boden- und Objektpunkten auf 0,3 Meter sowie die Steifigkeit des Tuchs (rigidness) auf zwei, den mittleren der drei zulässigen Werte.
 
-Aus den so bestimmten Bodenpunkten wird anschließend für jeden Punkt der Wolke die lokale Geländehöhe geschätzt und von seiner Z-Koordinate abgezogen. Die Schätzung erfolgt über eine inverse Distanzgewichtung (inverse distance weighting) der zehn nächstgelegenen Bodenpunkte, deren Beitrag zur Schätzung mit dem Quadrat ihres Abstands abnimmt. Bodenpunkte liegen danach nahe null, während die Höhe eines Vegetationspunktes seiner Wuchshöhe entspricht.
+Aus den so bestimmten Bodenpunkten wird anschließend für jeden Punkt der Wolke die lokale Geländehöhe geschätzt und von seiner Z-Koordinate abgezogen. Die Schätzung erfolgt über eine inverse Distanzgewichtung (inverse distance weighting) der zehn nächstgelegenen Bodenpunkte, deren Beitrag zur Schätzung mit dem Quadrat ihres Abstands zum geschätzten Punkt abnimmt. Bodenpunkte liegen danach nahe null und die Höhe eines Vegetationspunktes entspricht seiner Wuchshöhe.
 
-Diese Normalisierung erfolgt getrennt für jede der 16 annotierten Teilflächen und nicht gemeinsam über alle Gebiete. Die Höhe über Boden ist eine lokale Größe, wodurch ein einziges Geländemodell über mehrere hundert Kilometer hinweg weder fachlich sinnvoll noch mit vertretbarem Rechenaufwand zu erzeugen wäre. An den Rändern der Gebiete entstehen Werte, wo die photogrammetrische Rekonstruktion ungenau wird und das Geländemodell aus weiter entfernt liegenden Bodenpunkten extrapoliert werden muss. Aus diesem Grund werden nach der Normalisierung Punkte unterhalb von minus einem Meter verworfen.
+Diese Normalisierung erfolgt getrennt für jede der 16 annotierten Teilflächen, in deren Zuschnitt die Daten bereits geladen wurden. An den Rändern der Gebiete, wo die photogrammetrische Rekonstruktion ungenau wird und das Geländemodell aus weiter entfernt liegenden Bodenpunkten extrapoliert werden muss, entstehen dadurch stark negative Höhen. Aus diesem Grund werden nach der Normalisierung Punkte unterhalb von minus einem Meter verworfen.
 
 \subsubsection{Übertragung der Labels auf die Punktwolke}\label{label_transfer}
 
-Auf der so normalisierten Punktwolke lassen sich nun die Annotationen übertragen. Diese liegen als zweidimensionale Polygone im Luftbild vor, das Modell benötigt jedoch ein Label je Punkt der dreidimensionalen Wolke. Diese Übertragung erfolgt über einen räumlichen Verschnitt, bei dem für jeden Punkt geprüft wird, in welchem Polygon seine X- und Y-Koordinate liegt, woraufhin er dessen Klasse übernimmt. Neben der Vegetationsklasse werden auf demselben Weg die drei Qualitätsattribute \texttt{shadow}, \texttt{overexposed} und \texttt{confidence} übertragen. Punkte ohne zugeordnetes Polygon werden anschließend entfernt, wobei neben fehlenden Werten auch leere Zeichenketten abgefangen werden, da diese in R nicht als fehlender Wert gelten und sonst als eigene Scheinklasse in die weitere Verarbeitung gelangt wären.
+Auf der so normalisierten Punktwolke lassen sich die Annotationen übertragen, die als zweidimensionale Polygone im Luftbild vorliegen, während das Modell ein Label je Punkt der dreidimensionalen Wolke benötigt. Ein räumlicher Verschnitt prüft dafür für jeden Punkt, in welchem Polygon seine X- und Y-Koordinate liegt, und weist ihm dessen Klasse zu. Auf demselben Weg werden neben der Vegetationsklasse auch die drei Qualitätsattribute \texttt{shadow}, \texttt{overexposed} und \texttt{confidence} übertragen. Punkte ohne zugeordnetes Polygon werden anschließend entfernt.
 
 Dieses Vorgehen beantwortet die erste Teilfrage nach einem automatisierten Label-Transfer, bringt jedoch eine systematische Schwäche mit sich. Die
 Polygone wurden auf der von oben sichtbaren Oberfläche gezeichnet, ihre Klasse
@@ -79,15 +78,15 @@ wird beim Verschnitt aber auf die gesamte darunterliegende Punktsäule
 übertragen. Jedes Polygon wirkt damit wie ein Ausstecher, der seine Klasse
 durch die volle Höhe der Punktwolke stempelt.
 
-Ragt eine Baumkrone über eine Heidefläche, ist im Luftbild nur die Krone zu sehen. Dort entsteht ein Baumpolygon, und die darunter wachsende Heide erhält das Label \texttt{tree}. An den Rändern derselben Krone kehrt sich der Fehler um. Einzelne Zweige reichen über die benachbarte Fläche hinaus, werden im Bild aber nicht eigens abgegrenzt, weil die Polygongrenze vereinfacht entlang der sichtbaren Kronenkante verläuft. Punkte auf diesen Zweigen fallen in ein Heide- oder Graspolygon und tragen dessen Label. Der Ausstecher wirkt damit in beide Richtungen.
+Ragt eine Baumkrone über eine Heidefläche, ist im Luftbild nur die Krone zu sehen, wodurch die darunter wachsende Heide fälschlich das Label \texttt{tree} erhält. An den Rändern derselben Krone kehrt sich der Fehler um, weil einzelne Zweige über die benachbarte Fläche hinausreichen, im Bild aber nicht eigens abgegrenzt werden, da die Polygongrenze vereinfacht entlang der sichtbaren Kronenkante verläuft. Punkte auf diesen Zweigen fallen dadurch in ein Heide- oder Graspolygon und tragen dessen Label. Der Ausstecher wirkt damit in beide Richtungen.
 
-Nachweisen lassen sich beide Fehlerarten an der Höhenverteilung je Klasse. Ein erheblicher Teil der als \texttt{tree} gelabelten Punktmasse liegt nahe der Bodenoberfläche und bildet damit Unterwuchs statt Baum ab. In der Gegenrichtung reichen einzelne als \texttt{heath} gelabelte Punkte bis 22 Meter, als \texttt{graminoid} gelabelte bis 23 Meter und als \texttt{sand} gelabelte bis 14 Meter über den Boden, was für diese Klassen ausgeschlossen ist. Betroffen sind davon allerdings nur wenige Punkte, denn das 95. Perzentil der Heidepunkte liegt bei 1,26 Metern. Dass die Kontamination durch Überhang auftritt und nicht auf einzelne Flächen beschränkt bleibt, zeigen diese Extremwerte dennoch. Anschaulich wird das durch eine Abbildung, die einen senkrechten Schnitt durch die Punktwolke darstellt (Abbildung~\ref{fig:ausstecher}), in dem beide Fehlerarten nebeneinander auftreten.
+Ein erheblicher Teil der als \texttt{tree} gelabelten Punktmasse liegt, wie die Höhenverteilung je Klasse zeigt, nahe der Bodenoberfläche und bildet damit Unterwuchs statt Baum ab. In der Gegenrichtung reichen einzelne als \texttt{heath} gelabelte Punkte bis 22 Meter, als \texttt{graminoid} gelabelte bis 23 Meter und als \texttt{sand} gelabelte bis 14 Meter über den Boden, was in der Natur für diese Klassen ausgeschlossen ist. Betroffen sind davon allerdings nur wenige Punkte, denn das 95. Perzentil der Heidepunkte liegt bei 1,26 Metern. Anschaulich wird das durch eine Abbildung, die einen senkrechten Schnitt durch die Punktwolke darstellt (Abbildung~\ref{fig:ausstecher}), in dem beide Fehlerarten nebeneinander auftreten.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{ausstecher_problem}
     \caption[Fehllabel durch den Label-Transfer]{Senkrechter Schnitt durch die
-    Punktwolke der Schneise I nach dem Label-Transfer. [Eigene Darstellung].}
+    Punktwolke der Schneise I nach dem Label-Transfer. Eigene Darstellung.}
     \label{fig:ausstecher}
 \end{figure}
 
@@ -101,17 +100,21 @@ Um diese Fehllabel zu bereinigen, wird auf der normalisierten Höhe ein Regelwer
     \caption[Wirkung der höhenbasierten Labelkorrektur]{Senkrechter Schnitt
     durch die Punktwolke der 110-kV-Trasse vor (a) und nach (b) der
     Labelkorrektur. Die Linien bei 0,5 und 2,0 Metern markieren die Grenzen der Abwärtsregeln.
-    [Eigene Darstellung].}
+    Eigene Darstellung.}
     \label{fig:labelkorrektur}
 \end{figure}
 
-Die Schwellenwerte der Aufwärtsregeln wurden nicht geschätzt, sondern aus den Daten selbst abgeleitet. Für jede Klasse wurde über alle 16 annotierten Tiles das 95. Perzentil der normierten Höhe berechnet und auf einen gerundeten Wert festgelegt, woraus sich ein Höhenschwellenwert von 1,15 Meter für \texttt{soil}, 1,4 Meter für \texttt{sand}, 1,2 Meter für \texttt{graminoid} und 1,3 Meter für \texttt{heath} ergibt. Auf die Klasse \texttt{bush} ist dieses Vorgehen nicht anwendbar, da ihr oberes Perzentil durch überstehende Bäume so stark verfälscht wird, dass es mit 13,5 Metern weit oberhalb jeder realistischen Strauchhöhe liegt. Ihre Schwelle wurde deshalb als eigene Setzung auf 3,5 Meter festgelegt. Dieser Wert orientiert sich an der Wuchshöhe der auf Heideflächen typischen Pioniergehölze wie Schlehe, Weißdorn und Rosenarten \cite{Schoknecht.1998} und liegt bewusst unterhalb der in der Vegetationskunde üblichen Obergrenze der Strauchschicht von etwa fünf Metern, da Gehölze dieser Höhe im Untersuchungsgebiet bereits durchweg als Birke oder Kiefer und damit als Baum auftreten. Die Klasse \texttt{deadwood} bleibt bewusst ohne Höhenregel, weil Totholz sowohl liegend als auch stehend vorkommt und ihre Höhenverteilung deshalb zweigipflig ist, sodass eine einzelne Schwelle eine der beiden Erscheinungsformen systematisch falsch behandeln würde.
+Um die Schwellenwerte der Aufwärtsregeln aus den Daten selbst abzuleiten, wurde für jede Klasse über alle 16 annotierten Teilflächen das 95. Perzentil der normierten Höhe berechnet und auf einen gerundeten Wert festgelegt, woraus sich ein Höhenschwellenwert von 1,15 Meter für \texttt{soil}, 1,4 Meter für \texttt{sand}, 1,2 Meter für \texttt{graminoid} und 1,3 Meter für \texttt{heath} ergibt.
 
-Verlässlich ist die Zuweisung des Unterwuchses über feste Höhenbänder allerdings nicht und bleibt somit eine Näherung. Tiefliegende Punkte unter Baumkronen können auch offener Boden oder Sand sein, werden durch die Abwärtsregeln aber je nach Höhe entweder der Heide oder den Büschen zugeordnet. Beide Klassen können dadurch überschätzt werden, was im Fall von \texttt{bush} sogar unmittelbar die Zielgröße dieser Arbeit betrifft.
+Auf die Klasse \texttt{bush} ist dieses Vorgehen nicht anwendbar, da ihr oberes Perzentil durch überstehende Bäume so stark verfälscht wird, dass es mit 13,5 Metern weit oberhalb jeder realistischen Strauchhöhe liegt. Ihre Schwelle wurde deshalb als eigene Setzung auf 3,5 Meter festgelegt. Dieser Wert orientiert sich an der Wuchshöhe der auf Heideflächen typischen Pioniergehölze wie Schlehe, Weißdorn und Rosenarten \cite{Schoknecht.1998} und liegt bewusst unterhalb der in der Vegetationskunde üblichen Obergrenze der Strauchschicht von etwa fünf Metern, da Gehölze dieser Höhe im Untersuchungsgebiet bereits durchweg als Birke oder Kiefer und damit als Baum auftreten.
 
-Hinzu kommt, dass die Regeln punktweise und nicht objektbezogen arbeiten. Ein Strauch, dessen Basis am Boden ansetzt, wird an der Grenze von 0,5 Metern waagerecht durchgeschnitten und unterhalb davon der Heide, oberhalb den Büschen zugeschlagen, obwohl es sich um dieselbe Pflanze handelt. In Abbildung~\ref{fig:labelkorrektur} ist das an mehreren Stellen zu erkennen.
+Die Klasse \texttt{deadwood} bleibt bewusst ohne Höhenregel, weil Totholz sowohl liegend als auch stehend vorkommt und ihre Höhenverteilung deshalb zweigipflig ist, sodass eine einzelne Schwelle eine der beiden Erscheinungsformen systematisch falsch behandeln würde.
 
-Eine weitere Nebenwirkung entsteht aus der Reihenfolge der Regeln. Weil die Aufwärtsregeln zuerst greifen, wird etwa ein Graspunkt oberhalb von 1,2 Metern zunächst zu \texttt{tree} hochgestuft und unmittelbar danach von der Abwärtsregel zu \texttt{bush} zurückgestuft, obwohl kein Regelsatz diesen Übergang direkt vorsieht. Betroffen sind davon vor allem die Klassen \texttt{graminoid} und \texttt{heath}. Wie stark beide Effekte die Buschklasse verschieben, wird bei der Einordnung der Ergebnisse aufgegriffen (Kapitel~\ref{diskussion}). Die Schwellenwerte selbst beruhen zudem auf den 16 annotierten Teilflächen und wären bei einer erneuten Erweiterung des Datensatzes neu zu bestimmen.
+Die Zuweisung des Unterwuchses über feste Höhenbänder bleibt allerdings eine Näherung. Tiefliegende Punkte unter Baumkronen können auch offener Boden oder Sand sein, werden durch die Abwärtsregeln aber je nach Höhe entweder der Heide oder den Büschen zugeordnet. Beide Klassen können dadurch überschätzt werden, was im Fall von \texttt{bush} sogar unmittelbar die Zielgröße dieser Arbeit betrifft.
+
+Hinzu kommt, dass die Regeln punktweise und nicht objektbezogen arbeiten. Ein Strauch, dessen Basis am Boden ansetzt, wird an der Grenze von 0,5 Metern waagerecht durchgeschnitten und unterhalb davon der Heide, oberhalb den Büschen zugeordnet, obwohl es sich um dieselbe Pflanze handelt. In Abbildung~\ref{fig:labelkorrektur} ist das an mehreren Stellen zu erkennen.
+
+Aus der Reihenfolge der Regeln entsteht eine weitere Nebenwirkung, denn weil die Aufwärtsregeln zuerst greifen, wird etwa ein Graspunkt oberhalb von 1,2 Metern zunächst zu \texttt{tree} hochgestuft und unmittelbar danach von der Abwärtsregel zu \texttt{bush} zurückgestuft, obwohl kein Regelsatz diesen Übergang direkt vorsieht. Betroffen sind davon vor allem die Klassen \texttt{graminoid} und \texttt{heath}. Wie stark beide Effekte die Buschklasse verschieben, wird bei der Einordnung der Ergebnisse aufgegriffen (Kapitel~\ref{diskussion}). Die Schwellenwerte selbst beruhen zudem auf den 16 annotierten Teilflächen und wären bei einer erneuten Erweiterung des Datensatzes neu zu bestimmen.
 
 % ZAHLEN FÜR DIE DISKUSSION (vollständige Punktwolke, 11.721.599 Punkte):
 % - Umklassifiziert insgesamt: 1.157.068 Punkte (9,9 %)
@@ -125,58 +128,59 @@ Eine weitere Nebenwirkung entsteht aus der Reihenfolge der Regeln. Weil die Aufw
 
 \subsubsection{Lokale Höhenmerkmale}\label{hoehenmerkmale}
 
-Die bisher vorliegenden Merkmale beschreiben jeden Punkt über seine Lage, seine Farbe und seine Höhe über dem Boden. Für die entscheidende Trennung reicht das nicht aus, denn die Höhe allein trennt einen 40 Zentimeter hohen Busch nicht von einem gleich hohen Heidebestand. Was eine annotierende Person in diesem Fall nutzt, ist nicht die absolute Höhe, sondern die Struktur des Bestandes, also die Frage, ob die Oberfläche geschlossen und flächig ist oder ob einzelne Zweige aus ihrer Umgebung herausragen. Um diese Information für das Netz verfügbar zu machen, werden je Punkt zwei zusätzliche Merkmale berechnet. Das Merkmal \texttt{z\_range} gibt die Höhenspanne innerhalb einer Rasterzelle von 0,5 Metern an und erreicht große Werte bei Sträuchern mit Ästen und Lücken, kleine Werte im geschlossenen Heideteppich und nahezu den Wert null auf offenem Boden. Das Merkmal \texttt{z\_rel} beschreibt die Höhe eines Punktes über der medianen Höhe seiner Umgebung von 2,5 Metern und wird positiv, wenn eine Struktur aus dem umgebenden Bestand herausragt. Berechnet werden beide Merkmale getrennt je Gebiet.
+Die bisher vorliegenden Merkmale beschreiben jeden Punkt über seine Lage, seine Farbe und seine Höhe über dem Boden. Für die entscheidende Trennung reicht das nicht aus, denn die Höhe allein trennt einen 40 Zentimeter hohen Busch nicht von einem gleich hohen Heidebestand. Im Luftbild erkennt eine annotierende Person den Unterschied an der Textur, also an derselben unruhigen Oberfläche, die sich in der Punktwolke als kleinräumige Höhenvariabilität niederschlägt. Um diese Information für das Netz verfügbar zu machen, werden je Punkt zwei zusätzliche Merkmale berechnet. Das Merkmal \texttt{z\_range} gibt die Höhenspanne innerhalb einer Rasterzelle von 0,5 Metern an und erreicht große Werte bei locker aufgebauten Sträuchern, deren Zweige in verschiedenen Höhen liegen, kleine Werte im geschlossenen Heideteppich und nahezu den Wert null auf offenem Boden. Das Merkmal \texttt{z\_rel} beschreibt die Höhe eines Punktes über der medianen Höhe seiner Umgebung von 2,5 Metern und wird positiv, wenn eine Struktur aus dem umgebenden Bestand herausragt. Berechnet werden beide Merkmale getrennt je Gebiet.
 
 Beide Merkmale werden bei fünf Metern begrenzt, \texttt{z\_rel} zusätzlich nach unten bei minus fünf Metern. Ohne diese Grenze reicht \texttt{z\_range} in Zellen, die eine Baumkrone schneiden, bis über 20 Meter und drückt den für die Verbuschung entscheidenden Bereich zwischen Heide und Busch auf einen sehr schmalen Ausschnitt zusammen. Verloren geht durch die Kappung wenig, da solche Spannen nur unter Baumkronen auftreten und sich Bäume bereits über die normalisierte Höhe zuverlässig von der niedrigen Vegetation abheben.
 
 \subsubsection{Kachelung}\label{tiling}
 
-Damit sind alle Merkmale berechnet, und die Punktwolke kann in die Form
-gebracht werden, die das Netz erwartet. Da PointNet++ keine beliebig großen
-Szenen verarbeitet, sondern Punktmengen fester Größe, muss sie zuvor zerlegt
-werden. Ein gleitendes
+Nachdem alle Merkmale berechnet sind, muss die Punktwolke in die Form
+gebracht werden, die das Netz erwartet, denn PointNet++ verarbeitet keine
+beliebig großen Szenen, sondern Punktmengen fester Größe. Ein gleitendes
 Fenster (sliding window) von zehn Metern Kantenlänge wandert dafür über die
 Fläche und schneidet daraus quadratische Kacheln. Zwischen zwei Fenstern
 liegen jeweils fünf Meter Versatz, sodass benachbarte Kacheln sich zur Hälfte
-überlappen. Damit verdoppelt sich nicht nur die Zahl der Trainingsbeispiele, das Netz sieht dieselbe Struktur auch an wechselnder Stelle innerhalb der Kachel, was einer Datenerweiterung (data augmentation) entspricht.
+überlappen. Damit verdoppelt sich nicht nur die Zahl der Trainingsbeispiele, sondern das Netz sieht dieselbe Struktur auch an wechselnder Stelle innerhalb der Kachel, was einer Datenerweiterung (data augmentation) entspricht.
 
-Das gleitende Fenster wird je zusammenhängendem Bereich verschoben und nicht über alle Gebiete hinweg, damit die großen unannotierten Zwischenräume ausgelassen werden. Die acht aneinandergrenzenden Teilflächen der Schneise I bilden ein durchgehendes Raster, während alle übrigen Teilflächen isoliert liegen und einzeln verarbeitet werden.
+Das gleitende Fenster wird je zusammenhängendem Bereich verschoben und nicht über alle Gebiete hinweg, damit die großen unannotierten Zwischenräume ausgelassen werden. Die acht aneinandergrenzenden Teilflächen der Schneise I bilden ein durchgehendes Raster, wohingegen alle übrigen Teilflächen isoliert liegen und einzeln verarbeitet werden.
 
-Jede Kachel muss dieselbe Anzahl an Punkten enthalten, weil das Netz eine feste Eingabegröße erwartet. Aus jedem Fenster werden deshalb 8.192 Punkte ohne Zurücklegen gezogen, damit kein Punkt doppelt in eine Kachel gelangt und dort eine Dichte vortäuscht, die in den Daten nicht vorhanden ist. Enthält ein Fenster weniger Punkte, wird es verworfen. Betroffen sind davon vor allem Randfenster, die nur zum Teil innerhalb einer annotierten Fläche liegen. Von 4.170 Fenstern bleiben auf diesem Weg 3.017 Kacheln übrig. Gezogen wird mit einem festen Startwert des Zufallsgenerators, damit ein erneuter Export dieselben Kacheln erzeugt und die Läufe der Ablationsstudie vergleichbar bleiben. Wie viele Punkte eine Kachel enthält, gehört selbst zu den Faktoren, die dort variiert werden (Abschnitt~\ref{ablation}).
+Jede Kachel muss dieselbe Anzahl an Punkten enthalten, weil das Netz eine feste Eingabegröße erwartet. Aus jedem Fenster werden deshalb 8.192 Punkte ohne Zurücklegen gezogen, damit kein Punkt doppelt in eine Kachel gelangt und dort eine Dichte vortäuscht, die in den Daten nicht vorhanden ist. Enthält ein Fenster weniger Punkte, wird es verworfen, was vor allem Randfenster betrifft, die nur zum Teil innerhalb einer annotierten Fläche liegen. Aus 4.170 Fenstern entstehen auf diesem Weg 3.017 Kacheln. Gezogen wird mit einem festen Startwert des Zufallsgenerators, damit ein erneuter Export dieselben Kacheln erzeugt und die Läufe der Ablationsstudie vergleichbar bleiben. Wie viele Punkte eine Kachel enthält, gehört zu den Faktoren, die dort variiert werden (Abschnitt~\ref{ablation}).
 
-Die Punkte jeder Kachel werden auf die Fenstermitte zentriert, damit das Netz keine absoluten Koordinaten lernt, sondern nur die Anordnung der Punkte zueinander. Die Farbkanäle einschließlich des Nahinfrarotkanals erhalten Werte zwischen null und eins, die Klassenbezeichner werden von eins bis acht auf null bis sieben umgeschrieben, so wie es die Implementierung erwartet. Abgelegt wird jede Kachel als Textdatei, in der eine Zeile einem Punkt entspricht. Dort stehen in fester Reihenfolge die zentrierten X- und Y-Koordinaten, die normalisierte Höhe, die vier Farbkanäle, die beiden lokalen Höhenmerkmale, das Label sowie die drei Qualitätsattribute.
+Die Punkte jeder Kachel werden auf die Fenstermitte zentriert, damit das Netz keine absoluten Koordinaten lernt, sondern nur die Anordnung der Punkte zueinander. Die Farbkanäle einschließlich des Nahinfrarotkanals erhalten Werte zwischen null und eins. Die Klassenbezeichner werden von der Nummerierung eins bis acht auf null bis sieben umgeschrieben, so wie es die Implementierung erwartet. Abgelegt wird jede Kachel als Textdatei, in der eine Zeile einem Punkt entspricht. Dort stehen in fester Reihenfolge die zentrierten X- und Y-Koordinaten, die normalisierte Höhe, die vier Farbkanäle, die beiden lokalen Höhenmerkmale, das Label sowie die drei Qualitätsattribute.
 
 \subsubsection{Räumlich getrennte Datenaufteilung}\label{split}
 
 Bevor trainiert werden kann, muss der Kacheldatensatz in einen Trainings-, einen Validierungs- und einen Testteil zerlegt werden, damit die abschließende Bewertung auf Kacheln beruht, die das Netz nie gesehen hat.
 
-Die Kacheln zufällig auf die drei Teile zu verteilen wäre in diesem Fall die falsche Herangehensweise. Wegen der 50-prozentigen Überlappung enthalten zwei benachbarte Kacheln zur Hälfte dieselben Punkte. Landet nun die eine im Training und die andere in der Validierung, wird das Netz an Punkten geprüft, mit denen es trainiert wurde, und die gemessene Güte fiele zu optimistisch aus.
+Die Kacheln zufällig auf die drei Teile zu verteilen, wäre in diesem Fall irreführend, denn wegen der 50-prozentigen Überlappung enthalten zwei benachbarte Kacheln zur Hälfte dieselben Punkte. Landet nun die eine im Training und die andere in der Validierung, wird das Netz an Punkten geprüft, mit denen es trainiert wurde, sodass die gemessene Güte zu optimistisch ausfiele.
 
-Aufgrund dessen werden nicht einzelne Kacheln, sondern räumlich voneinander getrennte Blöcke auf die drei Teile verteilt. Alle Kacheln eines Blocks gehen geschlossen in denselben Teil, sodass keine Überlappung eine Grenze überschreiten kann. Die isoliert liegenden Teilflächen bilden jeweils einen eigenen Block, wohingegen die Schneise I als großes, zusammenhängendes Gebiet in drei Blöcke aufgeteilt wird, zwischen denen jeweils ein zehn Meter breiter Streifen frei bleibt, sodass kein Fenster über eine Blockgrenze reichen kann. Ohne diese Aufteilung fiele der gesamte Landschaftstyp der Schneise I in einen einzigen Teil, sodass das Netz auf ihm entweder nicht trainiert oder nicht geprüft würde.
+Verteilt werden deshalb nicht einzelne Kacheln, sondern räumlich voneinander getrennte Blöcke. Alle Kacheln eines Blocks gehen geschlossen in denselben Teil, sodass keine Überlappung eine Grenze überschreiten kann. Die isoliert liegenden Teilflächen bilden jeweils einen eigenen Block, wohingegen die Schneise I als großes, zusammenhängendes Gebiet in drei Blöcke aufgeteilt wird, zwischen denen jeweils ein zehn Meter breiter Streifen frei bleibt, sodass kein Fenster über eine Blockgrenze reichen kann. Ohne diese Aufteilung fiele der gesamte Landschaftstyp der Schneise I in einen einzigen Teil, sodass das Netz auf ihm entweder nicht trainiert oder nicht geprüft würde.
 
 Verteilt werden die Blöcke mit dem Ziel einer Aufteilung von 70 zu 15 zu 15 Prozent, die sich nur annähern lässt, weil immer ganze Blöcke vergeben werden. Von den 3.017 Kacheln entfallen am Ende 2.094 auf das Training, 455 auf die Validierung und 468 auf den Test, was 69, 15 und 16 Prozent entspricht. Beide Untersuchungsgebiete, der Authausener Wald und die Cuxhavener Küstenheide, sind in allen drei Teilen vertreten, sodass keiner der beiden Landschaftstypen ausschließlich im Training oder ausschließlich im Test vorkommt.
 
 \subsection{Modell und Trainingssetup}\label{modell_training}
 
 \subsubsection{Architektur}\label{modell_pointnetpp}
-Als Netz kommt PointNet++ in der Variante für semantische Segmentierung zum Einsatz, deren Aufbau in Abschnitt~\ref{pointnet++} beschrieben ist \cite{Qi.2017b}. Ausschlaggebend für die Wahl war, dass es Punktwolken unmittelbar verarbeitet und die Höhenstruktur des Bestandes dabei erhalten bleibt, während zweidimensionale Verfahren die dritte Dimension auf ein Rasterbild projizieren müssen. Genau diese Struktur unterscheidet einen Busch von einem gleich hohen Heidebestand.
+Als Netz kommt PointNet++ in der Variante für semantische Segmentierung zum Einsatz, deren Aufbau in Abschnitt~\ref{pointnet++} beschrieben ist \cite{Qi.2017b}. Gewählt wurde es, weil es Punktwolken unmittelbar verarbeitet und die Höhenstruktur des Bestandes erhält, während zweidimensionale Verfahren die dritte Dimension auf ein Rasterbild projizieren müssen. Genau an dieser Struktur hängt die Unterscheidung zwischen Busch und Heide.
 
-Die Umsetzung folgt der frei verfügbaren Referenzimplementierung von Yan \cite{Yan.2019}, die unter der MIT-Lizenz steht. Übernommen wurde sie unverändert als eigener Commit, bevor die erste eigene Zeile entstand, sodass sich jede spätere Änderung dieser Arbeit zuordnen lässt. Das Netz betrachtet eine Kachel in vier Set-Abstraction-Stufen mit jeweils größerem Blickfeld. In der ersten Stufe wählt es 1.024 Punkte als Zentren aus und beschreibt jedes davon anhand von bis zu 32 Nachbarn im Umkreis von 0,1 Metern, wodurch feine Textur erfasst wird. Über die folgenden Stufen sinkt die Zahl der Zentren auf 256, 64 und schließlich auf 16, während der Umkreis auf 0,2, 0,4 und 0,8 Meter wächst. Die Szene wird dadurch von Stufe zu Stufe gröber betrachtet, dafür aber im größeren Zusammenhang. Vier Feature-Propagation-Stufen verteilen die so gewonnenen Beschreibungen anschließend wieder auf alle Punkte, sodass am Ende jeder einzelne Punkt einen Wert je Klasse erhält. Eine Dropout-Schicht mit einer Rate von 0,5 schaltet während des Trainings zufällig die Hälfte der Merkmale ab und wirkt damit der Überanpassung entgegen. Eingabekanäle, Nachbarschaftsradien und die Zahl der Radien je Stufe sind umschaltbar und gehören zu den Faktoren, die in Abschnitt~\ref{ablation} variiert werden.
+Die Umsetzung folgt der frei verfügbaren Referenzimplementierung von Yan \cite{Yan.2019}, die unter der MIT-Lizenz steht. Übernommen wurde sie unverändert als eigener Commit, bevor die erste eigene Zeile entstand, sodass sich jede spätere Änderung dieser Arbeit zuordnen lässt.
+
+Das Netz betrachtet eine Kachel in vier Set-Abstraction-Stufen mit jeweils größerem Blickfeld. In der ersten Stufe wählt es 1.024 Punkte als Zentren aus und beschreibt jedes davon anhand von bis zu 32 Nachbarn im Umkreis von 0,1 Metern, wodurch feine Textur erfasst wird. Über die folgenden Stufen sinkt die Zahl der Zentren auf 256, 64 und schließlich auf 16, während der Umkreis auf 0,2, 0,4 und 0,8 Meter wächst. Die Szene wird dadurch von Stufe zu Stufe gröber betrachtet, dafür aber im größeren Zusammenhang. Vier Feature-Propagation-Stufen verteilen die so gewonnenen Beschreibungen anschließend wieder auf alle Punkte, sodass am Ende jeder einzelne Punkt einen Wert je Klasse erhält. Eine Dropout-Schicht setzt während des Trainings in jedem Schritt zufällig die Hälfte der Merkmalswerte auf null, sodass sich das Netz nicht auf einzelne Merkmale verlassen kann und weniger zur Überanpassung (overfitting) neigt. Bei der Anwendung des fertigen Modells bleibt sie abgeschaltet. Eingabekanäle, Nachbarschaftsradien und die Zahl der Radien je Stufe sind umschaltbar und gehören zu den Faktoren, die in Abschnitt~\ref{ablation} variiert werden.
 
 \subsubsection{Verlustfunktion}\label{verlustfunktion}
-Was ein Netz lernt, steuert die Verlustfunktion (loss function). Sie misst, wie weit die Vorhersage vom Label abweicht, und genau dieser Wert wird beim Training möglichst klein gemacht. Zwei Eigenschaften der Trainingsdaten machen an dieser Stelle einen Eingriff nötig.
+Was ein Netz lernt, steuert die Verlustfunktion (loss function). Sie misst, wie weit die Vorhersage vom Label abweicht, und genau dieser Wert wird beim Training minimiert. Zwei Eigenschaften der Trainingsdaten erfordern an dieser Stelle einen Eingriff.
 
-Die erste ist das Klassenungleichgewicht (class imbalance). Bäume und Heide stellen zusammen den weit überwiegenden Teil der Punkte, \texttt{deadwood} und \texttt{soil} kommen dagegen nur vereinzelt vor. Ein Netz kann den Fehler am einfachsten senken, indem es die seltenen Klassen gar nicht erst vorhersagt. Um dem entgegenzuwirken, geht jede Klasse mit einem eigenen Klassengewicht in den Verlust ein. Es fällt umso größer aus, je seltener die Klasse ist, und berechnet sich aus dem Kehrwert der Wurzel ihrer Häufigkeit. Die Wurzel schwächt den Ausgleich bewusst ab. Ohne sie bekämen die seltensten Klassen ein so hohes Gewicht, dass das Training instabil wird.
+Die erste ist das Klassenungleichgewicht (class imbalance), denn Bäume und Heide stellen zusammen den weit überwiegenden Teil der Punkte, während \texttt{deadwood} und \texttt{soil} nur vereinzelt vorkommen. Ein Netz kann den Fehler am einfachsten senken, indem es die seltenen Klassen gar nicht erst vorhersagt. Um dem entgegenzuwirken, geht jede Klasse mit einem eigenen Klassengewicht in den Verlust ein. Es berechnet sich aus dem Kehrwert der Wurzel ihrer Häufigkeit und fällt damit umso größer aus, je seltener die Klasse ist. Die Wurzel schwächt den Ausgleich bewusst ab, denn ohne sie bekämen die seltensten Klassen ein so hohes Gewicht, dass das Training instabil würde.
 
-Die zweite Eigenschaft ist die unterschiedliche Verlässlichkeit der Labels, denn nicht jedes annotierte Segment war im Luftbild gleich gut zu erkennen. Aus den drei Qualitätsattributen wird deshalb je Punkt ein zusätzliches Gewicht abgeleitet, das unsichere und schlecht sichtbare Punkte abschwächt, ohne sie ganz auszuschließen. In der Praxis wirkt es kaum, denn nur 220 der 76.193 Segmente sind als verschattet oder überbelichtet markiert und 75.916 tragen den höchsten Sicherheitswert.
+Die zweite Eigenschaft ist die unterschiedliche Verlässlichkeit der Labels, denn nicht jedes annotierte Segment war im Luftbild gleich gut zu erkennen. Aus den drei Qualitätsattributen wird deshalb je Punkt ein zusätzliches Gewicht abgeleitet, das unsichere und schlecht sichtbare Punkte abschwächt, ohne sie ganz auszuschließen. In der Praxis wirkt es kaum, denn von den 76.193 Segmenten sind nur 220 als verschattet oder überbelichtet markiert, während 75.916 den höchsten Sicherheitswert tragen.
 
-Beide Gewichtungen wirken zusammen, indem der klassengewichtete Fehler je Punkt anschließend mit den Punktgewichten gemittelt wird. Die Qualitätsattribute sind damit kein Eingabemerkmal des Netzes, sondern steuern nur, wie stark ein Punkt beim Lernen zählt.
+Beide Gewichtungen greifen nacheinander, denn der Fehler eines Punktes wird zuerst mit dem Gewicht seiner Klasse multipliziert und anschließend über alle Punkte gemittelt, wobei jeder Punkt entsprechend seinem Qualitätsgewicht in dieses Mittel eingeht. Die Qualitätsattribute sind damit kein Eingabemerkmal des Netzes, sondern steuern nur, wie stark ein Punkt beim Lernen zählt.
 
 \subsubsection{Training}\label{training}
 
 Die Trainingsparameter bleiben über alle Läufe unverändert, damit Unterschiede zwischen ihnen allein auf den jeweils geänderten Faktor zurückgehen. Optimiert wird mit dem Adam-Verfahren \cite{Kingma.2015}, das auch die Referenzimplementierung verwendet. Die Lernrate beginnt bei 0,001 und fällt alle zehn Epochen auf 70 Prozent ihres Wertes, sodass das Netz zunächst grob und gegen Ende fein nachjustiert. Hinzu kommt ein Gewichtsverfall (weight decay) von 0,0001. Das Training läuft über 64 Epochen in Stapeln (batches) von 32 Kacheln, wobei es ab run08 nur noch 16 sind, weil die verdoppelte Punktzahl je Kachel den Speicherbedarf entsprechend erhöht. Gerechnet wurde in einer Conda-Umgebung mit Python 3.9 auf einer CUDA-fähigen Grafikkarte im JupyterHub der Universität.
 
-Neben der Überlappung der Kacheln (Abschnitt~\ref{tiling}) kommt während des Trainings eine zweite Form der Datenerweiterung hinzu. Jede Kachel wird vor der Verarbeitung um die Z-Achse um einen zufälligen Winkel gedreht, und auf ihre Koordinaten wird ein Rauschen mit einer Standardabweichung von einem Zentimeter, begrenzt auf fünf Zentimeter, hinzugerechnet. Die Drehung ist fachlich begründet, denn in welche Himmelsrichtung eine Kachel zeigt, sagt nichts über die Vegetation darin aus. Das Rauschen macht das Netz unempfindlicher gegen die Ungenauigkeiten der photogrammetrischen Rekonstruktion.
+Neben der Überlappung der Kacheln (Abschnitt~\ref{tiling}) kommt während des Trainings eine zweite Form der Datenerweiterung hinzu. Jede Kachel wird vor der Verarbeitung um die Z-Achse um einen zufälligen Winkel gedreht. Auf ihre Koordinaten wird zusätzlich ein Rauschen mit einer Standardabweichung von einem Zentimeter, begrenzt auf fünf Zentimeter, hinzugerechnet. Die Drehung ist fachlich begründet, denn in welche Himmelsrichtung eine Kachel zeigt, sagt nichts über die Vegetation darin aus. Das Rauschen macht das Netz unempfindlicher gegen die Ungenauigkeiten der photogrammetrischen Rekonstruktion.
 
 Gespeichert wird der Zwischenstand mit der höchsten mittleren IoU auf dem Validierungsteil. Als Kriterium dient bewusst nicht der Verlust, sondern die mittlere IoU, weil sie alle Klassen gleich gewichtet und damit derselben Größe folgt, an der die Ergebnisse später gemessen werden.
 
@@ -189,24 +193,24 @@ Punkte über die Qualitätsattribute. Nach der Erweiterung auf 16 Teilflächen
 wurden alle Läufe neu und ohne Warmstart gerechnet, sodass die Vorläufe auf
 einer anderen Datengrundlage beruhen und nicht berichtet werden.
 
-Für die eigentliche Studie gilt durchgehend derselbe Grundsatz: Gegenüber
-seinem Vergleichslauf ändert jeder Lauf genau einen Faktor, alles Übrige bleibt
-gleich. Trainiert wird jedes Mal von Grund auf, statt auf einem vorhandenen
+Für die eigentliche Studie ändert jeder Lauf gegenüber seinem Vergleichslauf
+genau einen Faktor und lässt alles Übrige unverändert. Trainiert wird jedes Mal von Grund auf, statt auf einem vorhandenen
 Modell aufzusetzen, denn nur so lässt sich eine Veränderung dem geänderten
 Faktor zuordnen. Möglich wird dieses Vorgehen dadurch, dass sich Klassenschema
 und Nachbarschaftsradien über Umgebungsvariablen umstellen lassen und die Zahl
 der Eingabemerkmale aus der Spaltenzahl der Kacheldateien abgeleitet wird.
-Trainings- und Auswertungsskript bleiben für alle Varianten unverändert und
-ein Protokoll hält fest, welche Einstellungen ein Lauf verwendet hat. Streng
-eingehalten wird das bei allen Läufen außer run08. Dort zieht die verdoppelte
-Punktzahl je Kachel zwei weitere Änderungen nach sich, nämlich eine halbierte
-Stapelgröße und den Wegfall des Auffüllens unvollständiger Fenster.
+Trainings- und Auswertungsskript bleiben für alle Varianten unverändert,
+ergänzt um ein Protokoll, das festhält, welche Einstellungen ein Lauf verwendet
+hat. Streng eingehalten wird das bei allen Läufen außer run08, bei dem die
+verdoppelte Punktzahl je Kachel zwei weitere Änderungen nach sich zieht, nämlich
+eine halbierte Stapelgröße und den Wegfall des Auffüllens unvollständiger
+Fenster.
 
 \begin{table}[H]
     \centering
     \caption[Übersicht der Ablationsläufe]{Übersicht der Ablationsläufe mit dem
     jeweils geänderten Faktor und dem Lauf, gegen den verglichen wird.
-    [Eigene Darstellung].}
+    Eigene Darstellung.}
     \label{tab:ablation}
     \begin{tabular}{lll}
     \hline
@@ -214,7 +218,7 @@ Stapelgröße und den Wegfall des Auffüllens unvollständiger Fenster.
     \hline
     run01 & Ausgangskonfiguration mit acht Klassen und sechs Kanälen & \\
     run02 & Nahinfrarot als siebter Kanal & run01 \\
-    run03 & Focal Loss statt gewichtetem Verlust & run02 \\
+    run03 & Focal Loss \cite{Lin.2017} statt gewichtetem Verlust & run02 \\
     run04 & Reduktion auf sechs Klassen & run02 \\
     run05 & Zwei lokale Höhenmerkmale als achter und neunter Kanal & run04 \\
     run06 & Reduktion auf zwei Klassen, Gehölz gegen Rest & run05 \\
@@ -225,53 +229,53 @@ Stapelgröße und den Wegfall des Auffüllens unvollständiger Fenster.
     \end{tabular}
 \end{table}
 
-Wie Tabelle~\ref{tab:ablation} zeigt, greifen die neun Läufe an vier Stellen
-an. Zwei erweitern die Merkmale je Punkt, einer verändert die Verlustfunktion,
-zwei vereinfachen das Klassenschema, und die letzten drei verändern die
-Geometrie der Nachbarschaftssuche im Netz. Zu dieser letzten Gruppe kam es erst
-durch eine Zwischenauswertung. Nachdem mehrere Änderungen an Merkmalen und
-Verlustfunktion ohne Wirkung geblieben waren, wurde geprüft, ob die
-Nachbarschaftsparameter des Netzes überhaupt zur Punktdichte der Daten passen.
+Zwei der neun Läufe erweitern die Merkmale je Punkt, einer verändert die
+Verlustfunktion, zwei vereinfachen das Klassenschema und die letzten drei
+verändern die Geometrie der Nachbarschaftssuche im Netz, wie Tabelle~\ref{tab:ablation}
+zeigt. Diese letzte Gruppe geht auf eine Zwischenauswertung zurück, denn nachdem
+mehrere Änderungen an Merkmalen und Verlustfunktion ohne Wirkung geblieben
+waren, wurde geprüft, ob die Nachbarschaftsparameter des Netzes überhaupt zur
+Punktdichte der Daten passen.
 Die Radien der Referenzimplementierung sind auf den Innenraumdatensatz S3DIS
 abgestimmt, dessen Blöcke einen Meter Kantenlänge haben und ebenfalls 4.096
 Punkte enthalten. Auf Kacheln von zehn Metern übertragen findet die erste
 Set-Abstraction-Stufe bei einem Radius von 0,1 Metern im Median nur einen
 einzigen Punkt, nämlich ihr eigenes Zentrum, und lernt dort folglich nichts.
-Daraus ergaben sich die Wege, entweder die Radien zu vergrößern oder die
+Daraus ergaben sich zwei Wege, entweder die Radien zu vergrößern oder die
 Punktzahl je Kachel zu erhöhen.
 
-Eine Einschränkung des Vergleichs ergibt sich aus dem Export für run08. Mit ihm
-änderten sich nicht nur die Trainings-, sondern auch die Testkacheln. Randfenster
-mit zu wenigen Punkten wurden bis dahin durch Kopien vorhandener Punkte
-aufgefüllt und blieben so erhalten, nun werden sie verworfen. Übrig bleiben
+Aus dem Export für run08 ergibt sich eine Einschränkung des Vergleichs, denn
+mit ihm änderten sich nicht nur die Trainings-, sondern auch die Testkacheln.
+Randfenster mit zu wenigen Punkten blieben bis dahin erhalten, weil sie durch
+Kopien vorhandener Punkte aufgefüllt wurden. Nun dagegen werden sie verworfen. Übrig bleiben
 dadurch 468 statt 487 Testkacheln. Da Läufe auf unterschiedlichen
 Testmengen nicht vergleichbar sind, wurden run05 bis run07 nachträglich gegen
 die neue Testmenge ausgewertet. Möglich ist das ohne Neutraining, weil
-PointNet++ beliebige Punktzahlen verarbeitet und diese drei Läufe, wie run08 und
-run09, mit neun Eingabekanälen arbeiten. Berichtet werden sie deshalb alle auf
-derselben Grundlage. Für run01 bis run04 gilt das nicht, denn sie verwenden
-sechs oder sieben Kanäle und lassen sich auf den neuen Kacheln nicht auswerten.
-Sie bilden eine eigene Tabelle mit der ursprünglichen Testmenge.
+PointNet++ beliebige Punktzahlen verarbeitet und run05 bis run07 dieselben neun
+Eingabekanäle nutzen wie run08 und run09. Die Läufe run05 bis run09 stehen damit
+alle auf derselben Testmenge von 468 Kacheln. Für run01 bis run04 gilt das
+nicht, denn ihre Eingabeschicht ist auf sechs oder sieben Kanäle festgelegt und
+passt damit nicht zu den neun Kanälen des neuen Exports. Diese vier Läufe stehen
+deshalb in einer eigenen Tabelle mit der ursprünglichen Testmenge.
 
 \subsection{Evaluation}\label{evaluation}
 
 Bewertet wird jeder Lauf auf dem Testteil, der bis dahin unberührt geblieben
 ist. Ein eigenes Skript sammelt die Vorhersagen über alle Testkacheln in einer
 gemeinsamen Konfusionsmatrix und leitet daraus die in
-Abschnitt~\ref{evaluationsmetriken} definierten Kennzahlen ab, also Genauigkeit
-und IoU je Klasse sowie Gesamtgenauigkeit und mittlere IoU. Ergänzend gibt es
-die zehn häufigsten Verwechslungen aus, woran sich ablesen lässt, zwischen
-welchen Klassen die Fehler tatsächlich auftreten.
+Abschnitt~\ref{evaluationsmetriken} definierten Kennzahlen der Segmentierung ab.
+Ergänzend gibt das Skript die zehn häufigsten Verwechslungen aus, woran sich
+ablesen lässt, zwischen welchen Klassen die Fehler tatsächlich auftreten.
 
-Für die Fragestellung reicht die mittlere IoU allerdings nicht aus. Sie mittelt
-über alle Klassen und ist deshalb zwischen Läufen mit acht, sechs oder zwei
-Klassen nicht vergleichbar. Zusätzlich werden die Vorhersagen jedes Modells
-nachträglich zu Gehölz, also \texttt{bush} und \texttt{tree}, sowie dem Rest
+Für die Fragestellung reicht die mittlere IoU allerdings nicht aus, weil sie
+über alle Klassen mittelt und deshalb zwischen Läufen mit acht, sechs oder zwei
+Klassen nicht vergleichbar ist. Zusätzlich werden die Vorhersagen jedes Modells
+nachträglich zu Gehölz, das heißt \texttt{bush} und \texttt{tree}, sowie dem Rest
 zusammengefasst und für diese Zweiteilung IoU, Precision, Recall und F1-Score
 berechnet. Diese Größe hängt nicht vom trainierten Klassenschema ab und
 entspricht unmittelbar dem, was für den Verbuschungsgrad gebraucht wird.
-Zugleich ist sie der Maßstab, an dem sich der binäre Lauf messen lassen muss.
-Die Gehölzklasse lässt sich nämlich auf zwei Wegen gewinnen, entweder durch ein
+Zugleich ist sie der Maßstab, an dem sich der binäre Lauf messen lassen muss,
+denn die Gehölzklasse lässt sich auf zwei Wegen gewinnen, entweder durch ein
 eigens auf zwei Klassen trainiertes Modell oder durch nachträgliches
 Zusammenfassen der Vorhersagen eines Mehrklassenmodells. Der zweite Weg
 verursacht keinen zusätzlichen Aufwand, sodass sich ein eigens binär
@@ -291,21 +295,21 @@ Während für Training und Bewertung die 16 annotierten Teilflächen ausreichten
 
 Vorbereitet werden sie mit denselben Schritten und unveränderten Parametern wie die Trainingsdaten (Abschnitte~\ref{hoehennormalisierung} und~\ref{hoehenmerkmale}). Schon eine abweichende Kappungsgrenze oder ein anderer Bodenfilter würde dazu führen, dass derselbe Merkmalswert bei der Anwendung anders zu deuten ist als beim Training.
 
-Die Verarbeitung läuft blockweise in Abschnitten von hundert Metern, denen jeweils ein Puffer von zwanzig Metern beigegeben wird, da sich eine Bodenklassifikation über mehrere Quadratkilometer weder im Arbeitsspeicher halten noch in vertretbarer Zeit rechnen ließe \cite{Roussel.2020}. Dieser Puffer verhindert Stufen in der Bodeninterpolation an den Blockgrenzen und wird vor dem Schreiben wieder entfernt. Als Ergebnis liegen dann georeferenzierte LAZ-Blöcke vor, die die beiden Höhenmerkmale als zusätzliche Punktattribute mitführen.
+Die Verarbeitung läuft blockweise in Abschnitten von hundert Metern, denen jeweils ein Puffer von zwanzig Metern beigegeben wird. Eine Bodenklassifikation über das gesamte Gebiet erwies sich als nicht praktikabel, weil Arbeitsspeicherbedarf und Rechenzeit mit der Punktzahl stark ansteigen. Dieser Puffer verhindert Stufen in der Bodeninterpolation an den Blockgrenzen und wird vor dem Schreiben wieder entfernt. Als Ergebnis liegen dann georeferenzierte LAZ-Blöcke vor, die die beiden Höhenmerkmale als zusätzliche Punktattribute mitführen.
 
 \subsubsection{Anwendung des Modells}\label{inferenz}
 
-Während alle bisherigen Läufe der Messung auf gelabelten Kacheln beruhten, wird das Modell nun auf Punkte angewendet, für die keine Annotation vorliegt. Zerlegt werden die Blöcke dabei in Fenster derselben Größe und mit demselben Versatz wie beim Training (Abschnitt~\ref{tiling}), wobei die Fensterursprünge nun auf einem gemeinsamen Raster über alle Blöcke hinweg liegen und deshalb an den Blockgrenzen zusammenpassen. Geladen wird jeder Block zusammen mit einem Saum von zehn Metern aus den angrenzenden Blöcken, vorhergesagt werden jedoch nur seine eigenen Punkte. Ohne diesen Saum sähe das Netz an jeder Blockgrenze nur eine halbe Nachbarschaft.
+Während alle bisherigen Läufe der Messung auf gelabelten Kacheln beruhten, wird das Modell nun auf Punkte angewendet, für die keine Annotation vorliegt. Zerlegt werden die Blöcke dabei in Fenster derselben Größe und mit demselben Versatz wie beim Training (Abschnitt~\ref{tiling}), wobei die Fensterursprünge nun nicht mehr am Rand der jeweiligen Fläche ansetzen, sondern auf einem gemeinsamen Raster über alle Blöcke hinweg liegen. Andernfalls wären die Fenster zweier Nachbarblöcke gegeneinander verschoben und ein Punkt an der Grenze fiele in unterschiedlich geschnittene Nachbarschaften. Geladen wird jeder Block zusammen mit einem Saum von zehn Metern aus den angrenzenden Blöcken, vorhergesagt werden jedoch nur seine eigenen Punkte. Ohne diesen Saum sähe das Netz an jeder Blockgrenze nur eine halbe Nachbarschaft.
 
-Aus der Überlappung der Fenster folgt, dass jeder Punkt in bis zu vier von ihnen liegt und entsprechend mehrfach vorhergesagt wird. Statt diese Vorhersagen auszuzählen und die häufigste zu übernehmen, werden die Klassenwahrscheinlichkeiten über alle beteiligten Fenster gemittelt und erst aus dem Mittel die wahrscheinlichste Klasse bestimmt. Eine sichere Vorhersage setzt sich dadurch gegen eine unsichere durch, und Fehler, die nur am Rand eines einzelnen Fensters entstehen, gleichen sich aus. Der gemittelte Höchstwert bleibt als Sicherheitsmaß je Punkt erhalten.
+Aus dem Versatz von fünf Metern bei zehn Metern Kantenlänge (Abschnitt~\ref{tiling}) folgt, dass jeder Punkt in bis zu vier Fenstern liegt und entsprechend mehrfach vorhergesagt wird. Statt diese Vorhersagen auszuzählen und die häufigste zu übernehmen, werden die Klassenwahrscheinlichkeiten über alle beteiligten Fenster gemittelt und erst aus dem Mittel die wahrscheinlichste Klasse bestimmt. Dadurch setzt sich eine sichere Vorhersage gegen eine unsichere durch und Randfehler einzelner Fenster gleichen sich aus. Der gemittelte Höchstwert bleibt als Sicherheitsmaß je Punkt erhalten.
 
 Anders als beim Training, wo unvollständig belegte Fenster verworfen wurden, lässt sich hier nicht auf Bereiche verzichten, für die anschließend ein Verbuschungsgrad berechnet werden soll. Vorhergesagt wird deshalb auch in dünn belegten Fenstern, sofern sie mindestens hundert Punkte enthalten.
 
 \subsubsection{Bezugsfläche und Verbuschungsmaß}\label{verbuschungsmass}
 
-Naheliegend wäre, den Verbuschungsgrad als Anteil der Gehölzpunkte an allen Punkten einer Fläche zu berechnen. Dieses Maß wäre jedoch verzerrt, weil die Punktdichte einer photogrammetrischen Punktwolke ungleich verteilt ist: Ein Strauch mit Ästen und Textur liefert je Quadratmeter ein Vielfaches der Punkte, die auf flachem Sandboden entstehen, und unter Gehölzen fehlen Punkte, weil die Kronen den Boden verdecken. Ein Punktanteil würde die Verbuschung deshalb systematisch überschätzen.
+Naheliegend wäre, den Verbuschungsgrad als Anteil der Gehölzpunkte an allen Punkten einer Fläche zu berechnen. Dieses Maß wäre jedoch verzerrt, weil die Punktdichte einer photogrammetrischen Punktwolke ungleich verteilt ist und ein Strauch mit Ästen und Textur je Quadratmeter ein Vielfaches der Punkte liefert, die auf flachem Sandboden entstehen. Unter Gehölzen fehlen zugleich Punkte, weil die Kronen den Boden verdecken, sodass ein Punktanteil die Verbuschung systematisch überschätzen würde.
 
-Verwendet wird stattdessen die projizierte Flächendeckung, die über ein Raster von 0,25 Metern gebildet wird, in dem jede Zelle Klasse und Höhe ihres höchsten vorhergesagten Punktes übernimmt. Das entspricht dem Blick von oben, denn was von oben sichtbar ist, bedeckt den Boden, und ein Heidepunkt unter einem Buschzweig zählt folglich nicht als offene Heide. Da die Referenzdaten auf einer Deckungsgradschätzung im Gelände beruhen, die demselben Prinzip folgt, sind beide Größen unmittelbar vergleichbar.
+Verwendet wird stattdessen die projizierte Flächendeckung, also der von oben sichtbare Anteil der Fläche. Dafür wird ein Raster von 0,25 Metern über die Fläche gelegt, in dem jede Zelle Klasse und normalisierte Höhe ihres höchsten vorhergesagten Punktes übernimmt. Das entspricht dem Blick von oben, denn was von oben sichtbar ist, bedeckt den Boden. Ein Heidepunkt unter einem Buschzweig zählt folglich nicht als offene Heide. Da die Referenzdaten auf einer Deckungsgradschätzung im Gelände beruhen, die demselben Prinzip folgt, sind beide Größen unmittelbar vergleichbar.
 
 Als verbuscht gilt eine Zelle dieses Feinrasters, wenn ihre Klasse \texttt{bush} oder \texttt{tree} lautet und ihre Höhe unterhalb einer festgelegten Grenze bleibt. Nötig ist diese zusätzliche Bedingung, weil die Klasse \texttt{tree} zwei fachlich verschiedene Dinge zusammenfasst, nämlich die aufkommenden Pioniergehölze auf der Offenfläche und den angrenzenden Altbestand, dessen Kronen über die Polygongrenze ragen. In der Klasse unterscheiden sich beide nicht, wohl aber in der Höhe. Fachlich deckt sich das mit der Definition, nach der Verbuschung das Aufkommen von Pioniergehölzen auf offener Fläche meint und nicht den benachbarten Wald.
 
@@ -313,15 +317,15 @@ Welchen Wert diese Grenze annimmt, wurde aus dem Vergleich mit der Referenz best
 
 \subsubsection{Referenzdaten und Validierung}\label{validierung}
 
-Als Referenz dient die FFH- und Biotoptypenkartierung des Authausener Waldes aus dem Jahr 2014, die 393 Polygone umfasst und im Feld \texttt{VERBUP} den im Gelände geschätzten Verbuschungsgrad in Prozent führt. Ausgewertet werden ausschließlich Offenlandbiotope, also Heiden und Magerrasen, Moore und Sümpfe, Staudenfluren sowie Grünland. In Wäldern, Gewässern und Rohbodenbiotopen ist die Größe nicht definiert und steht dort ausnahmslos auf null. Ein Polygon geht nur dann in die Auswertung ein, wenn mindestens 80 Prozent seiner Fläche mit Vorhersagen belegt sind und es mindestens 200 Zellen des Feinrasters umfasst. Somit verbleiben 43 Polygone, von denen 19 auf Heiden und Magerrasen entfallen und 14 von diesen dem Lebensraumtyp 4030, den trockenen europäischen Heiden, zugeordnet sind.
+Als Referenz dient die FFH- und Biotoptypenkartierung des Authausener Waldes aus dem Jahr 2014 \cite{DBU.Biotopkartierung2014}, die 393 Polygone umfasst und im Feld \texttt{VERBUP} den im Gelände geschätzten Verbuschungsgrad in Prozent führt. Ausgewertet werden ausschließlich Offenlandbiotope, Heiden und Magerrasen, Moore und Sümpfe, Staudenfluren sowie Grünland. In Wäldern, Gewässern und Rohbodenbiotopen ist die Größe nicht definiert und steht dort ausnahmslos auf null. Ein Polygon geht nur dann in die Auswertung ein, wenn mindestens 80 Prozent seiner Fläche mit Vorhersagen belegt sind und es mindestens 200 Zellen des Feinrasters umfasst. Somit verbleiben 43 Polygone, von denen 19 auf Heiden und Magerrasen entfallen und 14 von diesen dem Lebensraumtyp 4030, den trockenen europäischen Heiden, zugeordnet sind.
 
 Zwischen Kartierung und Befliegung liegen elf Jahre, was den Vergleich belastet, denn eine 2014 frisch entkusselte Fläche ist bis 2025 wieder aufgewachsen. Um solche Fälle kenntlich zu machen, wird das Bemerkungsfeld der Kartierung nach Hinweisen auf kurz zuvor erfolgte Pflegemaßnahmen durchsucht. Sieben der 43 Polygone tragen einen solchen Vermerk, weshalb alle Kennzahlen zweimal berechnet werden, um eine mögliche Verzerrung des Ergebnisses auszuschließen.
 
-Berichtet werden der Wurzelwert des mittleren quadratischen Fehlers als
-mittlere Fehlergröße in Prozentpunkten, der Versatz mit Vorzeichen als
-systematische Abweichung sowie das Bestimmtheitsmaß. Da bei einer Stichprobe
-dieser Größe einzelne Flächen die Absolutwerte verzerren können, tritt die
-Rangkorrelation nach Spearman hinzu, die allein die Reihenfolge der Flächen
-bewertet (Abschnitt~\ref{evaluationsmetriken}).
+Berichtet werden die in Abschnitt~\ref{evaluationsmetriken} definierten
+Kennzahlen des Verbuschungsgrades. Da bei einer Stichprobe dieser Größe
+einzelne Flächen die Absolutwerte verzerren können, tritt die Rangkorrelation
+nach Spearman hinzu, die allein die Reihenfolge der Flächen bewertet.
 
-Aus demselben Feinraster entsteht schließlich ein Auswerteraster von fünf Metern, dessen Zellen jeweils den Anteil der als Verbuschung vorhergesagten Feinzellen an den kartierten Feinzellen tragen. Zellen, in denen weniger als die Hälfte der Feinzellen belegt ist, bleiben leer, damit dünn abgedeckte Randbereiche keine Scheinwerte liefern. Ausgegeben wird ein GeoTIFF in EPSG~25832, das über die vier Befliegungen 64,5 Hektar mit Werten abdeckt und damit ein Vielfaches der 19,6 Hektar, die die Geländekartierung beisteuert.
+Aus demselben Feinraster entsteht schließlich ein Auswerteraster von fünf Metern, dessen Zellen jeweils den Anteil der als Verbuschung vorhergesagten Feinzellen an den kartierten Feinzellen tragen. Zellen, in denen weniger als die Hälfte der Feinzellen belegt ist, bleiben leer, damit dünn abgedeckte Randbereiche keine Scheinwerte liefern. Ausgegeben wird ein GeoTIFF in EPSG~25832, das über die vier Befliegungen 64,5 Hektar mit Werten abdeckt und damit ein Vielfaches der 24,9 Hektar, die die Geländekartierung beisteuert.
+
+Sämtliche Skripte der beschriebenen Verarbeitungskette sind öffentlich verfügbar \cite{Waldeyer.2026}. Das Repository enthält die Vorverarbeitung in R, das Training, die Auswertung und die Berechnung des Verbuschungsgrades, nicht jedoch die Punktwolken und Annotationen.

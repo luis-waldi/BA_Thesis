@@ -264,7 +264,7 @@
 %-----------------------------------
 % Abkürzungsverzeichnis
 %-----------------------------------
-\usepackage[printonlyused]{acronym}
+\usepackage{acronym}
 
 %-----------------------------------
 % Symbolverzeichnis
@@ -405,16 +405,20 @@
 % In Overleaf führt der Einsatz des Symbolverzeichnisses zu einem Fehler, der aber ignoriert werdne kann
 % Falls das Symbolverzeichnis nicht im Inhaltsverzeichnis angezeigt werden soll
 % dann folgende Zeile auskommentieren.
-\phantomsection\addcontentsline{toc}{section}{\symheadingname}
-\input{skripte/symbolDef}
-\listofsymbols
-\newpage
+% Symbolverzeichnis deaktiviert, die Formelzeichen werden im Text erklaert.
+% Zum Reaktivieren die folgenden vier Zeilen einkommentieren.
+%\phantomsection\addcontentsline{toc}{section}{\symheadingname}
+%\input{skripte/symbolDef}
+%\listofsymbols
+%\newpage
 
 %-----------------------------------
 % Glossar
 %-----------------------------------
-\printnoidxglossaries
-\newpage
+% Glossar deaktiviert, es enthielt nur die Beispieleintraege der Vorlage.
+% Zum Reaktivieren die beiden folgenden Zeilen einkommentieren.
+%\printnoidxglossaries
+%\newpage
 
 %-----------------------------------
 % Sperrvermerk
@@ -439,21 +443,23 @@
 %-----------------------------------
 % Apendix / Anhang
 %-----------------------------------
-\newpage
-\section*{\AppendixName} %Überschrift "Anhang", ohne Nummerierung
-\addcontentsline{toc}{section}{\AppendixName} %Den Anhang ohne Nummer zum Inhaltsverzeichnis hinzufügen
-
-\begin{appendices}
-% Nachfolgende Änderungen erfolgten aufgrund von Issue 163
-\makeatletter
-\renewcommand\@seccntformat[1]{\csname the#1\endcsname:\quad}
-\makeatother
-\addtocontents{toc}{\protect\setcounter{tocdepth}{0}} %
-	\renewcommand{\thesection}{\AppendixName\ \arabic{section}}
-	\renewcommand\thesubsection{\AppendixName\ \arabic{section}.\arabic{subsection}}
-	\input{kapitel/anhang/anhang}
-\end{appendices}
-\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+% Anhang deaktiviert. Zum Reaktivieren den Block einkommentieren und
+% kapitel/anhang/anhang.tex mit eigenen Inhalten fuellen.
+%\newpage
+%\section*{\AppendixName} %Überschrift "Anhang", ohne Nummerierung
+%\addcontentsline{toc}{section}{\AppendixName} %Den Anhang ohne Nummer zum Inhaltsverzeichnis hinzufügen
+%
+%\begin{appendices}
+%% Nachfolgende Änderungen erfolgten aufgrund von Issue 163
+%\makeatletter
+%\renewcommand\@seccntformat[1]{\csname the#1\endcsname:\quad}
+%\makeatother
+%\addtocontents{toc}{\protect\setcounter{tocdepth}{0}} %
+%	\renewcommand{\thesection}{\AppendixName\ \arabic{section}}
+%	\renewcommand\thesubsection{\AppendixName\ \arabic{section}.\arabic{subsection}}
+%	\input{kapitel/anhang/anhang}
+%\end{appendices}
+%\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
 
 %-----------------------------------
 % Literaturverzeichnis
